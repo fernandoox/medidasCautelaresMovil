@@ -3,6 +3,7 @@ import { Font } from 'expo';
 import { View, Alert } from 'react-native';
 import { Button, Text, Item, Input, H3 } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import { NavigationActions } from 'react-navigation';
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 
@@ -16,7 +17,7 @@ export default class ImputadoTemporal extends React.Component {
     super(props)
     this.state = {
       //Variables
-      carpetaJudicialParam: this.props.carpetaJudicial,
+      //carpetaJudicialParam: this.props.carpetaJudicial,
       imputadoTmpNombre: null,
       imputadoTmpApellidoP: null,
       imputadoTmpApellidoM: null,
@@ -30,16 +31,7 @@ export default class ImputadoTemporal extends React.Component {
       jsonImputadoTmp.apellidoP = this.state.imputadoTmpApellidoP;
       jsonImputadoTmp.apellidoM = this.state.imputadoTmpApellidoM;
       this.setState({imputado:jsonImputadoTmp})
-
-      const {navigate} = this.props.navigation;
-      navigate('EntrevistaScreen',
-        {
-          imputadoParam: this.state.jsonImputadoTmp,
-          carpetaJudicialParam: this.state.carpetaJudicial,
-          tipoCapturaParam: "TMP"
-        }
-      )
-      //Alert.alert('Nombre imputado tmp', JSON.stringify(this.state.imputado), [{text: 'OK'}], { cancelable: false });
+      Alert.alert('Nombre imputado tmp', JSON.stringify(this.state.imputado), [{text: 'OK'}], { cancelable: false });
   }
 
   render() {
