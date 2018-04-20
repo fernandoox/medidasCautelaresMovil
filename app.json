@@ -1,0 +1,23 @@
+{
+   "expo": {
+    "name": "G. M. Cautelares",
+    "icon": "./assets/img/iconApp.png",
+    "version": "1.0.0",
+    "slug": "cuestionarioMedidas",
+    "sdkVersion": "26.0.0",
+    "assetBundlePatterns": [
+      "assets/img/*",
+      "native-base/Fonts/*",
+      "node_modules/native-base/Fonts/*",
+    ],
+    "ios": {
+      "bundleIdentifier": "gob.poderjudicialcdmx.appCuestionarioMedidias"
+    },
+    "android": {
+      "package": "gob.poderjudicialcdmx.appCuestionarioMedidias"
+    },
+    "packagerOpts": {
+      "nonPersistent": "--nonPersistent"
+    }
+   }
+ }
