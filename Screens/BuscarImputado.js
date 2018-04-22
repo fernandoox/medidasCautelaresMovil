@@ -93,6 +93,7 @@ export default class BuscarImputado extends React.Component {
 
 
   render() {
+    const {navigate} = this.props.navigation;
     if (this.state.loading) {
       return (
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
@@ -172,10 +173,10 @@ export default class BuscarImputado extends React.Component {
                 </Display>
 
                 {/* Imputado temporal cuando no hay conexión a internet */}
-                <Display enable={this.state.isConnected}
+                <Display enable={!this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
-                  <ImputadoTemporal/>
+                  <ImputadoTemporal nav = {this.props.navigation}/>
                 </Display>
 
               </Col>

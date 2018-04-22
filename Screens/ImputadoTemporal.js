@@ -23,6 +23,7 @@ export default class ImputadoTemporal extends React.Component {
       imputadoTmpApellidoM: null,
       imputado: {}
     };
+    const nav = this.props.nav;
   }
 
   aplicarEntrevistaImputadoTemporal = () => {
@@ -31,7 +32,14 @@ export default class ImputadoTemporal extends React.Component {
       jsonImputadoTmp.apellidoP = this.state.imputadoTmpApellidoP;
       jsonImputadoTmp.apellidoM = this.state.imputadoTmpApellidoM;
       this.setState({imputado:jsonImputadoTmp})
-      Alert.alert('Nombre imputado tmp', JSON.stringify(this.state.imputado), [{text: 'OK'}], { cancelable: false });
+      this.props.nav.navigate('EntrevistaScreen',
+        {
+          imputadoParam: jsonImputadoTmp,
+          carpetaJudicialParam: "TEST CJ",
+          tipoCapturaParam: "TMP"
+        }
+      )
+      //Alert.alert('Nombre imputado tmp', JSON.stringify(this.state.imputado), [{text: 'OK'}], { cancelable: false });
   }
 
   render() {
