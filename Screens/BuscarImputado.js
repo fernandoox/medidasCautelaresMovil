@@ -86,7 +86,7 @@ export default class BuscarImputado extends React.Component {
         {
           imputadoParam: this.state.selectedImputado,
           carpetaJudicialParam: this.state.carpetaJudicial,
-          tipoCapturaParam: "BD"
+          tipoCapturaParam: "ONLINE"
         }
       )
   }
@@ -176,7 +176,7 @@ export default class BuscarImputado extends React.Component {
                 <Display enable={!this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
-                  <ImputadoTemporal nav = {this.props.navigation}/>
+                  <ImputadoTemporal carpetaJudicial={this.state.carpetaJudicial} nav={this.props.navigation}/>
                 </Display>
 
               </Col>

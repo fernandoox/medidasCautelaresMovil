@@ -1,7 +1,7 @@
 {
    "expo": {
-    "name": "G. M. Cautelares",
-    "icon": "./assets/img/iconApp.png",
+    "name": "Cautelares",
+    "icon": "./assets/img/iconAppVerde.png",
     "version": "1.0.0",
     "slug": "cuestionarioMedidas",
     "sdkVersion": "26.0.0",

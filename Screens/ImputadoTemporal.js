@@ -17,7 +17,6 @@ export default class ImputadoTemporal extends React.Component {
     super(props)
     this.state = {
       //Variables
-      //carpetaJudicialParam: this.props.carpetaJudicial,
       imputadoTmpNombre: null,
       imputadoTmpApellidoP: null,
       imputadoTmpApellidoM: null,
@@ -35,8 +34,8 @@ export default class ImputadoTemporal extends React.Component {
       this.props.nav.navigate('EntrevistaScreen',
         {
           imputadoParam: jsonImputadoTmp,
-          carpetaJudicialParam: "TEST CJ",
-          tipoCapturaParam: "TMP"
+          carpetaJudicialParam: this.props.carpetaJudicial,
+          tipoCapturaParam: "OFFLINE"
         }
       )
       //Alert.alert('Nombre imputado tmp', JSON.stringify(this.state.imputado), [{text: 'OK'}], { cancelable: false });
@@ -48,7 +47,7 @@ export default class ImputadoTemporal extends React.Component {
         <Row>
           <Col>
             <Text style={{marginVertical:10, textAlign:'center', color: '#D66F59', fontWeight:'bold'}}>
-              Nombre tmp child: {this.state.imputadoTmpNombre}
+              Registro temporal
             </Text>
 
             <Item style={{marginVertical: 5}}>
@@ -82,7 +81,8 @@ export default class ImputadoTemporal extends React.Component {
               style={{marginVertical: 10, borderRadius:20}}
               disabled={this.state.imputadoTmpNombre == null
                 || this.state.imputadoTmpApellidoP == null
-                || this.state.imputadoTmpApellidoM == null}
+                || this.state.imputadoTmpApellidoM == null
+                || this.props.carpetaJudicial == null}
               onPress={this.aplicarEntrevistaImputadoTemporal}>
                 <Text>Aplicar entrevista temporal</Text>
             </Button>
