@@ -8,7 +8,7 @@ import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import preguntasData from '../Utils/Preguntas.json';
 
-export default class InfoGeneral extends React.Component {
+export default class DatosGenerales extends React.Component {
   // Header Screen
   static navigationOptions = {
     title: 'Imputado temporal',
@@ -52,14 +52,12 @@ export default class InfoGeneral extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding">
-        <ScrollView keyboardDismissMode="interactive" overScrollMode="never">
-          <Grid>
 
+          <Grid style={{ paddingBottom:55 }}>
             <Row>
               <Col style={{ paddingHorizontal:15 }}>
-                <Text style={{marginTop:10, textAlign:'center', color: '#D66F59', fontWeight:'bold'}}>
-                  Realizar entrevista:  - {this.props.testProp}
+                <Text style={{marginVertical:10, textAlign:'center', color: '#D66F59', fontWeight:'bold'}}>
+                  Datos Generales {/*- CP: {this.props.testProp}*/}
                 </Text>
                 {/* Iterar el JSON de Preguntas */}
                 {
@@ -67,29 +65,31 @@ export default class InfoGeneral extends React.Component {
                     return (
                       <Item style={{marginVertical: 8}} key={i}>
                         <Input
-                          returnKeyType='done'
                           placeholder={preg.pregunta}
                           placeholderTextColor='#2C4743'
-                          autoCapitalize='none' autoCorrect={false}
                           style={{color:'#2C4743', fontSize: 18}}/>
                       </Item>
                     )
                   })
                 }
-
-                <Button full  onPress={this.nextPreprocess}>
-                  <Text>Siguiente</Text>
-                </Button>
-
+              </Col>
+            </Row>
+                
+            <Row size={20}>
+              <Col>
                 <Button full info onPress={this.previousPreprocess}>
                   <Text>Anterior</Text>
+                </Button>
+              </Col>
+              <Col>
+                <Button full onPress={this.nextPreprocess}>
+                  <Text>Siguiente</Text>
                 </Button>
               </Col>
             </Row>
 
           </Grid>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
     );
   }
 }

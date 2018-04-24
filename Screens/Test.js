@@ -35,26 +35,26 @@ export default class Test extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding">
-        <ScrollView keyboardDismissMode="interactive" overScrollMode="never">
           <Grid>
             <Row>
               <Col style={{ paddingHorizontal:15 }}>
                 <Text style={{color: 'teal'}}>IMPUTADO TEMPORAL SIN CONEXIÓN</Text>
+              </Col>
+            </Row>
 
-                <Button full  onPress={this.nextPreprocess}>
-                  <Text>Siguiente</Text>
-                </Button>
-
+            <Row size={20}>
+              <Col>
                 <Button full info onPress={this.previousPreprocess}>
                   <Text>Anterior</Text>
                 </Button>
-
+              </Col>
+              <Col>
+                <Button full onPress={this.nextPreprocess}>
+                  <Text>Siguiente</Text>
+                </Button>
               </Col>
             </Row>
           </Grid>
-        </ScrollView>
-      </KeyboardAvoidingView>
     );
   }
 }

@@ -52,29 +52,26 @@ export default class ImputadoTemporal extends React.Component {
 
             <Item style={{marginVertical: 5}}>
               <Input
-                returnKeyType='next'
                 placeholder='Nombre'
                 placeholderTextColor='#2C4743'
                 style={{color:'#2C4743', fontSize: 18}}
-                onChangeText={(txtNombre) => this.setState({imputadoTmpNombre : txtNombre}) }/>
+                onChangeText={(imputadoTmpNombre) => this.setState({imputadoTmpNombre}) }/>
             </Item>
 
             <Item style={{marginVertical: 5}}>
               <Input
-                returnKeyType='next'
                 placeholder='Apellido paterno'
                 placeholderTextColor='#2C4743'
                 style={{color:'#2C4743', fontSize: 18}}
-                onChangeText={(txtApellidoP) => this.setState({imputadoTmpApellidoP : txtApellidoP}) }/>
+                onChangeText={(imputadoTmpApellidoP) => this.setState({imputadoTmpApellidoP}) }/>
             </Item>
 
             <Item style={{marginVertical: 5}}>
               <Input
-                returnKeyType='done'
                 placeholder='Apellido materno'
                 placeholderTextColor='#2C4743'
                 style={{color:'#2C4743', fontSize: 18}}
-                onChangeText={(txtApellidoM) => this.setState({imputadoTmpApellidoM : txtApellidoM}) }/>
+                onChangeText={(imputadoTmpApellidoM) => this.setState({imputadoTmpApellidoM}) }/>
             </Item>
 
             <Button full danger

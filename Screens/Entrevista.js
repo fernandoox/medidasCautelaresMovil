@@ -6,7 +6,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import MultiStep from 'react-native-multistep-wizard'
-import InfoGeneral from './InfoGeneral';
+import DatosGenerales from './DatosGenerales';
 import Test from './Test';
 import Login from './Login';
 
@@ -50,39 +50,37 @@ export default class Entrevista extends React.Component {
   render() {
     
     const steps = [
-      {name: 'StepOne', component: <InfoGeneral testProp={this.state.carpetaJudicial}/>},
-      {name: 'StepTwo', component: <Test />},
+      {name: 'DatosGenerales', component: <DatosGenerales testProp={this.state.carpetaJudicial}/>},
+      {name: 'StepTwo', component: <Test/>},
       {name: 'StepThree', component: <Login/>},
     ];
 
     return (
       <KeyboardAvoidingView behavior="position">
-        <ScrollView keyboardDismissMode="none" overScrollMode="never">
-          <Grid>
+      <ScrollView keyboardShouldPersistTaps="handled" >
+      <Grid>
 
-            <Row size={20}>
-              <Col>
-                <Separator bordered style={{backgroundColor: '#D66F59', paddingLeft:10}}>
-                  <Text style={{fontSize:14, fontWeight:'bold', color: 'white'}}>
-                    CARPETA JUDICIAL
-                  </Text>
-                </Separator>
-                <ListItem style={{paddingTop: -5, paddingBottom: -5}}>
-                  <Text style={{fontSize:16, fontWeight:'bold'}}>{this.state.carpetaJudicial}</Text>
-                </ListItem>
-                <Separator bordered style={{backgroundColor: '#D66F59', paddingLeft:10}}>
-                  <Text style={{fontSize:14, fontWeight:'bold', color: 'white'}}>IMPUTADO</Text>
-                </Separator>
-                <ListItem style={{paddingTop: -5, paddingBottom: -5}}>
-                  <Text style={{fontSize:16, fontWeight:'bold'}}>{this.state.imputado.nombre + " " + this.state.imputado.apellidoP + " " + this.state.imputado.apellidoM}</Text>
-                </ListItem>
-              </Col>
-            </Row>
+        <Row style={{backgroundColor: '#D66F59', height:55}}>
+          <Col>
+            <View>
+              <Separator bordered style={{backgroundColor: '#D66F59', paddingLeft:10}}>
+                <Text style={{fontSize:14, fontWeight:'bold', color: 'white'}}>
+                  CARPETA JUDICIAL: {this.state.carpetaJudicial}
+                </Text>
+              </Separator>
+              <Separator bordered style={{backgroundColor: '#D66F59', paddingLeft:10}}>
+                <Text style={{fontSize:14, fontWeight:'bold', color: 'white'}}>
+                  IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.apellidoP + " " + this.state.imputado.apellidoM}
+                </Text>
+              </Separator>
+            </View>
+          </Col>
+        </Row>
 
-            <MultiStep steps={steps} onFinish={this.finish}/>
+        <MultiStep steps={steps} onFinish={this.finish}/>
 
-          </Grid>
-        </ScrollView>
+      </Grid>
+      </ScrollView>
       </KeyboardAvoidingView>
     );
   }

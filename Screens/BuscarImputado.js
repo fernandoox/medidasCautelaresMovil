@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, Keyboard, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Button, Text, Item, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
@@ -44,7 +44,6 @@ export default class BuscarImputado extends React.Component {
     console.log("Buscando imputados con carpeta: "+this.state.carpetaJudicial);
     console.log("Online: "+this.state.isConnected);
     this.setState({isLoading: true});
-    Keyboard.dismiss();
     axios.get('imputados', {
       params: {
         carpetaJudicial: this.state.carpetaJudicial
@@ -104,7 +103,7 @@ export default class BuscarImputado extends React.Component {
 
     return (
       <KeyboardAvoidingView behavior="position">
-        <ScrollView keyboardDismissMode="interactive" overScrollMode="never">
+        <ScrollView keyboardShouldPersistTaps="handled">
           <Grid>
             <Row>
               <Col style={{ paddingHorizontal:15 }}>

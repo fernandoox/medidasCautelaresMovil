@@ -11,7 +11,6 @@ import Entrevista from './Screens/Entrevista';
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
   BuscarImputadoScreen: {screen: BuscarImputado},
-  ImputadoTemporalScreen: {screen: ImputadoTemporal},
   EntrevistaScreen: {screen: Entrevista},
 })
 
