@@ -1,7 +1,7 @@
 {
    "expo": {
     "name": "Cautelares",
-    "icon": "./assets/img/iconAppVerde.png",
+    "icon": "./assets/img/iconApp.png",
     "version": "1.0.0",
     "slug": "cuestionarioMedidas",
     "sdkVersion": "26.0.0",
@@ -9,6 +9,10 @@
       "assets/img/*",
       "native-base/Fonts/*",
       "node_modules/native-base/Fonts/*",
+      "node_modules/react-navigation/src/views/assets/*",
+      "react-navigation/src/views/assets/*",
+      "node_modules/react-native-datepicker/*",
+      "react-native-datepicker/*"
     ],
     "ios": {
       "bundleIdentifier": "gob.poderjudicialcdmx.appCuestionarioMedidias"

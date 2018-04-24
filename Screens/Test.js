@@ -15,25 +15,23 @@ export default class Test extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      isConnected: null,
     };
   }
 
-  componentDidMount(){
-    NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
-    NetInfo.isConnected.fetch().done(
-      (isConnected) => { this.setState({isConnected}); }
-    );
+
+
+  nextPreprocess = () => {
+    console.log("Siguiente test...");
+    // Save step state for use in other steps of the wizard
+    this.props.saveState(1,{hola:'value dos'});
+    this.props.nextFn()
   }
-
-  componentWillUnmount() {
-    NetInfo.isConnected.removeEventListener('connectionChange',this.verificarConexion);
+  
+  previousPreprocess = () => {
+    console.log("Anterior test...");
+    // Go to previous step
+    this.props.prevFn();
   }
-
-  verificarConexion = (isConnected) => {
-    this.setState({isConnected});
-  };
-
 
   render() {
     return (
@@ -44,14 +42,14 @@ export default class Test extends React.Component {
               <Col style={{ paddingHorizontal:15 }}>
                 <Text style={{color: 'teal'}}>IMPUTADO TEMPORAL SIN CONEXIÓN</Text>
 
-                <Item style={{marginVertical: 10}}>
-                  <Input
-                    placeholder='Nombre'
-                    placeholderTextColor='#2C4743'
-                    autoCapitalize='none' autoCorrect={false}
-                    style={{color:'#2C4743', fontSize: 20}}
-                    onChangeText={(imputadoTemporalNombre) => this.setState({imputadoTemporalNombre}) }/>
-                </Item>
+                <Button full  onPress={this.nextPreprocess}>
+                  <Text>Siguiente</Text>
+                </Button>
+
+                <Button full info onPress={this.previousPreprocess}>
+                  <Text>Anterior</Text>
+                </Button>
+
               </Col>
             </Row>
           </Grid>
