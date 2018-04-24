@@ -1,24 +1,20 @@
 {
    "expo": {
-    "name": "Cautelares",
-    "icon": "./assets/img/iconApp.png",
+    "name": "GM Cautelares",
+    "icon": "./assets/img/iconAppRojo.png",
     "version": "1.0.0",
-    "slug": "cuestionarioMedidas",
+    "slug": "entrevistaMedidas",
     "sdkVersion": "26.0.0",
     "assetBundlePatterns": [
       "assets/img/*",
       "native-base/Fonts/*",
-      "node_modules/native-base/Fonts/*",
-      "node_modules/react-navigation/src/views/assets/*",
-      "react-navigation/src/views/assets/*",
-      "node_modules/react-native-datepicker/*",
-      "react-native-datepicker/*"
+      "node_modules/native-base/Fonts/*"
     ],
     "ios": {
-      "bundleIdentifier": "gob.poderjudicialcdmx.appCuestionarioMedidias"
+      "bundleIdentifier": "gob.tsjcdmx.appEntrevistaMedidias"
     },
     "android": {
-      "package": "gob.poderjudicialcdmx.appCuestionarioMedidias"
+      "package": "gob.tsjcdmx.appEntrevistaMedidias"
     },
     "packagerOpts": {
       "nonPersistent": "--nonPersistent"
