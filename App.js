@@ -7,11 +7,29 @@ import Login from './Screens/Login';
 import BuscarImputado from './Screens/BuscarImputado';
 import ImputadoTemporal from './Screens/ImputadoTemporal';
 import Entrevista from './Screens/Entrevista';
+import GLOBALS from './Utils/Globals';
 
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
-  BuscarImputadoScreen: {screen: BuscarImputado},
-  EntrevistaScreen: {screen: Entrevista},
+  BuscarImputadoScreen: {
+    screen: BuscarImputado,
+    navigationOptions: {
+      title: 'Buscar imputado',
+      headerStyle: {backgroundColor: GLOBALS.COLORS.BACKGROUND_PRIMARY},
+      headerTitleStyle: {color:'white'},
+      headerTintColor: 'white',
+    },
+  },
+
+  EntrevistaScreen: {
+    screen: Entrevista,
+    navigationOptions: {
+      title: 'Entrevista',
+      headerStyle: {backgroundColor: GLOBALS.COLORS.BACKGROUND_PRIMARY},
+      headerTitleStyle: {color:'white'},
+      headerTintColor: 'white',
+    },
+  },
 })
 
 const AppNavigation = () => (

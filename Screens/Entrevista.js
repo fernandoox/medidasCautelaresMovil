@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
-import { Button, Text, Item, Input, H3, Separator, ListItem } from 'native-base';
+import { Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
@@ -11,10 +11,6 @@ import Test from './Test';
 import Login from './Login';
 
 export default class Entrevista extends React.Component {
-  // Header Screen
-  static navigationOptions = {
-    title: 'Entrevista',
-  };
 
   constructor(props){
     super(props)
@@ -26,8 +22,14 @@ export default class Entrevista extends React.Component {
       carpetaJudicial: params.carpetaJudicialParam,
       tipoCaptura: params.tipoCapturaParam,
     };
+    jsonBaseEntrevista = {
+      "imputado": params.imputadoParam,
+      "carpetaJudicial": params.carpetaJudicialParam,
+      "tipoCaptura": params.tipoCapturaParam,
+      "respuestas": [],
+    }
   }
-
+  //http://medidascautelares.tsjcdmx.gob.mx/sscmc
   componentDidMount(){
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
     NetInfo.isConnected.fetch().done(
@@ -43,9 +45,11 @@ export default class Entrevista extends React.Component {
     this.setState({isConnected});
   };
 
-  finish = (wizardState) => {
-    Alert.alert('Finish ...', JSON.stringify(wizardState), [{text: 'OK'}], { cancelable: false });   
+  terminarEntrevista = (wizardState) => {
+    jsonBaseEntrevista.respuestas = wizardState;
+    Alert.alert('FINISH DATOS GEN...', JSON.stringify(jsonBaseEntrevista), [{text: 'OK'}], { cancelable: false });   
   }
+
 
   render() {
     
@@ -60,24 +64,28 @@ export default class Entrevista extends React.Component {
       <ScrollView keyboardShouldPersistTaps="handled" >
       <Grid>
 
-        <Row style={{backgroundColor: '#D66F59', height:55}}>
+        <Row style={{backgroundColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, height:110}}>
           <Col>
-            <View>
-              <Separator bordered style={{backgroundColor: '#D66F59', paddingLeft:10}}>
-                <Text style={{fontSize:14, fontWeight:'bold', color: 'white'}}>
-                  CARPETA JUDICIAL: {this.state.carpetaJudicial}
-                </Text>
-              </Separator>
-              <Separator bordered style={{backgroundColor: '#D66F59', paddingLeft:10}}>
-                <Text style={{fontSize:14, fontWeight:'bold', color: 'white'}}>
-                  IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.apellidoP + " " + this.state.imputado.apellidoM}
-                </Text>
-              </Separator>
-            </View>
+            <Card>
+              <CardItem>
+                <Body>
+                  <Text style={{ fontSize:15, fontWeight:'bold', textDecorationLine: 'underline' }}>
+                    CARPETA JUDICIAL: {this.state.carpetaJudicial}
+                  </Text>
+                </Body>
+              </CardItem>
+              <CardItem style={{ marginTop:-15, marginBottom: -15 }}>
+                <Body>
+                  <Text style={{ fontSize:15, fontWeight:'bold' }}>
+                    IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.primerApellido + " " + this.state.imputado.segundoApellido}
+                  </Text>
+                </Body>
+              </CardItem>
+            </Card>
           </Col>
         </Row>
 
-        <MultiStep steps={steps} onFinish={this.finish}/>
+        <MultiStep steps={steps} onFinish={this.terminarEntrevista}/>
 
       </Grid>
       </ScrollView>

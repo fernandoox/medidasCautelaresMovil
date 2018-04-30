@@ -8,11 +8,7 @@ import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import ImputadoTemporal from './ImputadoTemporal'
 export default class BuscarImputado extends React.Component {
-  // Header Screen
-  static navigationOptions = {
-    title: 'Buscar imputado',
-  }
-
+  
   constructor(props){
     super(props)
     this.state = {
@@ -44,17 +40,17 @@ export default class BuscarImputado extends React.Component {
     console.log("Buscando imputados con carpeta: "+this.state.carpetaJudicial);
     console.log("Online: "+this.state.isConnected);
     this.setState({isLoading: true});
-    axios.get('imputados', {
+    axios.get('/imputados', {
       params: {
-        carpetaJudicial: this.state.carpetaJudicial
+        numeroCarpeta: this.state.carpetaJudicial
       }
     })
     .then((res) => {
       console.log("-- Status: "+res.data.status);
       if (res.data.status == "ok") {
         this.setState({
-          imputados: res.data.data,
-          numImputados: Object.keys(res.data.data).length,
+          imputados: res.data.imputados,
+          numImputados: Object.keys(res.data.imputados).length,
           isLoading: false,
         })
       }
@@ -92,7 +88,6 @@ export default class BuscarImputado extends React.Component {
 
 
   render() {
-    const {navigate} = this.props.navigation;
     if (this.state.loading) {
       return (
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
@@ -157,7 +152,7 @@ export default class BuscarImputado extends React.Component {
                       this.state.imputados.map((imputado) => {
                         return (
                           <Item
-                            label={imputado.nombre + " " + imputado.apellidoP + " " + imputado.apellidoM}
+                            label={imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido}
                             value={imputado}  key={imputado.id}/>
                         );
                       })

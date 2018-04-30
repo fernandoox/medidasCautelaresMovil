@@ -28,8 +28,8 @@ export default class ImputadoTemporal extends React.Component {
   aplicarEntrevistaImputadoTemporal = () => {
       let jsonImputadoTmp = {}
       jsonImputadoTmp.nombre = this.state.imputadoTmpNombre;
-      jsonImputadoTmp.apellidoP = this.state.imputadoTmpApellidoP;
-      jsonImputadoTmp.apellidoM = this.state.imputadoTmpApellidoM;
+      jsonImputadoTmp.primerApellido = this.state.imputadoTmpApellidoP;
+      jsonImputadoTmp.segundoApellido = this.state.imputadoTmpApellidoM;
       this.setState({imputado:jsonImputadoTmp})
       this.props.nav.navigate('EntrevistaScreen',
         {
@@ -38,7 +38,6 @@ export default class ImputadoTemporal extends React.Component {
           tipoCapturaParam: "OFFLINE"
         }
       )
-      //Alert.alert('Nombre imputado tmp', JSON.stringify(this.state.imputado), [{text: 'OK'}], { cancelable: false });
   }
 
   render() {
