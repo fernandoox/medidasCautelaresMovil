@@ -8,7 +8,7 @@ import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import ImputadoTemporal from './ImputadoTemporal'
 export default class BuscarImputado extends React.Component {
-  
+
   constructor(props){
     super(props)
     this.state = {
@@ -122,7 +122,7 @@ export default class BuscarImputado extends React.Component {
                 </Item>
 
                 {/* Buscar imputados por carpeta solo cuando hay conexión a internet */}
-                <Display enable={this.state.isConnected}
+                <Display enable={!this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
                   <Button full light
@@ -153,7 +153,7 @@ export default class BuscarImputado extends React.Component {
                         return (
                           <Item
                             label={imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido}
-                            value={imputado}  key={imputado.id}/>
+                            value={imputado} key={imputado.id}/>
                         );
                       })
                     }
@@ -167,7 +167,7 @@ export default class BuscarImputado extends React.Component {
                 </Display>
 
                 {/* Imputado temporal cuando no hay conexión a internet */}
-                <Display enable={!this.state.isConnected}
+                <Display enable={this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
                   <ImputadoTemporal carpetaJudicial={this.state.carpetaJudicial} nav={this.props.navigation}/>

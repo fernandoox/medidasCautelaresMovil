@@ -47,12 +47,12 @@ export default class Entrevista extends React.Component {
 
   terminarEntrevista = (wizardState) => {
     jsonBaseEntrevista.respuestas = wizardState;
-    Alert.alert('FINISH DATOS GEN...', JSON.stringify(jsonBaseEntrevista), [{text: 'OK'}], { cancelable: false });   
+    Alert.alert('FINISH DATOS GEN...', JSON.stringify(jsonBaseEntrevista), [{text: 'OK'}], { cancelable: false });
   }
 
 
   render() {
-    
+
     const steps = [
       {name: 'DatosGenerales', component: <DatosGenerales testProp={this.state.carpetaJudicial}/>},
       {name: 'StepTwo', component: <Test/>},
@@ -64,17 +64,17 @@ export default class Entrevista extends React.Component {
       <ScrollView keyboardShouldPersistTaps="handled" >
       <Grid>
 
-        <Row style={{backgroundColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, height:110}}>
+        <Row style={{backgroundColor: '#607D8B', height:85}}>
           <Col>
             <Card>
               <CardItem>
                 <Body>
-                  <Text style={{ fontSize:15, fontWeight:'bold', textDecorationLine: 'underline' }}>
+                  <Text style={{ fontSize:15, fontWeight:'bold' }}>
                     CARPETA JUDICIAL: {this.state.carpetaJudicial}
                   </Text>
                 </Body>
               </CardItem>
-              <CardItem style={{ marginTop:-15, marginBottom: -15 }}>
+              <CardItem style={{ marginTop:-15, marginBottom:-15,}}>
                 <Body>
                   <Text style={{ fontSize:15, fontWeight:'bold' }}>
                     IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.primerApellido + " " + this.state.imputado.segundoApellido}

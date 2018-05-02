@@ -1,47 +1,77 @@
 [
   {
     "idPregunta": 1,
+    "node": "FECHA_ENTREVISTA",
     "pregunta": "Fecha de entrevista",
     "tipoEntrada": "date"
   },
   {
     "idPregunta": 2,
+    "node": "HORA_ENTREVISTA",
     "pregunta": "Hora de entrevista",
-    "tipoEntrada": "hour"
+    "tipoEntrada": "time"
   },
   {
     "idPregunta": 3,
+    "node": "NOMBRE",
     "pregunta": "Nombre del adolescente",
     "tipoEntrada": "text"
   },
   {
     "idPregunta": 4,
-    "pregunta": "Grupo étnico o indigena",
+    "node": "PRIMER_APELLIDO",
+    "pregunta": "Apellido paterno",
     "tipoEntrada": "text"
   },
   {
     "idPregunta": 5,
-    "pregunta": "Situación de discapacidad",
+    "node": "SEGUNDO_ENTREVISTA",
+    "pregunta": "Apellido materno",
     "tipoEntrada": "text"
   },
   {
     "idPregunta": 6,
-    "pregunta": "Sexo",
+    "node": "GRUPO_ETNICO",
+    "pregunta": "Grupo étnico o indigena",
     "tipoEntrada": "text"
   },
   {
     "idPregunta": 7,
+    "node": "SITUACION_DISCAPACIDAD",
+    "pregunta": "Situación de discapacidad",
+    "tipoEntrada": "text"
+  },
+  {
+    "idPregunta": 8,
+    "node": "SEXO",
+    "pregunta": "Sexo",
+    "tipoEntrada": "text",
+    "tipoEntrada": "catalogo",
+    "catalogo": "SexoCat"
+  },
+  {
+    "idPregunta": 9,
+    "node": "FECHA_NACIMIENTO",
     "pregunta": "Fecha de nacimiento",
     "tipoEntrada": "date"
   },
   {
-    "idPregunta": 8,
+    "idPregunta": 10,
+    "node": "PAIS",
     "pregunta": "País",
     "tipoEntrada": "text"
   },
   {
-    "idPregunta": 9,
+    "idPregunta": 11,
+    "node": "ID_NACIONALIDAD",
     "pregunta": "Nacionalidad",
-    "tipoEntrada": "date"
-  }
+    "tipoEntrada": "catalogo",
+    "catalogo": "NacionalidesCat"
+  },
+  {
+    "idPregunta": 12,
+    "node": "DOCUMENTO_MIGRATORIO",
+    "pregunta": "Documento migratorio",
+    "tipoEntrada": "boolean"
+  },
 ]

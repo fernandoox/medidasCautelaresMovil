@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Mexicano"
+  },
+  {
+    "id": 2,
+    "nombre": "Americano"
+  },
+  {
+    "id": 3,
+    "nombre": "Canadiense"
+  },
+  {
+    "id": 4,
+    "nombre": "Noruego"
+  },
+]
