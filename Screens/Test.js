@@ -15,46 +15,48 @@ export default class Test extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      isConnected: null,
     };
   }
 
-
-
-  nextPreprocess = () => {
-    console.log("Siguiente test...");
-    // Save step state for use in other steps of the wizard
-    this.props.saveState(1,{hola:'value dos'});
-    this.props.nextFn()
+  componentDidMount(){
+    NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({isConnected}); }
+    );
   }
-  
-  previousPreprocess = () => {
-    console.log("Anterior test...");
-    // Go to previous step
-    this.props.prevFn();
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange',this.verificarConexion);
   }
+
+  verificarConexion = (isConnected) => {
+    this.setState({isConnected});
+  };
+
 
   render() {
     return (
+      <KeyboardAvoidingView behavior="padding">
+        <ScrollView keyboardDismissMode="interactive" overScrollMode="never">
           <Grid>
             <Row>
               <Col style={{ paddingHorizontal:15 }}>
                 <Text style={{color: 'teal'}}>IMPUTADO TEMPORAL SIN CONEXIÓN</Text>
-              </Col>
-            </Row>
 
-            <Row size={20}>
-              <Col>
-                <Button full info onPress={this.previousPreprocess}>
-                  <Text>Anterior</Text>
-                </Button>
-              </Col>
-              <Col>
-                <Button full onPress={this.nextPreprocess}>
-                  <Text>Siguiente</Text>
-                </Button>
+                <Item style={{marginVertical: 10}}>
+                  <Input
+                    placeholder='Nombre'
+                    placeholderTextColor='#2C4743'
+                    autoCapitalize='none' autoCorrect={false}
+                    style={{color:'#2C4743', fontSize: 20}}
+                    onChangeText={(imputadoTemporalNombre) => this.setState({imputadoTemporalNombre}) }/>
+                </Item>
               </Col>
             </Row>
           </Grid>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

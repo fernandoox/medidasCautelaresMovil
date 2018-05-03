@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, YellowBox } from 'react-native';
-import { Container } from 'native-base';
+import { Root } from 'native-base';
 import { StackNavigator } from 'react-navigation';
 import Login from './Screens/Login';
 import BuscarImputado from './Screens/BuscarImputado';
@@ -67,9 +67,9 @@ export default class App extends React.Component {
       );
     }
     return (
-      <Container>
+      <Root>
         <AppNavigation/>
-      </Container>
+      </Root>
     );
   }
 }

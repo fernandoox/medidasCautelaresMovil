@@ -23,7 +23,7 @@ export default class Login extends React.Component {
   nextPreprocess = () => {
     console.log("Siguiente login...");
     // Save step state for use in other steps of the wizard
-    this.props.saveState(2,{key2:'Chingon'});
+    this.props.saveState(2,{otroNodoRespuesta:'valores'});
     this.props.nextFn()
   }
   
@@ -43,13 +43,13 @@ export default class Login extends React.Component {
             </Row>
 
             <Row size={20}>
-              <Col>
-                <Button full info onPress={this.previousPreprocess}>
+              <Col style={{padding:5}}>
+                <Button full rounded light onPress={this.previousPreprocess}>
                   <Text>Anterior</Text>
                 </Button>
               </Col>
-              <Col>
-                <Button full onPress={this.nextPreprocess}>
+              <Col style={{padding:5}}>
+                <Button full rounded danger onPress={this.nextPreprocess}>
                   <Text>Siguiente</Text>
                 </Button>
               </Col>

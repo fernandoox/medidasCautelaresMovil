@@ -7,7 +7,7 @@ import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import MultiStep from 'react-native-multistep-wizard'
 import DatosGenerales from './DatosGenerales';
-import Test from './Test';
+import Domicilios from './Domicilios';
 import Login from './Login';
 
 export default class Entrevista extends React.Component {
@@ -29,7 +29,7 @@ export default class Entrevista extends React.Component {
       "respuestas": [],
     }
   }
-  //http://medidascautelares.tsjcdmx.gob.mx/sscmc
+
   componentDidMount(){
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
     NetInfo.isConnected.fetch().done(
@@ -47,7 +47,8 @@ export default class Entrevista extends React.Component {
 
   terminarEntrevista = (wizardState) => {
     jsonBaseEntrevista.respuestas = wizardState;
-    Alert.alert('FINISH DATOS GEN...', JSON.stringify(jsonBaseEntrevista), [{text: 'OK'}], { cancelable: false });
+    console.log(JSON.stringify(jsonBaseEntrevista));
+    Alert.alert('FINISH...', JSON.stringify(jsonBaseEntrevista), [{text: 'OK'}], { cancelable: false });
   }
 
 
@@ -55,16 +56,16 @@ export default class Entrevista extends React.Component {
 
     const steps = [
       {name: 'DatosGenerales', component: <DatosGenerales testProp={this.state.carpetaJudicial}/>},
-      {name: 'StepTwo', component: <Test/>},
+      {name: 'Domicilios', component: <Domicilios/>},
       {name: 'StepThree', component: <Login/>},
     ];
 
     return (
       <KeyboardAvoidingView behavior="position">
-      <ScrollView keyboardShouldPersistTaps="handled" >
+      <ScrollView keyboardShouldPersistTaps="always" >
       <Grid>
 
-        <Row style={{backgroundColor: '#607D8B', height:85}}>
+        <Row style={{backgroundColor: '#607D8B', height:90}}>
           <Col>
             <Card>
               <CardItem>

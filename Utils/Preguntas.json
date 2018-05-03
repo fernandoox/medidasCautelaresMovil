@@ -1,0 +1,47 @@
+[
+  {
+    "idPregunta": 1,
+    "pregunta": "Fecha de entrevista",
+    "tipoEntrada": "date",
+  },
+  {
+    "idPregunta": 2,
+    "pregunta": "Hora de entrevista",
+    "tipoEntrada": "hour",
+  },
+  {
+    "idPregunta": 3,
+    "pregunta": "Nombre del adolescente",
+    "tipoEntrada": "text",
+  },
+  {
+    "idPregunta": 4,
+    "pregunta": "Grupo étnico o indigena",
+    "tipoEntrada": "text",
+  },
+  {
+    "idPregunta": 5,
+    "pregunta": "Situación de discapacidad",
+    "tipoEntrada": "text",
+  },
+  {
+    "idPregunta": 6,
+    "pregunta": "Sexo",
+    "tipoEntrada": "text",
+  },
+  {
+    "idPregunta": 7,
+    "pregunta": "Fecha de nacimiento",
+    "tipoEntrada": "date",
+  },
+  {
+    "idPregunta": 8,
+    "pregunta": "País",
+    "tipoEntrada": "text",
+  },
+  {
+    "idPregunta": 9,
+    "pregunta": "Nacionalidad",
+    "tipoEntrada": "date",
+  },
+]

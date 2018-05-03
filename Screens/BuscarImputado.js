@@ -46,7 +46,6 @@ export default class BuscarImputado extends React.Component {
       }
     })
     .then((res) => {
-      console.log("-- Status: "+res.data.status);
       if (res.data.status == "ok") {
         this.setState({
           imputados: res.data.imputados,
@@ -98,7 +97,7 @@ export default class BuscarImputado extends React.Component {
 
     return (
       <KeyboardAvoidingView behavior="position">
-        <ScrollView keyboardShouldPersistTaps="handled">
+        <ScrollView keyboardShouldPersistTaps="always">
           <Grid>
             <Row>
               <Col style={{ paddingHorizontal:15 }}>
@@ -122,7 +121,7 @@ export default class BuscarImputado extends React.Component {
                 </Item>
 
                 {/* Buscar imputados por carpeta solo cuando hay conexión a internet */}
-                <Display enable={!this.state.isConnected}
+                <Display enable={this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
                   <Button full light
@@ -167,7 +166,7 @@ export default class BuscarImputado extends React.Component {
                 </Display>
 
                 {/* Imputado temporal cuando no hay conexión a internet */}
-                <Display enable={this.state.isConnected}
+                <Display enable={!this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
                   <ImputadoTemporal carpetaJudicial={this.state.carpetaJudicial} nav={this.props.navigation}/>
