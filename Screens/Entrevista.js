@@ -8,8 +8,10 @@ import GLOBALS from '../Utils/Globals';
 import MultiStep from 'react-native-multistep-wizard'
 import DatosGenerales from './DatosGenerales';
 import Domicilios from './Domicilios';
-import Login from './Login';
-
+import RedFamiliar from './RedFamiliar';
+import Estudios from './Estudios';
+import Ocupacion from './Ocupacion';
+import Sustancias from './Sustancias';
 export default class Entrevista extends React.Component {
 
   constructor(props){
@@ -48,21 +50,25 @@ export default class Entrevista extends React.Component {
   terminarEntrevista = (wizardState) => {
     jsonBaseEntrevista.respuestas = wizardState;
     console.log(JSON.stringify(jsonBaseEntrevista));
-    Alert.alert('FINISH...', JSON.stringify(jsonBaseEntrevista), [{text: 'OK'}], { cancelable: false });
+    Alert.alert('FINAL DE ENTREVISTA', "Puede aplicar la entrevista a otro imputado", [{text: 'OK'}], { cancelable: false });
+    const {navigate} = this.props.navigation;
+    navigate('BuscarImputadoScreen');
   }
 
 
   render() {
 
     const steps = [
-      {name: 'DatosGenerales', component: <DatosGenerales testProp={this.state.carpetaJudicial}/>},
-      {name: 'Domicilios', component: <Domicilios/>},
-      {name: 'StepThree', component: <Login/>},
+      {name: 'DatosGenerales',  component: <DatosGenerales testProp={this.state.carpetaJudicial}/>},
+      {name: 'Domicilios',      component: <Domicilios/>},
+      {name: 'RedFamiliar',     component: <RedFamiliar/>},
+      {name: 'Estudios',        component: <Estudios/>},
+      {name: 'Ocupacion',       component: <Ocupacion/>},
+      {name: 'Sustancias',      component: <Sustancias/>},
     ];
 
     return (
-      <KeyboardAvoidingView behavior="position">
-      <ScrollView keyboardShouldPersistTaps="always" >
+
       <Grid>
 
         <Row style={{backgroundColor: '#607D8B', height:90}}>
@@ -89,8 +95,7 @@ export default class Entrevista extends React.Component {
         <MultiStep steps={steps} onFinish={this.terminarEntrevista}/>
 
       </Grid>
-      </ScrollView>
-      </KeyboardAvoidingView>
+
     );
   }
 }

@@ -3,7 +3,6 @@ import { Font } from 'expo';
 import { View, ActivityIndicator, YellowBox } from 'react-native';
 import { Root } from 'native-base';
 import { StackNavigator } from 'react-navigation';
-import Login from './Screens/Login';
 import BuscarImputado from './Screens/BuscarImputado';
 import ImputadoTemporal from './Screens/ImputadoTemporal';
 import Entrevista from './Screens/Entrevista';

@@ -6,7 +6,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 
-export default class Login extends React.Component {
+export default class RedFamiliar extends React.Component {
   // Header Screen
   static navigationOptions = {
     title: 'Login',
@@ -38,7 +38,7 @@ export default class Login extends React.Component {
           <Grid>
             <Row>
               <Col style={{ paddingHorizontal:15 }}>
-                <Text style={{color: 'crimson'}}>LOGIN</Text>
+                <Text style={{color: 'crimson'}}>PASO 3: RED FAMILIAR...</Text>
               </Col>
             </Row>
 
@@ -49,7 +49,7 @@ export default class Login extends React.Component {
                 </Button>
               </Col>
               <Col style={{padding:5}}>
-                <Button full rounded danger onPress={this.nextPreprocess}>
+                <Button full rounded light onPress={this.nextPreprocess}>
                   <Text>Siguiente</Text>
                 </Button>
               </Col>

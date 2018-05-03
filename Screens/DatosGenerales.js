@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert } from 'react-native';
+import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Button, Text, Item, Input, Label, H3, Separator, ListItem, Picker, Toast } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker'
@@ -110,8 +110,9 @@ export default class DatosGenerales extends React.Component {
 
   render() {
     return (
-
-      <Grid>
+      <KeyboardAvoidingView behavior="padding" enabled>
+      <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
+      <Grid style={{paddingBottom: 100}}>
         <Row>
           <Col style={{ paddingHorizontal:15 }}>
             <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
@@ -221,13 +222,15 @@ export default class DatosGenerales extends React.Component {
             </Button>
           </Col>
           <Col style={{padding:5}}>
-            <Button full rounded danger onPress={this.confirmToNext}>
+            <Button full rounded light onPress={this.confirmToNext}>
               <Text>Siguiente</Text>
             </Button>
           </Col>
         </Row>
 
       </Grid>
+      </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

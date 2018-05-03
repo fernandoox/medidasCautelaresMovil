@@ -1,20 +1,28 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator } from 'react-native';
-import { Button, Text, Item, Input, Card, CardItem, Body } from 'native-base';
+import { View, ActivityIndicator, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Button, Text, Item, Input, Label, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import Modal from "react-native-modal";
+import ActionButton from 'react-native-action-button';
 
+import AgregarDomicilio from './AgregarDomicilio'
 export default class Domicilios extends React.Component {
 
   constructor(props){
     super(props)
     this.state = {
+      isModalVisible: false
     };
   }
+
+  _toggleModal = () => {
+    this.setState({ isModalVisible: !this.state.isModalVisible });
+  }
+    
 
   nextPreprocess = () => {
     this.props.saveState(1,{domicilios:'valores domicilios'});
@@ -31,14 +39,10 @@ export default class Domicilios extends React.Component {
 
   render() {
     return (
-      <Grid>
-        <Row style={{flexDirection: "row", alignItems:'center'}}>
-          <Col>
-            <Button danger onPress={this.openModal} style={{position: 'absolute', right:10, bottom: 10, width:50, height:50, borderRadius: 25}}>
-              <Icon name='plus' style={{fontSize: 20, color: 'white'}}/>
-            </Button>
-          </Col>
-        </Row>
+
+      <View>
+      <ScrollView style={{alignSelf: 'stretch',flex: 1,}} overScrollMode="never">
+      <Grid style={{paddingBottom: 90}}>
 
         <Row>
           <Col style={{ paddingHorizontal:15 }}>
@@ -47,19 +51,65 @@ export default class Domicilios extends React.Component {
             </Text>
           </Col>
         </Row>
-
         
         <Row>
           <Col>
             <Card>
-              <CardItem>
-                <Icon active name="home" style={{fontSize: 18, marginRight:5}} />
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
                 <Text>Viena 214, Del Carmen, 04100 Ciudad de México, CDMX</Text>
               </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
+                <Text>Tipo domicilio: Actual</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="calendar" style={{fontSize: 18, marginRight:8}} />
+                <Text>Horarios en los que se encuentra: 14:00 a 19:00</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="phone" style={{fontSize: 18, marginRight:8}} />
+                <Text>Teléfono: 2414197940</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Col>
+                <Button transparent full>
+                  <Icon active name="trash" style={{color:GLOBALS.COLORS.TEXT_WARN, fontSize:17}}/>
+                  <Text style={{color:GLOBALS.COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
+                </Button>
+                </Col>
+              </CardItem>
             </Card>
+
+            <Card>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
+                <Text>(2) Viena 214, Del Carmen, 04100 Ciudad de México, CDMX</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
+                <Text>Tipo domicilio: Actual</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="calendar" style={{fontSize: 18, marginRight:8}} />
+                <Text>Horarios en los que se encuentra: 14:00 a 19:00</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="phone" style={{fontSize: 18, marginRight:8}} />
+                <Text>Teléfono: 2414197940</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Col>
+                <Button transparent full>
+                  <Icon active name="trash" style={{color:GLOBALS.COLORS.TEXT_WARN, fontSize:17}}/>
+                  <Text style={{color:GLOBALS.COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
+                </Button>
+                </Col>
+              </CardItem>
+            </Card>
+
           </Col>
         </Row>
-       
         <Row>
           <Col style={{padding:5}}>
             <Button full rounded light onPress={this.previousPreprocess}>
@@ -67,12 +117,32 @@ export default class Domicilios extends React.Component {
             </Button>
           </Col>
           <Col style={{padding:5}}>
-            <Button full rounded danger onPress={this.nextPreprocess}>
+            <Button full rounded light onPress={this.nextPreprocess}>
               <Text>Siguiente</Text>
             </Button>
           </Col>
         </Row>
-      </Grid>
+        </Grid>
+        </ScrollView>
+
+        
+        <Modal isVisible={this.state.isModalVisible} avoidKeyboard={false}>
+          <View style={{ flex: 1 }}>    
+            <AgregarDomicilio/>
+            <Button danger full onPress={this._toggleModal}>
+              <Text>Cerrar / Agregar Domicilio</Text>
+            </Button>
+          </View>
+        </Modal>
+
+        <View style={{position:'absolute', bottom:130, right:5, height: 80, }}>
+          <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30}}>
+            <Text>add</Text>
+          </Button>
+        </View>
+
+        </View>
+      
     );
   }
 }
