@@ -6,6 +6,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import MultiStep from 'react-native-multistep-wizard'
+import StepIndicator from 'react-native-step-indicator';
 import DatosGenerales from './DatosGenerales';
 import Domicilios from './Domicilios';
 import RedFamiliar from './RedFamiliar';
@@ -57,6 +58,31 @@ export default class Entrevista extends React.Component {
 
 
   render() {
+    const labelsSteps = ["Generales","Domicilios","Familia","Estudios","Ocupación", "Sustancias"];
+
+    const customStylesSteps = {
+      stepIndicatorSize: 20,
+      currentStepIndicatorSize:25,
+      separatorStrokeWidth: 1,
+      currentStepStrokeWidth: 2,
+      stepStrokeCurrentColor: '#fe7013',
+      stepStrokeWidth: 2,
+      stepStrokeFinishedColor: '#fe7013',
+      stepStrokeUnFinishedColor: '#aaaaaa',
+      separatorFinishedColor: '#fe7013',
+      separatorUnFinishedColor: '#aaaaaa',
+      stepIndicatorFinishedColor: '#fe7013',
+      stepIndicatorUnFinishedColor: '#ffffff',
+      stepIndicatorCurrentColor: '#ffffff',
+      stepIndicatorLabelFontSize: 11,
+      currentStepIndicatorLabelFontSize: 11,
+      stepIndicatorLabelCurrentColor: '#fe7013',
+      stepIndicatorLabelFinishedColor: '#ffffff',
+      stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+      labelColor: '#999999',
+      labelSize: 11,
+      currentStepLabelColor: '#fe7013'
+    }
 
     const steps = [
       {name: 'DatosGenerales',  component: <DatosGenerales testProp={this.state.carpetaJudicial}/>},
@@ -70,20 +96,19 @@ export default class Entrevista extends React.Component {
     return (
 
       <Grid>
-
-        <Row style={{backgroundColor: '#607D8B', height:90}}>
+        <Row style={{backgroundColor: '#607D8B', height:70}}>
           <Col>
             <Card>
               <CardItem>
                 <Body>
-                  <Text style={{ fontSize:15, fontWeight:'bold' }}>
+                  <Text style={{ fontSize:13, fontWeight:'bold' }}>
                     CARPETA JUDICIAL: {this.state.carpetaJudicial}
                   </Text>
                 </Body>
               </CardItem>
-              <CardItem style={{ marginTop:-15, marginBottom:-15,}}>
+              <CardItem style={{ marginTop:-20, marginBottom:-20 }}>
                 <Body>
-                  <Text style={{ fontSize:15, fontWeight:'bold' }}>
+                  <Text style={{ fontSize:13, fontWeight:'bold' }}>
                     IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.primerApellido + " " + this.state.imputado.segundoApellido}
                   </Text>
                 </Body>
@@ -92,8 +117,14 @@ export default class Entrevista extends React.Component {
           </Col>
         </Row>
 
-        <MultiStep steps={steps} onFinish={this.terminarEntrevista}/>
+        <StepIndicator
+          stepCount={6}
+          currentPosition={2}
+          customStyles={customStylesSteps}
+          labels={labelsSteps}
+        />
 
+        <MultiStep steps={steps} onFinish={this.terminarEntrevista}/>
       </Grid>
 
     );

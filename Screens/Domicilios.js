@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, ActivityIndicator, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
 import { Button, Text, Item, Input, Label, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -8,21 +8,30 @@ import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import Modal from "react-native-modal";
 import ActionButton from 'react-native-action-button';
-
 import AgregarDomicilio from './AgregarDomicilio'
+
+let deviceWidth = Dimensions.get("window").width;
+let deviceHeight = Dimensions.get("window").height;
+
 export default class Domicilios extends React.Component {
 
   constructor(props){
     super(props)
     this.state = {
-      isModalVisible: false
+      isModalVisible: false,
+      domicilios: [],
     };
   }
 
   _toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
-    
+  
+  agregarDomicilio = (stateDomicilio) => {
+    this.state.domicilios.push(stateDomicilio)
+    console.warn(JSON.stringify(this.state.domicilios))
+    this._toggleModal();
+  }
 
   nextPreprocess = () => {
     this.props.saveState(1,{domicilios:'valores domicilios'});
@@ -33,16 +42,12 @@ export default class Domicilios extends React.Component {
     this.props.prevFn();
   }
 
-  openModal = () => {
-    console.warn("Open modal");
-  }
-
   render() {
     return (
 
       <View>
-      <ScrollView style={{alignSelf: 'stretch',flex: 1,}} overScrollMode="never">
-      <Grid style={{paddingBottom: 90}}>
+      <ScrollView style={{height:(deviceHeight-100)}} overScrollMode="never">
+      <Grid style={{paddingBottom: 120}}>
 
         <Row>
           <Col style={{ paddingHorizontal:15 }}>
@@ -81,10 +86,10 @@ export default class Domicilios extends React.Component {
               </CardItem>
             </Card>
 
-            <Card>
+             <Card>
               <CardItem style={{marginBottom:-10}}>
                 <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
-                <Text>(2) Viena 214, Del Carmen, 04100 Ciudad de México, CDMX</Text>
+                <Text>Viena 214, Del Carmen, 04100 Ciudad de México, CDMX</Text>
               </CardItem>
               <CardItem style={{marginBottom:-10}}>
                 <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
@@ -108,6 +113,32 @@ export default class Domicilios extends React.Component {
               </CardItem>
             </Card>
 
+             <Card>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
+                <Text>Viena 214, Del Carmen, 04100 Ciudad de México, CDMX</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
+                <Text>Tipo domicilio: Actual</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="calendar" style={{fontSize: 18, marginRight:8}} />
+                <Text>Horarios en los que se encuentra: 14:00 a 19:00</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Icon active name="phone" style={{fontSize: 18, marginRight:8}} />
+                <Text>Teléfono: 2414197940</Text>
+              </CardItem>
+              <CardItem style={{marginBottom:-10}}>
+                <Col>
+                <Button transparent full>
+                  <Icon active name="trash" style={{color:GLOBALS.COLORS.TEXT_WARN, fontSize:17}}/>
+                  <Text style={{color:GLOBALS.COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
+                </Button>
+                </Col>
+              </CardItem>
+            </Card>
           </Col>
         </Row>
         <Row>
@@ -124,25 +155,18 @@ export default class Domicilios extends React.Component {
         </Row>
         </Grid>
         </ScrollView>
-
         
         <Modal isVisible={this.state.isModalVisible} avoidKeyboard={false}>
-          <View style={{ flex: 1 }}>    
-            <AgregarDomicilio/>
-            <Button danger full onPress={this._toggleModal}>
-              <Text>Cerrar / Agregar Domicilio</Text>
-            </Button>
-          </View>
+          <AgregarDomicilio agregarDomicilioChild={this.agregarDomicilio}/>
         </Modal>
 
-        <View style={{position:'absolute', bottom:130, right:5, height: 80, }}>
+        <View style={{position:'absolute', bottom:100, right:10, height: 80, }}>
           <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30}}>
             <Text>add</Text>
           </Button>
         </View>
 
         </View>
-      
     );
   }
 }

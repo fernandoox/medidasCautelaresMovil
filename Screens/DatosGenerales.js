@@ -5,6 +5,7 @@ import { Button, Text, Item, Input, Label, H3, Separator, ListItem, Picker, Toas
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker'
 import axios from 'axios';
+import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import preguntasDatosGeneralesData from '../Utils/Preguntas/DatosGenerales.json';
 import CatSexoData from '../Utils/Catalogos/Sexo.json';
@@ -15,7 +16,6 @@ export default class DatosGenerales extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      isConnected: null,
       FECHA_ENTREVISTA: null,
       FECHA_NACIMIENTO: null,
       HORA_ENTREVISTA: null,
@@ -33,7 +33,10 @@ export default class DatosGenerales extends React.Component {
     // Se clona json de preguntas a respuestas con solo su nodo en nulo
     this.state.preguntas.map((preg, i) => {
       jsonRespDatosGenerales[preg.node] = null;
-    })
+    })  
+    
+    //verify sotorage device is empty 
+
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
@@ -87,13 +90,13 @@ export default class DatosGenerales extends React.Component {
   }
   
   nextPreprocess = () => {
-    if(this.validateForm()){
+      //save the answers in storage device
+
       this.props.saveState(0,{datosGenerales:jsonRespDatosGenerales});
       this.props.nextFn();
-    }
   }
 
-  validateForm = () => {
+  /*validateForm = () => {
     let formValido = true;
     this.state.preguntas.map((preg, i) => {
       if(jsonRespDatosGenerales[preg.node] === null || jsonRespDatosGenerales[preg.node] === ""){
@@ -102,7 +105,7 @@ export default class DatosGenerales extends React.Component {
       }
     })
     return formValido;
-  }
+  }*/
 
   previousPreprocess = () => {
     this.props.prevFn();
@@ -112,7 +115,7 @@ export default class DatosGenerales extends React.Component {
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
       <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
-      <Grid style={{paddingBottom: 100}}>
+      <Grid style={{paddingBottom: 140}}>
         <Row>
           <Col style={{ paddingHorizontal:15 }}>
             <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
@@ -217,7 +220,7 @@ export default class DatosGenerales extends React.Component {
 
         <Row>
           <Col style={{padding:5}}>
-            <Button full rounded light onPress={this.previousPreprocess}>
+            <Button full rounded light onPress={this.previousPreprocess} disabled={true}>
               <Text>Anterior</Text>
             </Button>
           </Col>

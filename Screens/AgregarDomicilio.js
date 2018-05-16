@@ -11,7 +11,13 @@ export default class AgregarDomicilio extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      codigoPoastal: null,
+      calle: null,
     };
+  }
+
+  agregarDomicilio = () => {
+    this.props.agregarDomicilioChild(this.state);
   }
 
   render() {
@@ -19,7 +25,7 @@ export default class AgregarDomicilio extends React.Component {
     <KeyboardAvoidingView behavior="padding">
     <ScrollView keyboardShouldPersistTaps="always" style={{backgroundColor:'white', paddingBottom:20}}>
     <Grid style={{backgroundColor:'white'}} style={{paddingHorizontal:10}}>
-       <Row>
+        <Row>
           <Col style={{ paddingHorizontal:15 }}>
             <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
               AGREGAR DOMICILIO
@@ -27,42 +33,28 @@ export default class AgregarDomicilio extends React.Component {
           </Col>
         </Row>
 
-       <Row style={{backgroundColor:'white'}}>
-           <Col>
+        <Row style={{backgroundColor:'white'}}>
+          <Col>
+
            <Item stackedLabel>
-                <Label>CP:</Label>
-                <Input style={{fontSize: 16}} keyboardType='numeric' maxLength={5}/>
-			</Item>
-
-		    <Item stackedLabel>
-				<Label>Calle:</Label>
-				<Input style={{fontSize: 16}}/>
-			</Item>
+              <Label>CP:</Label>
+              <Input style={{fontSize: 16}} keyboardType='numeric' maxLength={5}  
+                onChangeText={(codigoPoastal) => this.setState({codigoPoastal})}
+              />
+			      </Item>
 
             <Item stackedLabel>
-				<Label>Número:</Label>
-				<Input style={{fontSize: 16}}/>
-			</Item>
+              <Label>Calle:</Label>
+              <Input style={{fontSize: 16}}
+                onChangeText={(calle) => this.setState({calle})}
+              />
+            </Item>
 
-			<Item stackedLabel>
-				<Label>Colonia:</Label>
-				<Input style={{fontSize: 16}}/>
-			</Item>    
-
-            <Item stackedLabel>
-				<Label>Cómo llegar:</Label>
-				<Input style={{fontSize: 16}}/>
-			</Item>      
-
-            <Item stackedLabel>
-				<Label>Teimpo de vivir en el domicilio:</Label>
-				<Input style={{fontSize: 16}}/>
-			</Item> 
-
-            <Text style={{marginVertical:15, textAlign:'center'}}>(Más campos ... )</Text>     
+            <Button danger full onPress={this.agregarDomicilio}>
+              <Text>Cerrar / Agregar Domicilio</Text>
+            </Button>
            </Col>
-				
-		</Row>
+		    </Row>
     </Grid>
     </ScrollView>
     </KeyboardAvoidingView>
