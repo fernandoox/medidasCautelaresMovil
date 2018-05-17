@@ -115,9 +115,9 @@ export default class DatosGenerales extends React.Component {
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
       <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
-      <Grid style={{paddingBottom: 140}}>
+      <Grid>
         <Row>
-          <Col style={{ paddingHorizontal:15 }}>
+          <Col>
             <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
               DATOS GENERALES {/*- CP: {this.props.testProp}*/}
             </Text>
@@ -146,7 +146,7 @@ export default class DatosGenerales extends React.Component {
                         <Item style={{marginVertical: 5}} stackedLabel>
                           <Label>{preg.pregunta}:</Label>
                             <DatePicker
-                              style={{width: 330}}
+                              style={{width: 310}}
                               customStyles={{dateInput:{borderWidth: 0}}}
                               date={this.state[preg.node]}
                               placeholder="Seleccionar"
@@ -164,7 +164,7 @@ export default class DatosGenerales extends React.Component {
                         <Item style={{marginVertical: 5}} stackedLabel>
                           <Label>{preg.pregunta}:</Label>
                           <Picker
-                            style={{width: 330}}
+                            style={{width: 310}}
                             iosHeader="Seleccionar una opción"
                             placeholder="Seleccionar una opción"
                             itemTextStyle={{ fontSize: 17}}
@@ -193,7 +193,7 @@ export default class DatosGenerales extends React.Component {
                         <Item style={{marginVertical: 5}} stackedLabel>
                           <Label>{preg.pregunta}:</Label>
                           <Picker
-                            style={{width: 330}}
+                            style={{width: 310}}
                             iosHeader="Seleccionar una opción"
                             placeholder="Seleccionar una opción"
                             itemTextStyle={{ fontSize: 17}}

@@ -112,33 +112,6 @@ export default class Domicilios extends React.Component {
                 </Col>
               </CardItem>
             </Card>
-
-             <Card>
-              <CardItem style={{marginBottom:-10}}>
-                <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
-                <Text>Viena 214, Del Carmen, 04100 Ciudad de México, CDMX</Text>
-              </CardItem>
-              <CardItem style={{marginBottom:-10}}>
-                <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
-                <Text>Tipo domicilio: Actual</Text>
-              </CardItem>
-              <CardItem style={{marginBottom:-10}}>
-                <Icon active name="calendar" style={{fontSize: 18, marginRight:8}} />
-                <Text>Horarios en los que se encuentra: 14:00 a 19:00</Text>
-              </CardItem>
-              <CardItem style={{marginBottom:-10}}>
-                <Icon active name="phone" style={{fontSize: 18, marginRight:8}} />
-                <Text>Teléfono: 2414197940</Text>
-              </CardItem>
-              <CardItem style={{marginBottom:-10}}>
-                <Col>
-                <Button transparent full>
-                  <Icon active name="trash" style={{color:GLOBALS.COLORS.TEXT_WARN, fontSize:17}}/>
-                  <Text style={{color:GLOBALS.COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
-                </Button>
-                </Col>
-              </CardItem>
-            </Card>
           </Col>
         </Row>
         <Row>
