@@ -69,7 +69,7 @@ export default class Entrevista extends React.Component {
 
   _onLayoutDidChange = (e) => {
     const layout = e.nativeEvent.layout;
-    this.setState({ size: { width: layout.width-5, height: layout.height } });
+    this.setState({ size: { width: layout.width-12, height: layout.height } });
   }
 
   render() {
@@ -140,7 +140,6 @@ export default class Entrevista extends React.Component {
             pageInfo
             autoplay={false}
             isLooped = {true}
-            contentContainerStyle={{backgroundColor:'pink'}}
             currentPage={this.state.currentPosition}
             onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}
           >

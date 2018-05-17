@@ -34,9 +34,6 @@ export default class DatosGenerales extends React.Component {
     this.state.preguntas.map((preg, i) => {
       jsonRespDatosGenerales[preg.node] = null;
     })  
-    
-    //verify sotorage device is empty 
-
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
@@ -90,13 +87,11 @@ export default class DatosGenerales extends React.Component {
   }
   
   nextPreprocess = () => {
-      //save the answers in storage device
-
+      jsonRespDatosGenerales.completo = this.validateForm();
       this.props.saveState(0,{datosGenerales:jsonRespDatosGenerales});
-      this.props.nextFn();
   }
 
-  /*validateForm = () => {
+  validateForm = () => {
     let formValido = true;
     this.state.preguntas.map((preg, i) => {
       if(jsonRespDatosGenerales[preg.node] === null || jsonRespDatosGenerales[preg.node] === ""){
@@ -105,10 +100,6 @@ export default class DatosGenerales extends React.Component {
       }
     })
     return formValido;
-  }*/
-
-  previousPreprocess = () => {
-    this.props.prevFn();
   }
 
   render() {
@@ -220,13 +211,8 @@ export default class DatosGenerales extends React.Component {
 
         <Row>
           <Col style={{padding:5}}>
-            <Button full rounded light onPress={this.previousPreprocess} disabled={true}>
-              <Text>Anterior</Text>
-            </Button>
-          </Col>
-          <Col style={{padding:5}}>
             <Button full rounded light onPress={this.confirmToNext}>
-              <Text>Siguiente</Text>
+              <Text>Confirmar</Text>
             </Button>
           </Col>
         </Row>
