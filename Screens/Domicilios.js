@@ -10,8 +10,8 @@ import Modal from "react-native-modal";
 import ActionButton from 'react-native-action-button';
 import AgregarDomicilio from './AgregarDomicilio'
 
-let deviceWidth = Dimensions.get("window").width;
-let deviceHeight = Dimensions.get("window").height;
+const { width, height } = Dimensions.get('window');
+
 
 export default class Domicilios extends React.Component {
 
@@ -46,8 +46,8 @@ export default class Domicilios extends React.Component {
     return (
 
       <View>
-      <ScrollView style={{height:(deviceHeight-100)}} overScrollMode="never">
-      <Grid style={{paddingBottom: 120}}>
+      <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
+      <Grid>
 
         <Row>
           <Col style={{ paddingHorizontal:15 }}>
@@ -133,7 +133,7 @@ export default class Domicilios extends React.Component {
           <AgregarDomicilio agregarDomicilioChild={this.agregarDomicilio}/>
         </Modal>
 
-        <View style={{position:'absolute', bottom:100, right:10, height: 80, }}>
+        <View style={{position:'absolute', bottom:0, right:-10, height: 80, }}>
           <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30}}>
             <Text>add</Text>
           </Button>
