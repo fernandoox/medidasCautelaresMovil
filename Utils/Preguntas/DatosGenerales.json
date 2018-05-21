@@ -45,7 +45,6 @@
     "idPregunta": 8,
     "node": "SEXO",
     "pregunta": "Sexo",
-    "tipoEntrada": "text",
     "tipoEntrada": "catalogo",
     "catalogo": "SexoCat"
   },
@@ -73,5 +72,5 @@
     "node": "DOCUMENTO_MIGRATORIO",
     "pregunta": "Documento migratorio",
     "tipoEntrada": "boolean"
-  },
+  }
 ]

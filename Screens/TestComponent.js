@@ -6,7 +6,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 
-export default class Sustancias extends React.Component {
+export default class TestComponent extends React.Component {
 
   constructor(props){
     super(props)
@@ -14,36 +14,52 @@ export default class Sustancias extends React.Component {
     };
   }
 
-  nextPreprocess = () => {
-    this.props.nextFn()
-  }
-  
-  previousPreprocess = () => {
-    this.props.prevFn();
-  }
-
   render() {
     return (
-          <Grid>
-            <Row>
-              <Col style={{ paddingHorizontal:15 }}>
-                <Text style={{color: 'green'}}>PASO 6 - FIN : CONSUMO DE SUSTANCIAS!!...</Text>
-              </Col>
-            </Row>
+    <Grid style={{backgroundColor:'white'}}>
 
-            <Row size={20}>
-              <Col style={{padding:5}}>
-                <Button full rounded light onPress={this.previousPreprocess}>
-                  <Text>Anterior</Text>
-                </Button>
-              </Col>
-              <Col style={{padding:5}}>
-                <Button full rounded danger onPress={this.nextPreprocess}>
-                  <Text>Siguiente</Text>
-                </Button>
-              </Col>
-            </Row>
-          </Grid>
+      <Row>
+        <Col style={{ padding:15 }}>
+          <Text style={{color: GLOBALS.COLORS.BACKGROUND_PRIMARY, textAlign:'center'}}>Imputado: XXXXXXX</Text>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col style={{ margin:5, padding:15, borderRadius:5, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderWidth: 2 }}>
+          <Text style={{color: 'teal', textAlign: 'center'}}>Generales</Text>
+        </Col>
+        <Col style={{ margin:5, padding:15, borderRadius:5, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderWidth: 2 }}>
+          <Text style={{color: 'teal', textAlign: 'center'}}>Domicilios</Text>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col style={{ margin:5, padding:15, borderRadius:5, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderWidth: 2 }}>
+          <Text style={{color: 'teal', textAlign: 'center'}}>Familia</Text>
+        </Col>
+        <Col style={{ margin:5, padding:15, borderRadius:5, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderWidth: 2 }}>
+          <Text style={{color: 'teal', textAlign: 'center'}}>Estudios</Text>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col style={{ margin:5, padding:15, borderRadius:5, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderWidth: 2 }}>
+          <Text style={{color: 'teal', textAlign: 'center'}}>Ocupación</Text>
+        </Col>
+        <Col style={{ margin:5, padding:15, borderRadius:5, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderWidth: 2 }}>
+          <Text style={{color: 'teal', textAlign: 'center'}}>Sustancias</Text>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col style={{ padding:15 }}>
+          <Button danger full>
+            <Text>Terminar entrevista</Text>
+          </Button>
+        </Col>
+      </Row>
+
+    </Grid>
     );
   }
 }

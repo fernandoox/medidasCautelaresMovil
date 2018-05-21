@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView, AsyncStorage } from 'react-native';
 import { Button, Text, Item, Input, Label, H3, Separator, ListItem, Picker, Toast } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker'
@@ -88,7 +88,40 @@ export default class DatosGenerales extends React.Component {
   
   nextPreprocess = () => {
       jsonRespDatosGenerales.completo = this.validateForm();
-      this.props.saveState(0,{datosGenerales:jsonRespDatosGenerales});
+      console.log(JSON.stringify(jsonRespDatosGenerales));
+      storage.save({
+        key: 'datosGeneralesStorage',
+        data: jsonRespDatosGenerales,
+      });
+
+      // load
+      storage.load({
+        key: 'datosGeneralesStorage',
+        
+        // autoSync(default true) means if data not found or expired,
+        // then invoke the corresponding sync method
+        autoSync: true,
+        
+        // syncInBackground(default true) means if data expired,
+        // return the outdated data first while invoke the sync method.
+        // It can be set to false to always return data provided by sync method when expired.(Of course it's slower)
+        syncInBackground: true,
+      }).then(ret => {
+        // found data go to then()
+        console.log("Load in Async: "+JSON.stringify(ret));
+      }).catch(err => {
+        // any exception including data not found 
+        // goes to catch()
+        console.warn(err.message);
+        switch (err.name) {
+            case 'NotFoundError':
+                // TODO;
+                break;
+              case 'ExpiredError':
+                  // TODO
+                  break;
+        }
+      })
   }
 
   validateForm = () => {
@@ -96,7 +129,7 @@ export default class DatosGenerales extends React.Component {
     this.state.preguntas.map((preg, i) => {
       if(jsonRespDatosGenerales[preg.node] === null || jsonRespDatosGenerales[preg.node] === ""){
         formValido = false;
-        Toast.show({text: preg.pregunta+' es campo obligatorio.', buttonText: 'OK' , duration: 3500, textStyle: { color: GLOBALS.COLORS.TEXT_WARN }})
+        //Toast.show({text: preg.pregunta+' es campo obligatorio.', buttonText: 'OK' , duration: 3500, textStyle: { color: GLOBALS.COLORS.TEXT_WARN }})
       }
     })
     return formValido;

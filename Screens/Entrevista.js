@@ -1,23 +1,37 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions } from 'react-native';
-import { Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
+import { Root, Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body, ActionSheet } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
-import MultiStep from 'react-native-multistep-wizard'
 import StepIndicator from 'react-native-step-indicator';
-import CarouselPager from 'react-native-carousel-pager';
 import Carousel from 'react-native-looped-carousel';
+import Modal from "react-native-modal";
 import DatosGenerales from './DatosGenerales';
 import Domicilios from './Domicilios';
 import RedFamiliar from './RedFamiliar';
 import Estudios from './Estudios';
 import Ocupacion from './Ocupacion';
 import Sustancias from './Sustancias';
+import TestComponent from './TestComponent';
 
 const { width, height } = Dimensions.get('window');
+
 export default class Entrevista extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return{
+      headerRight: (
+        <Root>
+          <Button style={{marginRight:10}} onPress={params.handleToggleModalProgress} transparent>
+            <Icon active name="tasks" style={{color:'white', fontSize:22}}/>
+          </Button>
+        </Root>
+      )
+    }
+  }
 
   constructor(props){
     super(props)
@@ -25,6 +39,7 @@ export default class Entrevista extends React.Component {
     const { params } = this.props.navigation.state;
     this.state = {
       isConnected: null,
+      isModalVisible: false,
       imputado: params.imputadoParam,
       carpetaJudicial: params.carpetaJudicialParam,
       tipoCaptura: params.tipoCapturaParam,
@@ -40,6 +55,7 @@ export default class Entrevista extends React.Component {
   }
 
   componentDidMount(){
+    this.props.navigation.setParams({ handleToggleModalProgress: this._toggleModalProgress });
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
@@ -54,12 +70,8 @@ export default class Entrevista extends React.Component {
     this.setState({isConnected});
   };
 
-  terminarEntrevista = (wizardState) => {
-    jsonBaseEntrevista.respuestas = wizardState;
-    console.log(JSON.stringify(jsonBaseEntrevista));
-    Alert.alert('FINAL DE ENTREVISTA', "Puede aplicar la entrevista a otro imputado", [{text: 'OK'}], { cancelable: false });
-    const {navigate} = this.props.navigation;
-    navigate('BuscarImputadoScreen');
+  _toggleModalProgress = () => {
+    this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
   changeStep = (stepNumber) => {
@@ -81,23 +93,23 @@ export default class Entrevista extends React.Component {
       currentStepIndicatorSize:28,
       separatorStrokeWidth: 1,
       currentStepStrokeWidth: 2,
-      stepStrokeCurrentColor: '#fe7013',
+      stepStrokeCurrentColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
       stepStrokeWidth: 2,
-      stepStrokeFinishedColor: '#fe7013',
+      stepStrokeFinishedColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
       stepStrokeUnFinishedColor: '#aaaaaa',
-      separatorFinishedColor: '#fe7013',
+      separatorFinishedColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
       separatorUnFinishedColor: '#aaaaaa',
-      stepIndicatorFinishedColor: '#fe7013',
+      stepIndicatorFinishedColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
       stepIndicatorUnFinishedColor: '#ffffff',
       stepIndicatorCurrentColor: '#ffffff',
       stepIndicatorLabelFontSize: 11,
       currentStepIndicatorLabelFontSize: 11,
-      stepIndicatorLabelCurrentColor: '#fe7013',
+      stepIndicatorLabelCurrentColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
       stepIndicatorLabelFinishedColor: '#ffffff',
       stepIndicatorLabelUnFinishedColor: '#aaaaaa',
       labelColor: '#999999',
       labelSize: 11,
-      currentStepLabelColor: '#fe7013'
+      currentStepLabelColor: GLOBALS.COLORS.BACKGROUND_PRIMARY
     }
 
     return (
@@ -137,26 +149,29 @@ export default class Entrevista extends React.Component {
             ref={ref => this._carousel = ref}
             delay={100}
             style={this.state.size}
-            pageInfo
+            pageInfo={false}
             autoplay={false}
-            isLooped = {true}
+            isLooped={false}
             currentPage={this.state.currentPosition}
-            onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}
-          >
-            <View style={[{ borderWidth: 2, borderColor: '#fe7013', borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+            onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
+            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
               <DatosGenerales testProp={this.state.carpetaJudicial}/>
             </View>
-            <View style={[{ borderWidth: 2, borderColor: '#fe7013', borderRadius:5, paddingHorizontal: 15},this.state.size]}><Domicilios/></View>
-            <View style={[{ borderWidth: 2, borderColor: '#fe7013', borderRadius:5, paddingHorizontal: 15},this.state.size]}><RedFamiliar/></View>
-            <View style={[{ borderWidth: 2, borderColor: '#fe7013', borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
-            <View style={[{ borderWidth: 2, borderColor: '#fe7013', borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>
-            <View style={[{ borderWidth: 2, borderColor: '#fe7013', borderRadius:5, paddingHorizontal: 15},this.state.size]}><Sustancias/></View>
-            <View style={[{ borderWidth: 2, borderColor: 'pink', borderRadius:5, paddingHorizontal: 15},this.state.size]}><Text>Dashboard cuadricula</Text></View>
+            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Domicilios/></View>
+            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><RedFamiliar/></View>
+            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
+            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>
+            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Sustancias/></View>
           </Carousel>
         </View>
 
-      </Grid>
+        <Modal onSwipe={() => this.setState({ isModalVisible: false })}
+          swipeDirection="right" isVisible={this.state.isModalVisible}>
+          <TestComponent/>
+        </Modal>
 
+      </Grid>
+      
     );
   }
 }
