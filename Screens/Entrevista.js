@@ -1,11 +1,12 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions } from 'react-native';
-import { Root, Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body, ActionSheet } from 'native-base';
+import { Root, Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
+import Storage from 'react-native-storage';
 import StepIndicator from 'react-native-step-indicator';
 import Carousel from 'react-native-looped-carousel';
 import Modal from "react-native-modal";
@@ -60,6 +61,11 @@ export default class Entrevista extends React.Component {
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
     );
+
+    storage.save({
+      key: 'jsonBaseEntrevistaStorage',
+      data: jsonBaseEntrevista,
+    });
   }
 
   componentWillUnmount() {
@@ -71,12 +77,18 @@ export default class Entrevista extends React.Component {
   };
 
   _toggleModalProgress = () => {
+    console.warn("Opening progress modal");
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
   changeStep = (stepNumber) => {
     console.log("Step: "+stepNumber);
     this.setState({currentPosition:stepNumber});
+  }
+
+  changeStepInProgress = () => {
+    console.log("Step in progress parent: ");
+    this.setState({ isModalVisible: false })
   }
 
   _onLayoutDidChange = (e) => {
@@ -115,7 +127,7 @@ export default class Entrevista extends React.Component {
     return (
       <Grid>
         
-        <Row style={{backgroundColor: '#607D8B', height:70}}>
+        <Row style={{backgroundColor: '#607D8B', height:80}}>
           <Col>
             <Card>
               <CardItem>
@@ -137,6 +149,7 @@ export default class Entrevista extends React.Component {
         </Row>
 
         <StepIndicator
+          style={{marginTop:10}}
           stepCount={6}
           customStyles={customStylesSteps}
           labels={labelsSteps}
@@ -151,8 +164,8 @@ export default class Entrevista extends React.Component {
             style={this.state.size}
             pageInfo={false}
             autoplay={false}
-            isLooped={false}
-            currentPage={this.state.currentPosition}
+            isLooped={true}
+            currentPage={0}
             onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
             <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
               <DatosGenerales testProp={this.state.carpetaJudicial}/>
@@ -167,7 +180,7 @@ export default class Entrevista extends React.Component {
 
         <Modal onSwipe={() => this.setState({ isModalVisible: false })}
           swipeDirection="right" isVisible={this.state.isModalVisible}>
-          <TestComponent/>
+          <TestComponent imputado={this.state.imputado} carpetaJudicial={this.state.carpetaJudicial}/>
         </Modal>
 
       </Grid>

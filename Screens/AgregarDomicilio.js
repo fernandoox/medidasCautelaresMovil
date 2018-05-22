@@ -58,7 +58,6 @@ export default class AgregarDomicilio extends React.Component {
 
   render() {
     return (
-    <KeyboardAvoidingView behavior="padding">
     <ScrollView keyboardShouldPersistTaps="always" style={{backgroundColor:'white', paddingBottom:20}}>
     <Grid style={{backgroundColor:'white'}} style={{paddingHorizontal:10, paddingBottom:15}}>
       <Row>
@@ -74,10 +73,12 @@ export default class AgregarDomicilio extends React.Component {
                 <Col key={i}>
                   <Row style={{flexDirection: "row", alignItems:'center'}}>
                     {
-                      (preg.tipoEntrada == "text" || preg.tipoEntrada == "numeric") ?
+                      (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
                       <Item stackedLabel>
                         <Label>{preg.pregunta}:</Label>
                         <Input
+                          keyboardType={preg.tipoEntrada}
+                          maxLength={preg.maxLength}
                           style={{fontSize: 16}}
                           onChangeText={(valueData) => {
                             this.setValueAnswerText(valueData, preg.node);
@@ -138,7 +139,6 @@ export default class AgregarDomicilio extends React.Component {
 
     </Grid>
     </ScrollView>
-    </KeyboardAvoidingView>
     );
   }
 }

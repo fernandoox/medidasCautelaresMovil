@@ -3,7 +3,8 @@
       "idPregunta": 1,
       "node": "SN_CODIGO_POSTAL",
       "pregunta": "Código postal",
-      "tipoEntrada": "numeric"
+      "tipoEntrada": "numeric",
+      "maxLength": 5
     },
     {
       "idPregunta": 2,
@@ -16,31 +17,31 @@
       "idPregunta": 3,
       "node": "SN_COLONIA",
       "pregunta": "Colonia",
-      "tipoEntrada": "text"
+      "tipoEntrada": "default"
     },
     {
       "idPregunta": 4,
       "node": "SN_CALLE",
       "pregunta": "Calle",
-      "tipoEntrada": "text"
+      "tipoEntrada": "default"
     },
     {
       "idPregunta": 5,
       "node": "SN_NUM_EXTERIOR",
       "pregunta": "Número exterior",
-      "tipoEntrada": "text"
+      "tipoEntrada": "default"
     },
     {
       "idPregunta": 6,
       "node": "SN_REFERENCIAS_DOMICILIO",
       "pregunta": "Cómo llegar",
-      "tipoEntrada": "text"
+      "tipoEntrada": "default"
     },
     {
       "idPregunta": 7,
       "node": "SN_TIEMPO_VIVIR",
       "pregunta": "Tiempo de vivir en el domicilio",
-      "tipoEntrada": "text"
+      "tipoEntrada": "default"
     },
     {
       "idPregunta": 8,

@@ -77,7 +77,7 @@ export default class DatosGenerales extends React.Component {
   confirmToNext = () => {
     Alert.alert(
       '¿Son correctos los datos?',
-      'Si continua se limpiarán los campos',
+      'Si continúa puede regresar a modificar los datos',
       [
         {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'Continuar', onPress: () => this.nextPreprocess()},
@@ -87,41 +87,42 @@ export default class DatosGenerales extends React.Component {
   }
   
   nextPreprocess = () => {
-      jsonRespDatosGenerales.completo = this.validateForm();
-      console.log(JSON.stringify(jsonRespDatosGenerales));
-      storage.save({
-        key: 'datosGeneralesStorage',
-        data: jsonRespDatosGenerales,
-      });
 
-      // load
-      storage.load({
-        key: 'datosGeneralesStorage',
+    jsonRespDatosGenerales.completo = this.validateForm();
+    console.log(JSON.stringify(jsonRespDatosGenerales));
+    storage.save({
+      key: 'datosGeneralesStorage',
+      data: jsonRespDatosGenerales,
+    });
+    
+    // load
+    storage.load({
+      key: 'datosGeneralesStorage',
         
-        // autoSync(default true) means if data not found or expired,
-        // then invoke the corresponding sync method
-        autoSync: true,
+      // autoSync(default true) means if data not found or expired,
+      // then invoke the corresponding sync method
+      autoSync: true,
         
-        // syncInBackground(default true) means if data expired,
-        // return the outdated data first while invoke the sync method.
-        // It can be set to false to always return data provided by sync method when expired.(Of course it's slower)
-        syncInBackground: true,
-      }).then(ret => {
-        // found data go to then()
-        console.log("Load in Async: "+JSON.stringify(ret));
-      }).catch(err => {
-        // any exception including data not found 
-        // goes to catch()
-        console.warn(err.message);
-        switch (err.name) {
-            case 'NotFoundError':
-                // TODO;
+      // syncInBackground(default true) means if data expired,
+      // return the outdated data first while invoke the sync method.
+      // It can be set to false to always return data provided by sync method when expired.(Of course it's slower)
+      syncInBackground: true,
+    }).then(ret => {
+      // found data go to then()
+      console.log("Load in Async Generales: "+JSON.stringify(ret));
+    }).catch(err => {
+      // any exception including data not found 
+      // goes to catch()
+      console.warn(err.message);
+      switch (err.name) {
+          case 'NotFoundError':
+              // TODO;
+              break;
+            case 'ExpiredError':
+                // TODO
                 break;
-              case 'ExpiredError':
-                  // TODO
-                  break;
-        }
-      })
+      }
+    })
   }
 
   validateForm = () => {
