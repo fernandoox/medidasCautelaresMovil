@@ -31,18 +31,6 @@ export default class Estudios extends React.Component {
               </Col>
             </Row>
 
-            <Row size={20}>
-              <Col style={{padding:5}}>
-                <Button full rounded light onPress={this.previousPreprocess}>
-                  <Text>Anterior</Text>
-                </Button>
-              </Col>
-              <Col style={{padding:5}}>
-                <Button full rounded light onPress={this.nextPreprocess}>
-                  <Text>Siguiente</Text>
-                </Button>
-              </Col>
-            </Row>
           </Grid>
     );
   }

@@ -14,7 +14,7 @@ const ScreensMedidasCautelares = StackNavigator({
     screen: BuscarImputado,
     navigationOptions: {
       title: 'Buscar imputado',
-      headerStyle: {backgroundColor: GLOBALS.COLORS.BACKGROUND_PRIMARY},
+      headerStyle: {backgroundColor: COLORS.BACKGROUND_PRIMARY},
       headerTitleStyle: {color:'white'},
       headerTintColor: 'white',
     },
@@ -24,7 +24,7 @@ const ScreensMedidasCautelares = StackNavigator({
     screen: Entrevista,
     navigationOptions: {
       title: 'Entrevista',
-      headerStyle: {backgroundColor: GLOBALS.COLORS.BACKGROUND_PRIMARY},
+      headerStyle: {backgroundColor: COLORS.BACKGROUND_PRIMARY},
       headerTitleStyle: {color:'white'},
       headerTintColor: 'white',
     },

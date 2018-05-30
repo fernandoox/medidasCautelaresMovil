@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
-import { Button, Text, Item, Input, Label, Card, CardItem, Body } from 'native-base';
+import { Container, Content, Button, Text, Item, Input, Label, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
@@ -46,7 +46,6 @@ export default class Domicilios extends React.Component {
     let colonia = (domicilio.SN_COLONIA != null) ? domicilio.SN_COLONIA : "";
     let cPostal = (domicilio.SN_CODIGO_POSTAL != null) ? domicilio.SN_CODIGO_POSTAL : "";
     let municipio = (domicilio.ID_NU_MUNICIPIO != null) ? this.getDelegacionById(domicilio.ID_NU_MUNICIPIO) : "";
-    
     let domicilioStr =  calle + " " + numExt + ", " + colonia + ", C.P. " + cPostal + ", " + municipio + ", Ciudad de México";
     return domicilioStr;
   }
@@ -55,8 +54,7 @@ export default class Domicilios extends React.Component {
     function delegacion(delegacion) { 
       return delegacion.id === idParam;
     }
-    let strDelegacion = this.state.DelegacionesCat.find(delegacion).nombre
-    return strDelegacion.charAt(0).toUpperCase() + strDelegacion.slice(1);
+    return this.state.DelegacionesCat.find(delegacion).nombre;
   }
 
   getTipoDomicilioById = (idParam) => {
@@ -69,7 +67,7 @@ export default class Domicilios extends React.Component {
   removeDomicilioByIndex = (indexJSON) => {
     console.log("Remove item index: " + indexJSON);
     let jsonDomicilios = this.state.domicilios;
-    // Remove 1 element from index
+    // Remove 1 element from index indexJSON
     jsonDomicilios.splice(indexJSON, 1);
     this.setState({domicilios: jsonDomicilios});
     this.setState({numeroDomicilios: Object.keys(this.state.domicilios).length});
@@ -77,13 +75,13 @@ export default class Domicilios extends React.Component {
 
   render() {
     return (
-      <View>
-      <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
+      <View accessible={true}>
+      <ScrollView keyboardShouldPersistTaps="always">
       <Grid>
 
         <Row>
           <Col style={{ paddingHorizontal:15 }}>
-            <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
+            <Text style={{marginVertical:10, textAlign:'center', color:  COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
               DOMICILIOS ({this.state.numeroDomicilios})
             </Text>
           </Col>
@@ -102,8 +100,7 @@ export default class Domicilios extends React.Component {
           </Row>
         </Display>
 
-        <Row>
-          <Col>
+        <Content>
           {
             this.state.domicilios.map((domicilio, i) => {
               return (
@@ -127,8 +124,8 @@ export default class Domicilios extends React.Component {
                   <CardItem style={{marginBottom:-10}}>
                     <Col>
                       <Button transparent full onPress={() => { this.removeDomicilioByIndex(i) }}>
-                        <Icon active name="trash" style={{color:GLOBALS.COLORS.TEXT_WARN, fontSize:17}}/>
-                        <Text style={{color:GLOBALS.COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
+                        <Icon active name="trash" style={{color: COLORS.TEXT_WARN, fontSize:17}}/>
+                        <Text style={{color: COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
                       </Button>
                     </Col>
                   </CardItem>
@@ -136,17 +133,12 @@ export default class Domicilios extends React.Component {
               );
             })
           }
-            
-          </Col>
-        </Row>
+          </Content>
+          <Row>
+            <Col style={{padding:5, marginTop:30}}>
 
-        <Row>
-          <Col style={{padding:5, marginTop:30}}>
-            <Button full rounded light>
-              <Text>Confirmar</Text>
-            </Button>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
         </Grid>
         </ScrollView>
         
@@ -155,7 +147,7 @@ export default class Domicilios extends React.Component {
           <AgregarDomicilio agregarDomicilioChild={this.agregarDomicilio} cerrarModal={this._toggleModal}/>
         </Modal>
 
-        <View style={{position:'absolute', bottom:15, right:-10, height: 80, }}>
+        <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
           <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}>
             <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />
           </Button>

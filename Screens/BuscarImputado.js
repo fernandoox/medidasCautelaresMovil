@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Button, Text, Item, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
@@ -47,6 +47,7 @@ export default class BuscarImputado extends React.Component {
     })
     .then((res) => {
       if (res.data.status == "ok") {
+        Keyboard.dismiss();
         this.setState({
           imputados: res.data.imputados,
           numImputados: Object.keys(res.data.imputados).length,

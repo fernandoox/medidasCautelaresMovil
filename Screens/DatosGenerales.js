@@ -10,21 +10,24 @@ import GLOBALS from '../Utils/Globals';
 import preguntasDatosGeneralesData from '../Utils/Preguntas/DatosGenerales.json';
 import CatSexoData from '../Utils/Catalogos/Sexo.json';
 import CatNacionalidadesData from '../Utils/Catalogos/Nacionalidades.json';
+import CatLugaresEntrevistaData from '../Utils/Catalogos/LugaresEntrevista.json';
 
 export default class DatosGenerales extends React.Component {
 
   constructor(props){
     super(props)
     this.state = {
-      FECHA_ENTREVISTA: null,
+      DTM_FECHA_ENTREVISTA: null,
       FECHA_NACIMIENTO: null,
       HORA_ENTREVISTA: null,
       SEXO: null,
       ID_NACIONALIDAD: null,
+      ID_NU_LUGAR_ENTREVISTA: null,
       DOCUMENTO_MIGRATORIO: null,
       preguntas: preguntasDatosGeneralesData,
       SexoCat: CatSexoData,
-      NacionalidesCat: CatNacionalidadesData
+      NacionalidesCat: CatNacionalidadesData,
+      LugaresEntrevistaCat: CatLugaresEntrevistaData
     };
     jsonRespDatosGenerales = {}
   }
@@ -38,12 +41,13 @@ export default class DatosGenerales extends React.Component {
 
   setValueAnswerText = (valueData, nodeQuestion) => {
     jsonRespDatosGenerales[nodeQuestion] = valueData;
+    this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
   setValueAnswerDate = (dateData, nodeQuestion) => {
     switch (nodeQuestion) {
-      case "FECHA_ENTREVISTA":
-        this.setState({FECHA_ENTREVISTA:dateData})
+      case "DTM_FECHA_ENTREVISTA":
+        this.setState({DTM_FECHA_ENTREVISTA:dateData})
         break;
       case "FECHA_NACIMIENTO":
         this.setState({FECHA_NACIMIENTO:dateData})
@@ -55,10 +59,14 @@ export default class DatosGenerales extends React.Component {
         break;
     }
     jsonRespDatosGenerales[nodeQuestion] = dateData;
+    this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
     switch (nodeQuestion) {
+      case "ID_NU_LUGAR_ENTREVISTA":
+        this.setState({ID_NU_LUGAR_ENTREVISTA:itemSelected})
+        break;
       case "SEXO":
         this.setState({SEXO:itemSelected})
         break;
@@ -72,57 +80,16 @@ export default class DatosGenerales extends React.Component {
         break;
     }
     jsonRespDatosGenerales[nodeQuestion] = itemSelected;
-  }
-
-  confirmToNext = () => {
-    Alert.alert(
-      '¿Son correctos los datos?',
-      'Si continúa puede regresar a modificar los datos',
-      [
-        {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'Continuar', onPress: () => this.nextPreprocess()},
-      ],
-      { cancelable: false }
-    )
+    this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
   
-  nextPreprocess = () => {
-
-    jsonRespDatosGenerales.completo = this.validateForm();
-    console.log(JSON.stringify(jsonRespDatosGenerales));
+  saveJsonLocalGenerales = (jsonFromAnswers) => {
+    console.log(JSON.stringify(jsonFromAnswers));
+    jsonFromAnswers.completo = this.validateForm();
     storage.save({
       key: 'datosGeneralesStorage',
-      data: jsonRespDatosGenerales,
+      data: jsonFromAnswers,
     });
-    
-    // load
-    storage.load({
-      key: 'datosGeneralesStorage',
-        
-      // autoSync(default true) means if data not found or expired,
-      // then invoke the corresponding sync method
-      autoSync: true,
-        
-      // syncInBackground(default true) means if data expired,
-      // return the outdated data first while invoke the sync method.
-      // It can be set to false to always return data provided by sync method when expired.(Of course it's slower)
-      syncInBackground: true,
-    }).then(ret => {
-      // found data go to then()
-      console.log("Load in Async Generales: "+JSON.stringify(ret));
-    }).catch(err => {
-      // any exception including data not found 
-      // goes to catch()
-      console.warn(err.message);
-      switch (err.name) {
-          case 'NotFoundError':
-              // TODO;
-              break;
-            case 'ExpiredError':
-                // TODO
-                break;
-      }
-    })
   }
 
   validateForm = () => {
@@ -130,7 +97,7 @@ export default class DatosGenerales extends React.Component {
     this.state.preguntas.map((preg, i) => {
       if(jsonRespDatosGenerales[preg.node] === null || jsonRespDatosGenerales[preg.node] === ""){
         formValido = false;
-        //Toast.show({text: preg.pregunta+' es campo obligatorio.', buttonText: 'OK' , duration: 3500, textStyle: { color: GLOBALS.COLORS.TEXT_WARN }})
+        //Toast.show({text: preg.pregunta+' es campo obligatorio.', buttonText: 'OK' , duration: 3500, textStyle: { color: COLORS.TEXT_WARN }})
       }
     })
     return formValido;
@@ -138,122 +105,117 @@ export default class DatosGenerales extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <View>
+      <KeyboardAvoidingView behavior="position" enabled keyboardVerticalOffset={100}>
       <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
+      
       <Grid>
         <Row>
           <Col>
-            <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
+            <Text style={{marginVertical:10, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
               DATOS GENERALES {/*- CP: {this.props.testProp}*/}
             </Text>
-
-            {/* Iterar el JSON de Preguntas */}
-            {
-              this.state.preguntas.map((preg, i) => {
-                return (
-                  <Col key={i}>
-                    <Row style={{flexDirection: "row", alignItems:'center'}}>
-
-                      {
-                        (preg.tipoEntrada == "text") ?
-                        <Item stackedLabel>
-                          <Label>{preg.pregunta}:</Label>
-                          <Input
-                            style={{fontSize: 16}}
-                            onChangeText={(valueData) => {
-                              this.setValueAnswerText(valueData, preg.node);
-                            }}/>
-                        </Item> : null
-                      }
-
-                      {
-                        (preg.tipoEntrada == "date" || preg.tipoEntrada == "time") ?
-                        <Item style={{marginVertical: 5}} stackedLabel>
-                          <Label>{preg.pregunta}:</Label>
-                            <DatePicker
-                              style={{width: 310}}
-                              customStyles={{dateInput:{borderWidth: 0}}}
-                              date={this.state[preg.node]}
-                              placeholder="Seleccionar"
-                              mode={preg.tipoEntrada}
-                              androidMode="spinner"
-                              format={(preg.tipoEntrada == "date") ? "DD-MM-YYYY" : "HH:mm"}
-                              onDateChange={(date) => {
-                                this.setValueAnswerDate(date, preg.node)
-                            }}/>
-                        </Item> : null
-                      }
-
-                      {
-                        (preg.tipoEntrada == "catalogo") ?
-                        <Item style={{marginVertical: 5}} stackedLabel>
-                          <Label>{preg.pregunta}:</Label>
-                          <Picker
-                            style={{width: 310}}
-                            iosHeader="Seleccionar una opción"
-                            placeholder="Seleccionar una opción"
-                            itemTextStyle={{ fontSize: 17}}
-                            mode="dropdown"
-                            supportedOrientations={['portrait','landscape']}
-                            selectedValue={this.state[preg.node]}
-                            onValueChange={(itemSelected) => {
-                              this.setValueAnswerCatalogo(itemSelected, preg.node)
-                            }}>
-                            <Item label="Seleccionar una opción" value={null} />
-                            {
-                              this.state[preg.catalogo].map((catalogo) => {
-                                return (
-                                  <Item
-                                    label={catalogo.nombre}
-                                    value={catalogo.id} key={catalogo.id}/>
-                                );
-                              })
-                            }
-                          </Picker>
-                        </Item> : null
-                      }
-
-                      {
-                        (preg.tipoEntrada == "boolean") ?
-                        <Item style={{marginVertical: 5}} stackedLabel>
-                          <Label>{preg.pregunta}:</Label>
-                          <Picker
-                            style={{width: 310}}
-                            iosHeader="Seleccionar una opción"
-                            placeholder="Seleccionar una opción"
-                            itemTextStyle={{ fontSize: 17}}
-                            mode="dropdown"
-                            supportedOrientations={['portrait','landscape']}
-                            selectedValue={this.state[preg.node]}
-                            onValueChange={(itemSelected) => {
-                              this.setValueAnswerCatalogo(itemSelected, preg.node)
-                            }}>
-                            <Item label="Seleccionar una opción" value={null} />
-                            <Item label="SI" value={1} />
-                            <Item label="NO" value={0} />
-                          </Picker>
-                        </Item> : null
-                      }
-                    </Row>
-                  </Col>
-                )
-              })
-            }
-
-          </Col>
+            </Col>
         </Row>
 
-        <Row>
-          <Col style={{padding:5}}>
-            <Button full rounded light onPress={this.confirmToNext}>
-              <Text>Confirmar</Text>
-            </Button>
-          </Col>
-        </Row>
+        {/* Iterar el JSON de Preguntas */}
+        {
+
+          this.state.preguntas.map((preg, i) => {
+            return (
+              <Row style={{flexDirection: "row", alignItems:'center'}} key={i}>
+              <Col>
+                  {
+                    (preg.tipoEntrada == "text") ?
+                    <Item stackedLabel>
+                      <Label>{preg.pregunta}:</Label>
+                      <Input
+                        style={{fontSize: 16}}
+                        onChangeText={(valueData) => {
+                          this.setValueAnswerText(valueData, preg.node);
+                        }}/>
+                    </Item> : null
+                  }
+
+                  {
+                    (preg.tipoEntrada == "date" || preg.tipoEntrada == "time") ?
+                    <Item style={{marginVertical: 5}} stackedLabel>
+                      <Label>{preg.pregunta}:</Label>
+                      <DatePicker
+                        style={{width: 310}}
+                        customStyles={{dateInput:{borderWidth: 0}}}
+                        date={this.state[preg.node]}
+                        placeholder="Seleccionar"
+                        mode={preg.tipoEntrada}
+                        androidMode="spinner"
+                        format={(preg.tipoEntrada == "date") ? "DD-MM-YYYY" : "HH:mm"}
+                        onDateChange={(date) => {
+                          this.setValueAnswerDate(date, preg.node)
+                      }}/>
+                    </Item> : null
+                  }
+
+                  {
+                    (preg.tipoEntrada == "catalogo") ?
+                    <Item style={{marginVertical: 5}} stackedLabel>
+                      <Label>{preg.pregunta}:</Label>
+                      <Picker
+                        style={{width: 310}}
+                        iosHeader="Seleccionar una opción"
+                        placeholder="Seleccionar una opción"
+                        itemTextStyle={{ fontSize: 17}}
+                        mode="dropdown"
+                        supportedOrientations={['portrait','landscape']}
+                        selectedValue={this.state[preg.node]}
+                        onValueChange={(itemSelected) => {
+                          this.setValueAnswerCatalogo(itemSelected, preg.node)
+                        }}>
+                        <Item label="Seleccionar una opción" value={null} />
+                        {
+                          this.state[preg.catalogo].map((catalogo) => {
+                            return (
+                              <Item
+                                label={catalogo.nombre}
+                                value={catalogo.id} key={catalogo.id}/>
+                            );
+                          })
+                        }
+                      </Picker>
+                    </Item> : null
+                  }
+
+                  {
+                    (preg.tipoEntrada == "boolean") ?
+                    <Item style={{marginVertical: 5}} stackedLabel>
+                      <Label>{preg.pregunta}:</Label>
+                      <Picker
+                        style={{width: 310}}
+                        iosHeader="Seleccionar una opción"
+                        placeholder="Seleccionar una opción"
+                        itemTextStyle={{ fontSize: 17}}
+                        mode="dropdown"
+                        supportedOrientations={['portrait','landscape']}
+                        selectedValue={this.state[preg.node]}
+                        onValueChange={(itemSelected) => {
+                          this.setValueAnswerCatalogo(itemSelected, preg.node)
+                        }}>
+                        <Item label="Seleccionar una opción" value={null} />
+                        <Item label="SI" value={1} />
+                        <Item label="NO" value={0} />
+                      </Picker>
+                    </Item> : null
+                  }
+              </Col>
+              </Row>
+            )
+          })
+        }
 
       </Grid>
+      
       </ScrollView>
       </KeyboardAvoidingView>
+      </View>
     );
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
 import { Button, Text, Item, Input, Label, H3, Picker, Toast } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
@@ -52,8 +52,27 @@ export default class AgregarDomicilio extends React.Component {
   }
 
   agregarDomicilio = () => {
-    console.log("JSON Domicilio: "+JSON.stringify(jsonRespDomicilio))
-    this.props.agregarDomicilioChild(jsonRespDomicilio);
+    if(this.validateForm()){
+      console.log("JSON Domicilio: "+JSON.stringify(jsonRespDomicilio))
+      this.props.agregarDomicilioChild(jsonRespDomicilio);
+    }
+  }
+
+  validateForm = () => {
+    let countNull = 0;
+    let numQuestions =  Object.keys(this.state.preguntas).length;
+    let formValido = true;
+    this.state.preguntas.map((preg, i) => {
+      if(jsonRespDomicilio[preg.node] === null || jsonRespDomicilio[preg.node] === ""){
+        countNull++;
+      }
+    })
+    if(countNull == numQuestions){
+      formValido = false;
+      Alert.alert('Error', 'Debe llenar por lo menos un campo del domicilio', [{text: 'OK'}], { cancelable: false });
+      //Toast.show({text: 'Debe llenar por lo menos un campo del domicilio', buttonText: 'OK' , duration: 3500, textStyle: { color: COLORS.TEXT_WARN }})
+    }
+    return formValido;
   }
 
   render() {
@@ -62,67 +81,65 @@ export default class AgregarDomicilio extends React.Component {
     <Grid style={{backgroundColor:'white'}} style={{paddingHorizontal:10, paddingBottom:15}}>
       <Row>
         <Col>
-          <Text style={{marginVertical:10, textAlign:'center', color: GLOBALS.COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
+          <Text style={{marginVertical:10, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
             AGREGAR DOMICILIO
           </Text>
+        </Col>
+      </Row>
 
-          {/* Iterar el JSON de Preguntas */}
-          {
-            this.state.preguntas.map((preg, i) => {
-              return (
-                <Col key={i}>
-                  <Row style={{flexDirection: "row", alignItems:'center'}}>
-                    {
-                      (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
-                      <Item stackedLabel>
-                        <Label>{preg.pregunta}:</Label>
-                        <Input
-                          keyboardType={preg.tipoEntrada}
-                          maxLength={preg.maxLength}
-                          style={{fontSize: 16}}
-                          onChangeText={(valueData) => {
-                            this.setValueAnswerText(valueData, preg.node);
-                          }}/>
-                      </Item> : null
-                    }
+      {/* Iterar el JSON de Preguntas */}
+      {
+        this.state.preguntas.map((preg, i) => {
+          return (
+            <Row style={{flexDirection: "row", alignItems:'center'}} key={i}>
+              <Col >
+                {
+                  (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
+                  <Item stackedLabel>
+                    <Label>{preg.pregunta}:</Label>
+                    <Input
+                      keyboardType={preg.tipoEntrada}
+                      maxLength={preg.maxLength}
+                      style={{fontSize: 16}}
+                      onChangeText={(valueData) => {
+                        this.setValueAnswerText(valueData, preg.node);
+                      }}/>
+                   </Item> : null
+                }
 
-                    {
-                      (preg.tipoEntrada == "catalogo") ?
-                      <Item style={{marginVertical: 5}} stackedLabel>
-                        <Label>{preg.pregunta}:</Label>
-                        <Picker
-                          style={{width: 310}}
-                          iosHeader="Seleccionar una opción"
-                          placeholder="Seleccionar una opción"
-                          itemTextStyle={{ fontSize: 17}}
-                          mode="dropdown"
-                          supportedOrientations={['portrait','landscape']}
-                          selectedValue={this.state[preg.node]}
-                          onValueChange={(itemSelected) => {
-                            this.setValueAnswerCatalogo(itemSelected, preg.node)
-                          }}>
-                          <Item label="Seleccionar una opción" value={null} />
-                          {
-                            this.state[preg.catalogo].map((catalogo) => {
-                              return (
-                                <Item
-                                  label={catalogo.nombre}
-                                  value={catalogo.id} key={catalogo.id}/>
-                              );
-                            })
-                          }
-                          </Picker>
-                        </Item> : null
+                {
+                  (preg.tipoEntrada == "catalogo") ?
+                  <Item style={{marginVertical: 5}} stackedLabel>
+                    <Label>{preg.pregunta}:</Label>
+                    <Picker
+                      style={{width: 310}}
+                      iosHeader="Seleccionar una opción"
+                      placeholder="Seleccionar una opción"
+                      itemTextStyle={{ fontSize: 17}}
+                      mode="dropdown"
+                      supportedOrientations={['portrait','landscape']}
+                      selectedValue={this.state[preg.node]}
+                      onValueChange={(itemSelected) => {
+                        this.setValueAnswerCatalogo(itemSelected, preg.node)
+                      }}>
+                      <Item label="Seleccionar una opción" value={null} />
+                      {
+                        this.state[preg.catalogo].map((catalogo) => {
+                          return (
+                            <Item
+                              label={catalogo.nombre}
+                              value={catalogo.id} key={catalogo.id}/>
+                          );
+                        })
                       }
-
-                    </Row>
-                  </Col>
-                )
-              })
-            }
-
-          </Col>
-        </Row>
+                    </Picker>
+                  </Item> : null
+                }
+              </Col>
+              </Row>
+            )
+          })
+        }
 
         <Row>
           <Col style={{padding:5}}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions } from 'react-native';
+import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions, StyleSheet } from 'react-native';
 import { Root, Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -10,13 +10,14 @@ import Storage from 'react-native-storage';
 import StepIndicator from 'react-native-step-indicator';
 import Carousel from 'react-native-looped-carousel';
 import Modal from "react-native-modal";
+import ModalProgreso from './ModalProgreso';
 import DatosGenerales from './DatosGenerales';
 import Domicilios from './Domicilios';
 import RedFamiliar from './RedFamiliar';
 import Estudios from './Estudios';
 import Ocupacion from './Ocupacion';
 import Sustancias from './Sustancias';
-import TestComponent from './TestComponent';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -51,12 +52,12 @@ export default class Entrevista extends React.Component {
       "imputado": params.imputadoParam,
       "carpetaJudicial": params.carpetaJudicialParam,
       "tipoCaptura": params.tipoCapturaParam,
-      "respuestas": [],
     }
   }
 
   componentDidMount(){
     this.props.navigation.setParams({ handleToggleModalProgress: this._toggleModalProgress });
+    
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
@@ -77,7 +78,6 @@ export default class Entrevista extends React.Component {
   };
 
   _toggleModalProgress = () => {
-    console.warn("Opening progress modal");
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
@@ -86,9 +86,9 @@ export default class Entrevista extends React.Component {
     this.setState({currentPosition:stepNumber});
   }
 
-  changeStepInProgress = () => {
-    console.log("Step in progress parent: ");
-    this.setState({ isModalVisible: false })
+  changeStepInProgress = (stepNumber) => {
+    this.setState({ isModalVisible: false, currentPosition:stepNumber })
+    this._carousel.animateToPage(stepNumber)
   }
 
   _onLayoutDidChange = (e) => {
@@ -97,33 +97,6 @@ export default class Entrevista extends React.Component {
   }
 
   render() {
-
-    const labelsSteps = ["Generales","Domicilios","Familia","Estudios","Ocupación", "Sustancias"];
-
-    const customStylesSteps = {
-      stepIndicatorSize: 25,
-      currentStepIndicatorSize:28,
-      separatorStrokeWidth: 1,
-      currentStepStrokeWidth: 2,
-      stepStrokeCurrentColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
-      stepStrokeWidth: 2,
-      stepStrokeFinishedColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
-      stepStrokeUnFinishedColor: '#aaaaaa',
-      separatorFinishedColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
-      separatorUnFinishedColor: '#aaaaaa',
-      stepIndicatorFinishedColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
-      stepIndicatorUnFinishedColor: '#ffffff',
-      stepIndicatorCurrentColor: '#ffffff',
-      stepIndicatorLabelFontSize: 11,
-      currentStepIndicatorLabelFontSize: 11,
-      stepIndicatorLabelCurrentColor: GLOBALS.COLORS.BACKGROUND_PRIMARY,
-      stepIndicatorLabelFinishedColor: '#ffffff',
-      stepIndicatorLabelUnFinishedColor: '#aaaaaa',
-      labelColor: '#999999',
-      labelSize: 11,
-      currentStepLabelColor: GLOBALS.COLORS.BACKGROUND_PRIMARY
-    }
-
     return (
       <Grid>
         
@@ -167,20 +140,20 @@ export default class Entrevista extends React.Component {
             isLooped={true}
             currentPage={0}
             onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
-            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <DatosGenerales testProp={this.state.carpetaJudicial}/>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+              <DatosGenerales/>
             </View>
-            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Domicilios/></View>
-            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><RedFamiliar/></View>
-            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
-            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>
-            <View style={[{ borderWidth: 2, borderColor: GLOBALS.COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Sustancias/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Domicilios/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><RedFamiliar/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Sustancias/></View>
           </Carousel>
         </View>
 
         <Modal onSwipe={() => this.setState({ isModalVisible: false })}
           swipeDirection="right" isVisible={this.state.isModalVisible}>
-          <TestComponent imputado={this.state.imputado} carpetaJudicial={this.state.carpetaJudicial}/>
+          <ModalProgreso changeStepChild={this.changeStepInProgress} imputado={this.state.imputado} carpetaJudicial={this.state.carpetaJudicial}/>
         </Modal>
 
       </Grid>
