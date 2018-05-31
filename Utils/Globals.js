@@ -43,7 +43,7 @@ global.COLORS = {
 	TEXT_WARN: 				"#ed143d",
 	
 	LIGHT_SUCCESS: 			"#44C4A1",
-	LIGHT_WARN: 			"orange",
+	LIGHT_WARN: 			"#ffa500",
 	LIGHT_ERROR: 			"#E56353"
 }
 /*-------------------------------------------------------------------------------------*/

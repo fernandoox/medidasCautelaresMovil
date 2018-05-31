@@ -11,6 +11,10 @@ import preguntasDatosGeneralesData from '../Utils/Preguntas/DatosGenerales.json'
 import CatSexoData from '../Utils/Catalogos/Sexo.json';
 import CatNacionalidadesData from '../Utils/Catalogos/Nacionalidades.json';
 import CatLugaresEntrevistaData from '../Utils/Catalogos/LugaresEntrevista.json';
+import CatEstadosCivilesData from '../Utils/Catalogos/EstadosCiviles.json';
+import CatTiposDocMigratorioData from '../Utils/Catalogos/TiposDocMigratorio.json';
+import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
+import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 
 export default class DatosGenerales extends React.Component {
 
@@ -20,14 +24,22 @@ export default class DatosGenerales extends React.Component {
       DTM_FECHA_ENTREVISTA: null,
       FECHA_NACIMIENTO: null,
       HORA_ENTREVISTA: null,
-      SEXO: null,
-      ID_NACIONALIDAD: null,
+      IND_SEXO: null,
+      ID_NU_NACIONALIDAD: null,
       ID_NU_LUGAR_ENTREVISTA: null,
-      DOCUMENTO_MIGRATORIO: null,
+      ID_NU_ESTADO_CIVIL: null,
+      IND_DOCUMENTO_MIGRATORIO: null,
+      ID_NU_TIPO_DOC_MIGRATORIO: null,
+      ID_NU_MUNICIPIO_LN: null,
+      ID_NU_ENTIDAD_FEDERATIVA: null,
       preguntas: preguntasDatosGeneralesData,
       SexoCat: CatSexoData,
       NacionalidesCat: CatNacionalidadesData,
-      LugaresEntrevistaCat: CatLugaresEntrevistaData
+      LugaresEntrevistaCat: CatLugaresEntrevistaData,
+      EstadosCivilesCat: CatEstadosCivilesData,
+      TiposDocMigratorioCat: CatTiposDocMigratorioData,
+      DelegacionesCat: CatDelegacionesData,
+      EntidadesFederativasCat: CatEntidadesFederativasData,
     };
     jsonRespDatosGenerales = {}
   }
@@ -36,7 +48,13 @@ export default class DatosGenerales extends React.Component {
     // Se clona json de preguntas a respuestas con solo su nodo en nulo
     this.state.preguntas.map((preg, i) => {
       jsonRespDatosGenerales[preg.node] = null;
-    })  
+    })
+
+    jsonRespDatosGenerales.completo = false;
+    storage.save({
+      key: 'datosGeneralesStorage',
+      data: jsonRespDatosGenerales,
+    });
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
@@ -67,14 +85,23 @@ export default class DatosGenerales extends React.Component {
       case "ID_NU_LUGAR_ENTREVISTA":
         this.setState({ID_NU_LUGAR_ENTREVISTA:itemSelected})
         break;
-      case "SEXO":
-        this.setState({SEXO:itemSelected})
+      case "IND_SEXO":
+        this.setState({IND_SEXO:itemSelected})
         break;
-      case "ID_NACIONALIDAD":
-        this.setState({ID_NACIONALIDAD:itemSelected})
+      case "ID_NU_ESTADO_CIVIL":
+        this.setState({ID_NU_ESTADO_CIVIL:itemSelected})
         break;
-      case "DOCUMENTO_MIGRATORIO":
-        this.setState({DOCUMENTO_MIGRATORIO:itemSelected})
+      case "ID_NU_NACIONALIDAD":
+        this.setState({ID_NU_NACIONALIDAD:itemSelected})
+        break;
+      case "IND_DOCUMENTO_MIGRATORIO":
+        this.setState({IND_DOCUMENTO_MIGRATORIO:itemSelected})
+        break;
+      case "ID_NU_TIPO_DOC_MIGRATORIO":
+        this.setState({ID_NU_TIPO_DOC_MIGRATORIO:itemSelected})
+        break;
+      case "ID_NU_ENTIDAD_FEDERATIVA":
+        this.setState({ID_NU_ENTIDAD_FEDERATIVA:itemSelected})
         break;
       default:
         break;
@@ -84,7 +111,7 @@ export default class DatosGenerales extends React.Component {
   }
   
   saveJsonLocalGenerales = (jsonFromAnswers) => {
-    console.log(JSON.stringify(jsonFromAnswers));
+    console.log("New storage: "+JSON.stringify(jsonFromAnswers));
     jsonFromAnswers.completo = this.validateForm();
     storage.save({
       key: 'datosGeneralesStorage',
@@ -93,14 +120,13 @@ export default class DatosGenerales extends React.Component {
   }
 
   validateForm = () => {
-    let formValido = true;
+    let formCompleto = true;
     this.state.preguntas.map((preg, i) => {
       if(jsonRespDatosGenerales[preg.node] === null || jsonRespDatosGenerales[preg.node] === ""){
-        formValido = false;
-        //Toast.show({text: preg.pregunta+' es campo obligatorio.', buttonText: 'OK' , duration: 3500, textStyle: { color: COLORS.TEXT_WARN }})
+        formCompleto = false;
       }
     })
-    return formValido;
+    return formCompleto;
   }
 
   render() {
@@ -113,23 +139,23 @@ export default class DatosGenerales extends React.Component {
         <Row>
           <Col>
             <Text style={{marginVertical:10, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
-              DATOS GENERALES {/*- CP: {this.props.testProp}*/}
+              DATOS GENERALES
             </Text>
             </Col>
         </Row>
 
         {/* Iterar el JSON de Preguntas */}
         {
-
           this.state.preguntas.map((preg, i) => {
             return (
               <Row style={{flexDirection: "row", alignItems:'center'}} key={i}>
               <Col>
                   {
-                    (preg.tipoEntrada == "text") ?
+                    (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
                     <Item stackedLabel>
-                      <Label>{preg.pregunta}:</Label>
+                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
                       <Input
+                        keyboardType={preg.tipoEntrada}
                         style={{fontSize: 16}}
                         onChangeText={(valueData) => {
                           this.setValueAnswerText(valueData, preg.node);
@@ -140,7 +166,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "date" || preg.tipoEntrada == "time") ?
                     <Item style={{marginVertical: 5}} stackedLabel>
-                      <Label>{preg.pregunta}:</Label>
+                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
                       <DatePicker
                         style={{width: 310}}
                         customStyles={{dateInput:{borderWidth: 0}}}
@@ -158,7 +184,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "catalogo") ?
                     <Item style={{marginVertical: 5}} stackedLabel>
-                      <Label>{preg.pregunta}:</Label>
+                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
                       <Picker
                         style={{width: 310}}
                         iosHeader="Seleccionar una opción"
@@ -187,7 +213,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "boolean") ?
                     <Item style={{marginVertical: 5}} stackedLabel>
-                      <Label>{preg.pregunta}:</Label>
+                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
                       <Picker
                         style={{width: 310}}
                         iosHeader="Seleccionar una opción"
@@ -212,7 +238,6 @@ export default class DatosGenerales extends React.Component {
         }
 
       </Grid>
-      
       </ScrollView>
       </KeyboardAvoidingView>
       </View>

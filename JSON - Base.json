@@ -1,0 +1,73 @@
+{
+    "imputado": {
+        "id": 81,
+        "nombre": "FERNANDO",
+        "primerApellido": "CRUZ",
+        "segundoApellido": "RAMÍREZ"
+    },
+    "carpetaJudicial": "009/1402/2017",
+    "tipoCaptura": "ONLINE",
+    "datosGenerales": {
+        "ID_NU_LUGAR_ENTREVISTA": null,
+        "DTM_FECHA_ENTREVISTA": null,
+        "HORA_ENTREVISTA": null,
+        "SN_CARPETA_INVESTIGACION": null,
+        "SN_CARPETA_JUDICIAL": null,
+        "SN_NOMBRE": null,
+        "SN_APELLIDO_PATERNO": null,
+        "SN_APELLIDO_MATERNO": null,
+        "SN_OTROS_NOMBRES": null,
+        "SN_APODOS": null,
+        "SN_GRUPO_ETNICO": null,
+        "SN_SITUACION_DISCAPACIDAD": null,
+        "SN_RFC": null,
+        "SN_CURP": null,
+        "IND_SEXO": null,
+        "DTM_FECHA_NACIMIENTO": null,
+        "NU_EDAD": null,
+        "ID_NU_ESTADO_CIVIL": null,
+        "SN_DURACION": null,
+        "SN_PAIS": null,
+        "ID_NU_NACIONALIDAD": null,
+        "IND_DOCUMENTO_MIGRATORIO": null,
+        "ID_NU_TIPO_DOC_MIGRATORIO": null,
+        "IND_SABE_LEER_ESCRIBIR": null,
+        "IND_SITUACION_CALLE": null,
+        "SN_TELEFONO": null,
+        "SN_CODIGO_POSTAL": null,
+        "ID_NU_MUNICIPIO_LN": null,
+        "SN_COLONIA": null,
+        "SN_CALLE": null,
+        "SN_NUM_EXTERIOR": null,
+        "SN_NUM_INTERIOR": null,
+        "SN_MANZANA": null,
+        "SN_LOTE": null,
+        "ID_NU_ENTIDAD_FEDERATIVA": null,
+        "completo": false
+    },
+    "domicilios": {
+        "completo": true,
+        "snRazonMultDomicilios": null,
+        "datosDomicilios": [{
+            "SN_CODIGO_POSTAL": null,
+            "ID_NU_MUNICIPIO": null,
+            "SN_COLONIA": null,
+            "SN_CALLE": null,
+            "SN_NUM_EXTERIOR": null,
+            "SN_REFERENCIAS_DOMICILIO": null,
+            "SN_TIEMPO_VIVIR": null,
+            "TELEFONO": null,
+            "ID_NU_TIPO_DOMICILIO": 2
+        }, {
+            "SN_CODIGO_POSTAL": null,
+            "ID_NU_MUNICIPIO": 2,
+            "SN_COLONIA": null,
+            "SN_CALLE": null,
+            "SN_NUM_EXTERIOR": null,
+            "SN_REFERENCIAS_DOMICILIO": null,
+            "SN_TIEMPO_VIVIR": null,
+            "TELEFONO": null,
+            "ID_NU_TIPO_DOMICILIO": null
+        }]
+    }
+}

@@ -83,11 +83,11 @@ export default class Entrevista extends React.Component {
 
   changeStep = (stepNumber) => {
     console.log("Step: "+stepNumber);
-    this.setState({currentPosition:stepNumber});
+    this.setState({currentPosition: stepNumber});
   }
 
   changeStepInProgress = (stepNumber) => {
-    this.setState({ isModalVisible: false, currentPosition:stepNumber })
+    this.setState({ isModalVisible: false, currentPosition: stepNumber })
     this._carousel.animateToPage(stepNumber)
   }
 

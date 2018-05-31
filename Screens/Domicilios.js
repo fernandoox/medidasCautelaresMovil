@@ -5,6 +5,7 @@ import { Container, Content, Button, Text, Item, Input, Label, Card, CardItem, B
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
+import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import Modal from "react-native-modal";
 import Display from 'react-native-display';
@@ -27,17 +28,50 @@ export default class Domicilios extends React.Component {
       DelegacionesCat: CatDelegacionesData,
       TiposDomicilioCat: CatTiposDomicilioData,
     };
+    jsonRespDomicilios = {
+      completo: false,
+      snRazonMultDomicilios: null,
+      datosDomicilios: []
+    }
+  }
+
+  componentDidMount(){
+    storage.save({
+      key: 'datosDomiciliosStorage',
+      data: jsonRespDomicilios,
+    });
   }
 
   _toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
   
-  agregarDomicilio = (stateDomicilio) => {
-    console.log("Domicilio parent: "+JSON.stringify(stateDomicilio));
-    this.state.domicilios.push(stateDomicilio);
+  agregarDomicilio = (stateDomicilioFromChild) => {
+    this.state.domicilios.push(stateDomicilioFromChild);
+    this.saveJsonLocalDomicilios(this.state.domicilios);
     this.setState({numeroDomicilios: Object.keys(this.state.domicilios).length});
     this._toggleModal();
+  }
+
+  removeDomicilioByIndex = (indexJSON) => {
+    console.log("Remove item index: " + indexJSON);
+    let jsonDomicilios = this.state.domicilios;
+    // Remove 1 element from index indexJSON
+    jsonDomicilios.splice(indexJSON, 1);
+    this.setState({domicilios: jsonDomicilios});
+    this.saveJsonLocalDomicilios(this.state.domicilios);
+    this.setState({numeroDomicilios: Object.keys(this.state.domicilios).length});
+  }
+
+  saveJsonLocalDomicilios = (jsonFromAnswers) => {
+    console.log("New storage: "+JSON.stringify(jsonFromAnswers));
+    jsonRespDomicilios.datosDomicilios = jsonFromAnswers;
+    jsonRespDomicilios.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
+    jsonRespDomicilios.snRazonMultDomicilios = (Object.keys(jsonFromAnswers).length > 0) ? this.state.motivoVariosDomicilios : null;
+    storage.save({
+      key: 'datosDomiciliosStorage',
+      data: jsonRespDomicilios,
+    });
   }
 
   domicilioToString = (domicilio) => {
@@ -64,14 +98,7 @@ export default class Domicilios extends React.Component {
     return this.state.TiposDomicilioCat.find(tipoDomicilio).nombre;
   }
 
-  removeDomicilioByIndex = (indexJSON) => {
-    console.log("Remove item index: " + indexJSON);
-    let jsonDomicilios = this.state.domicilios;
-    // Remove 1 element from index indexJSON
-    jsonDomicilios.splice(indexJSON, 1);
-    this.setState({domicilios: jsonDomicilios});
-    this.setState({numeroDomicilios: Object.keys(this.state.domicilios).length});
-  }
+  
 
   render() {
     return (

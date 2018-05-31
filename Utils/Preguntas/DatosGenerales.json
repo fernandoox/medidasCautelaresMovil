@@ -16,55 +16,169 @@
     "tipoEntrada": "time"
   },
   {
-    "node": "NOMBRE",
+    "node": "SN_CARPETA_INVESTIGACION",
+    "pregunta": "Carpeta de investigación",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_CARPETA_JUDICIAL",
+    "pregunta": "Carpeta judicial",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_NOMBRE",
     "pregunta": "Nombre del adolescente",
-    "tipoEntrada": "text"
+    "tipoEntrada": "default"
   },
   {
-    "node": "PRIMER_APELLIDO",
+    "node": "SN_APELLIDO_PATERNO",
     "pregunta": "Apellido paterno",
-    "tipoEntrada": "text"
+    "tipoEntrada": "default"
   },
   {
-    "node": "SEGUNDO_ENTREVISTA",
+    "node": "SN_APELLIDO_MATERNO",
     "pregunta": "Apellido materno",
-    "tipoEntrada": "text"
+    "tipoEntrada": "default"
   },
   {
-    "node": "GRUPO_ETNICO",
+    "node": "SN_OTROS_NOMBRES",
+    "pregunta": "Otros nombres",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_APODOS",
+    "pregunta": "Apodo (s)",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_GRUPO_ETNICO",
     "pregunta": "Grupo étnico o indigena",
-    "tipoEntrada": "text"
+    "tipoEntrada": "default"
   },
   {
-    "node": "SITUACION_DISCAPACIDAD",
+    "node": "SN_SITUACION_DISCAPACIDAD",
     "pregunta": "Situación de discapacidad",
-    "tipoEntrada": "text"
+    "tipoEntrada": "default"
   },
   {
-    "node": "SEXO",
+    "node": "SN_RFC",
+    "pregunta": "RFC",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_CURP",
+    "pregunta": "CURP",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "IND_SEXO",
     "pregunta": "Sexo",
     "tipoEntrada": "catalogo",
     "catalogo": "SexoCat"
   },
   {
-    "node": "FECHA_NACIMIENTO",
+    "node": "DTM_FECHA_NACIMIENTO",
     "pregunta": "Fecha de nacimiento",
     "tipoEntrada": "date"
   },
   {
-    "node": "PAIS",
-    "pregunta": "País",
-    "tipoEntrada": "text"
+    "node": "NU_EDAD",
+    "pregunta": "Edad",
+    "tipoEntrada": "numeric"
   },
   {
-    "node": "ID_NACIONALIDAD",
+    "node": "ID_NU_ESTADO_CIVIL",
+    "pregunta": "Estado civil",
+    "tipoEntrada": "catalogo",
+    "catalogo": "EstadosCivilesCat"
+  },
+  {
+    "node": "SN_DURACION",
+    "pregunta": "Duración",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_PAIS",
+    "pregunta": "País",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "ID_NU_NACIONALIDAD",
     "pregunta": "Nacionalidad",
     "tipoEntrada": "catalogo",
     "catalogo": "NacionalidesCat"
   },
   {
-    "node": "DOCUMENTO_MIGRATORIO",
+    "node": "IND_DOCUMENTO_MIGRATORIO",
     "pregunta": "Documento migratorio",
     "tipoEntrada": "boolean"
+  },
+  {
+    "node": "ID_NU_TIPO_DOC_MIGRATORIO",
+    "pregunta": "Tipo de documento migratorio",
+    "tipoEntrada": "catalogo",
+    "catalogo": "TiposDocMigratorioCat"
+  },
+  {
+    "node": "IND_SABE_LEER_ESCRIBIR",
+    "pregunta": "Sabe leer y escribir",
+    "tipoEntrada": "boolean"
+  },
+  {
+    "node": "IND_SITUACION_CALLE",
+    "pregunta": "Situación de calle",
+    "tipoEntrada": "boolean"
+  },
+  {
+    "node": "SN_TELEFONO",
+    "pregunta": "Teléfono",
+    "tipoEntrada": "numeric"
+  },
+  {
+    "node": "SN_CODIGO_POSTAL",
+    "pregunta": "Código postal",
+    "tipoEntrada": "numeric"
+  },
+  {
+    "node": "ID_NU_MUNICIPIO_LN",
+    "pregunta": "Municipio",
+    "tipoEntrada": "catalogo",
+    "catalogo": "DelegacionesCat"
+  },
+  {
+    "node": "SN_COLONIA",
+    "pregunta": "Colonia",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_CALLE",
+    "pregunta": "Calle",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_NUM_EXTERIOR",
+    "pregunta": "Número exterior",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_NUM_INTERIOR",
+    "pregunta": "Número interior",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_MANZANA",
+    "pregunta": "Manzana",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "SN_LOTE",
+    "pregunta": "País",
+    "tipoEntrada": "default"
+  },
+  {
+    "node": "ID_NU_ENTIDAD_FEDERATIVA",
+    "pregunta": "Entidad federativa",
+    "tipoEntrada": "catalogo",
+    "catalogo": "EntidadesFederativasCat"
   }
 ]
