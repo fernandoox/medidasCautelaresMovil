@@ -1,0 +1,92 @@
+[
+    {
+        "node": "snNombre",
+        "pregunta": "Nombre",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snApellidoPaterno",
+        "pregunta": "Apellido paterno",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snApellidoMaterno",
+        "pregunta": "Apellido materno",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "parentesco",
+        "pregunta": "Parentesco",
+        "tipoEntrada": "catalogo",
+        "catalogo": "ParentescosCat"
+    },
+    {
+        "node": "nuEdad",
+        "pregunta": "Edad",
+        "tipoEntrada": "numeric"
+    },
+    {
+        "node": "indApoyoEconomico",
+        "pregunta": "Apoya económicamente",
+        "tipoEntrada": "boolean"
+    },
+    {
+        "node": "indDependienteEconomico",
+        "pregunta": "Dependiente económico",
+        "tipoEntrada": "boolean"
+    },
+    {
+        "node": "indMismaVivienda",
+        "pregunta": "Vive en la misma vivienda",
+        "tipoEntrada": "boolean"
+    },
+    {
+        "node": "snCodigoPostal",
+        "pregunta": "Código postal",
+        "tipoEntrada": "numeric",
+        "maxLength": 5
+    },
+    {
+        "node": "snCalle",
+        "pregunta": "Calle",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snNumExterior",
+        "pregunta": "Número exterior",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "municipio",
+        "pregunta": "Municipio",
+        "tipoEntrada": "catalogo",
+        "catalogo": "DelegacionesCat"
+    },
+    {
+        "node": "snColonia",
+        "pregunta": "Colonia",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "idNuEnitidadFederativa",
+        "pregunta": "Entidad federativa",
+        "tipoEntrada": "catalogo",
+        "catalogo": "EntidadesFederativasCat"
+    },
+    {
+        "node": "snTelefono",
+        "pregunta": "Teléfono",
+        "tipoEntrada": "numeric"
+    },
+    {
+        "node": "snFrecuenciaVisita",
+        "pregunta": "Frecuencia de visita",
+        "tipoEntrada": "numeric"
+    },
+    {
+        "node": "snTiempoDeConocerlo",
+        "pregunta": "Tiempo de conocerlo",
+        "tipoEntrada": "default"
+    }
+  ]
+  

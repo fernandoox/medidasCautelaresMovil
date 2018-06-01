@@ -5,53 +5,70 @@ import { Button, Text, Item, Input, Label, H3, Picker, Toast } from 'native-base
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
-import preguntasAgregarMunicipio from '../Utils/Preguntas/AgregarDomicilio.json';
+import preguntasAgregarFamiliar from '../Utils/Preguntas/AgregarFamiliar.json';
+import CatParentescosData from '../Utils/Catalogos/Parentescos.json';
 import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
-import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
+import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 
-export default class AgregarDomicilio extends React.Component { 
+export default class AgregarFamiliar extends React.Component { 
 
   constructor(props){
     super(props)
     this.state = {
-      preguntas: preguntasAgregarMunicipio,
+      preguntas: preguntasAgregarFamiliar,
+      ParentescosCat: CatParentescosData,
       DelegacionesCat: CatDelegacionesData,
-      TiposDomicilioCat: CatTiposDomicilioData,
-      ID_NU_TIPO_DOMICILIO:null,
-      ID_NU_MUNICIPIO:null
+      EntidadesFederativasCat: CatEntidadesFederativasData,
+      parentesco: null,
+      indApoyoEconomico:null,
+      indDependienteEconomico: null,
+      indMismaVivienda: null,
+      municipio: null,
+      idNuEnitidadFederativa: null,
     };
-    jsonRespDomicilio = {}
+    jsonRespFamiliar = {}
   }
 
   componentDidMount(){
     // Se clona json de preguntas a respuestas con solo su nodo en nulo
     this.state.preguntas.map((preg, i) => {
-      jsonRespDomicilio[preg.node] = null;
+      jsonRespFamiliar[preg.node] = null;
     })  
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
-    jsonRespDomicilio[nodeQuestion] = valueData;
+    jsonRespFamiliar[nodeQuestion] = valueData;
   }
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
     switch (nodeQuestion) {
-      case "ID_NU_TIPO_DOMICILIO":
-        this.setState({ID_NU_TIPO_DOMICILIO:itemSelected})
+      case "parentesco":
+        this.setState({parentesco:itemSelected})
         break;
-      case "ID_NU_MUNICIPIO":
-        this.setState({ID_NU_MUNICIPIO:itemSelected})
+      case "indApoyoEconomico":
+        this.setState({indApoyoEconomico:itemSelected})
+        break;
+      case "indDependienteEconomico":
+        this.setState({indDependienteEconomico:itemSelected})
+        break;
+      case "indMismaVivienda":
+        this.setState({indMismaVivienda:itemSelected})
+        break;
+      case "municipio":
+        this.setState({municipio:itemSelected})
+        break;
+      case "idNuEnitidadFederativa":
+        this.setState({idNuEnitidadFederativa:itemSelected})
         break;
       default:
         break;
     }
-    jsonRespDomicilio[nodeQuestion] = itemSelected;
+    jsonRespFamiliar[nodeQuestion] = itemSelected;
   }
 
-  agregarDomicilio = () => {
+  agregarFamiliar = () => {
     if(this.validateForm()){
-      console.log("JSON Domicilio: "+JSON.stringify(jsonRespDomicilio))
-      this.props.agregarDomicilioChild(jsonRespDomicilio);
+      this.props.agregarFamiliarChild(jsonRespFamiliar);
     }
   }
 
@@ -60,13 +77,13 @@ export default class AgregarDomicilio extends React.Component {
     let numQuestions =  Object.keys(this.state.preguntas).length;
     let formValido = true;
     this.state.preguntas.map((preg, i) => {
-      if(jsonRespDomicilio[preg.node] === null || jsonRespDomicilio[preg.node] === ""){
+      if(jsonRespFamiliar[preg.node] === null || jsonRespFamiliar[preg.node] === ""){
         countNull++;
       }
     })
     if(countNull == numQuestions){
       formValido = false;
-      Alert.alert('Error', 'Debe llenar por lo menos un campo del domicilio', [{text: 'OK'}], { cancelable: false });
+      Alert.alert('Error', 'Debe llenar por lo menos un campo del familiar', [{text: 'OK'}], { cancelable: false });
     }
     return formValido;
   }
@@ -78,7 +95,7 @@ export default class AgregarDomicilio extends React.Component {
       <Row>
         <Col>
           <Text style={{marginVertical:10, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
-            AGREGAR DOMICILIO
+            AGREGAR FAMILIAR
           </Text>
         </Col>
       </Row>
@@ -131,6 +148,29 @@ export default class AgregarDomicilio extends React.Component {
                     </Picker>
                   </Item> : null
                 }
+
+                {
+                  (preg.tipoEntrada == "boolean") ?
+                  <Item style={{marginVertical: 5}} stackedLabel>
+                    <Label>{preg.pregunta}:</Label>
+                    <Picker
+                      style={{width: 310}}
+                      iosHeader="Seleccionar una opción"
+                      placeholder="Seleccionar una opción"
+                      itemTextStyle={{ fontSize: 17}}
+                      mode="dropdown"
+                      supportedOrientations={['portrait','landscape']}
+                      selectedValue={this.state[preg.node]}
+                      onValueChange={(itemSelected) => {
+                        this.setValueAnswerCatalogo(itemSelected, preg.node)
+                      }}>
+                      <Item label="Seleccionar una opción" value={null} />
+                      <Item label="SI" value={1} />
+                      <Item label="NO" value={0} />
+                    </Picker>
+                  </Item> : null
+                }
+
               </Col>
               </Row>
             )
@@ -144,7 +184,7 @@ export default class AgregarDomicilio extends React.Component {
             </Button>
           </Col>
           <Col style={{padding:5}}>
-            <Button danger rounded full onPress={this.agregarDomicilio}>
+            <Button danger rounded full onPress={this.agregarFamiliar}>
               <Text>Agregar</Text>
             </Button>
           </Col>

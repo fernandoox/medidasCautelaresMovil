@@ -22,7 +22,7 @@ export default class DatosGenerales extends React.Component {
     super(props)
     this.state = {
       DTM_FECHA_ENTREVISTA: null,
-      FECHA_NACIMIENTO: null,
+      DTM_FECHA_NACIMIENTO: null,
       HORA_ENTREVISTA: null,
       IND_SEXO: null,
       ID_NU_NACIONALIDAD: null,
@@ -30,6 +30,8 @@ export default class DatosGenerales extends React.Component {
       ID_NU_ESTADO_CIVIL: null,
       IND_DOCUMENTO_MIGRATORIO: null,
       ID_NU_TIPO_DOC_MIGRATORIO: null,
+      IND_SABE_LEER_ESCRIBIR: null,
+      IND_SITUACION_CALLE: null,
       ID_NU_MUNICIPIO_LN: null,
       ID_NU_ENTIDAD_FEDERATIVA: null,
       preguntas: preguntasDatosGeneralesData,
@@ -67,8 +69,8 @@ export default class DatosGenerales extends React.Component {
       case "DTM_FECHA_ENTREVISTA":
         this.setState({DTM_FECHA_ENTREVISTA:dateData})
         break;
-      case "FECHA_NACIMIENTO":
-        this.setState({FECHA_NACIMIENTO:dateData})
+      case "DTM_FECHA_NACIMIENTO":
+        this.setState({DTM_FECHA_NACIMIENTO:dateData})
         break;
       case "HORA_ENTREVISTA":
         this.setState({HORA_ENTREVISTA:dateData})
@@ -96,6 +98,15 @@ export default class DatosGenerales extends React.Component {
         break;
       case "IND_DOCUMENTO_MIGRATORIO":
         this.setState({IND_DOCUMENTO_MIGRATORIO:itemSelected})
+        break;
+      case "IND_SABE_LEER_ESCRIBIR":
+        this.setState({IND_SABE_LEER_ESCRIBIR:itemSelected})
+        break;
+      case "IND_SITUACION_CALLE":
+        this.setState({IND_SITUACION_CALLE:itemSelected})
+        break;
+      case "ID_NU_MUNICIPIO_LN":
+        this.setState({ID_NU_MUNICIPIO_LN:itemSelected})
         break;
       case "ID_NU_TIPO_DOC_MIGRATORIO":
         this.setState({ID_NU_TIPO_DOC_MIGRATORIO:itemSelected})

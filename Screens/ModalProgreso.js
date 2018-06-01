@@ -16,6 +16,7 @@ export default class ModalProgreso extends React.Component {
       jsonBase: {},
       jsonGenerales: {},
       jsonDomicilios: {},
+      jsonRedFamiliar: {}
     };
     jsonBaseEntrevistaLocal = {}
   }
@@ -28,7 +29,7 @@ export default class ModalProgreso extends React.Component {
     }).then((response) => {
       jsonBaseEntrevistaLocal = response;
     }).catch(err => {
-      console.warn("ERROR ASYNC: "+err.message);
+      console.error("ERROR ASYNC: "+err.message);
     })
 
     // Load JSON Generales
@@ -39,10 +40,21 @@ export default class ModalProgreso extends React.Component {
       this.setState({jsonGenerales: response});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
-      console.warn("ERROR ASYNC GENERALES: "+err.message);
+      console.error("ERROR ASYNC GENERALES: "+err.message);
     })
     
-     //Load JSON Domicilios
+    // Load JSON Domicilios
+    storage.load({
+      key: 'datosFamiliaresStorage',
+    }).then((response) => {
+      jsonBaseEntrevistaLocal.redFamiliar = response;
+      this.setState({jsonRedFamiliar: response});
+      this.setState({jsonBase: jsonBaseEntrevistaLocal});
+    }).catch(err => {
+      console.error("ERROR ASYNC RED FAMILIAR: "+err.message);
+    })
+
+    // Load JSON Red Familiares
     storage.load({
       key: 'datosDomiciliosStorage',
     }).then((response) => {
@@ -52,11 +64,11 @@ export default class ModalProgreso extends React.Component {
     }).catch(err => {
       console.warn("ERROR ASYNC DOMICILIOS: "+err.message);
     })
-    
-    console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
+
   }
 
   changeStep = (numberStep) => {
+    console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
     this.props.changeStepChild(numberStep);
   }
 
@@ -97,7 +109,7 @@ export default class ModalProgreso extends React.Component {
             />
             <Text style={{marginLeft:10,  color: (this.state.jsonGenerales.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
-          </TouchableOpacity>
+        </TouchableOpacity>
         </Col>
  
         <Col style={[styles.columnStep]}>
@@ -110,7 +122,7 @@ export default class ModalProgreso extends React.Component {
             />
             <Text style={{marginLeft:10,  color: (this.state.jsonDomicilios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
-          </TouchableOpacity>
+        </TouchableOpacity>
         </Col>
 
       </Row>
@@ -119,10 +131,13 @@ export default class ModalProgreso extends React.Component {
 
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(2) }} style={{ padding:15 }}>
-          <Text style={[styles.titleStep]}>Familia</Text>
-          <Badge style={{backgroundColor: 'transparent', borderWidth:1, borderColor:COLORS.LIGHT_ERROR}}>
-            <Icon name="times" style={{ marginRight:10, fontSize: 15, color: COLORS.LIGHT_ERROR, position:'absolute', top:5, left:5}}/>
-            <Text style={{marginLeft:10, color: COLORS.LIGHT_ERROR}}>Completo</Text>
+          <Text style={[styles.titleStep]}>Red Familiar</Text>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonRedFamiliar.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+            <Icon 
+              name={(this.state.jsonRedFamiliar.completo) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonRedFamiliar.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+            />
+            <Text style={{marginLeft:10,  color: (this.state.jsonRedFamiliar.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -162,11 +177,13 @@ export default class ModalProgreso extends React.Component {
         </Col>
         
       </Row>
-      <Row>
+      
+      {/*<Row>
         <Col>
           <Text>{JSON.stringify(this.state.jsonBase)}</Text>
         </Col>
-      </Row>
+      </Row>*/}
+
       <Row>
         <Col style={{ padding:15, justifyContent:'center' }}>
           <Button danger full>

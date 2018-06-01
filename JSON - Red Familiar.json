@@ -3,30 +3,30 @@
     "tipoCaptura": "ONLINE",
     "jsonRedFamiliar": [{
         "dtmFechaAlta": "2018-05-23T13:05:24-05:00",
-        "idNuEnitidadFederativa": 9,
+        "-idNuEnitidadFederativa": 9,
         "idNuFamiliarDetail": 32,
-        "indApoyoEconomico": "0",
-        "indDependienteEconomico": "1",
-        "indMismaVivienda": "1",
-        "municipio": {
+        "-indApoyoEconomico": "0",
+        "-indDependienteEconomico": "1",
+        "-indMismaVivienda": "1",
+        "-municipio": {
             "id": 3,
             "nombreMunicipio": "COYOACAN"
         },
-        "nuEdad": 14,
-        "parentesco": {
+        "-nuEdad": 14,
+        "-parentesco": {
             "dtmFechaAlta": "2017-05-09T00:00:00-05:00",
             "idNuParentesco": 11,
             "indActivo": 1,
             "snParentesco": "SOBRINO (A)"
         },
-        "snApellidoMaterno": "SMITH",
-        "snApellidoPaterno": "JOHSON",
-        "snCalle": "LOS ZOMBIES",
-        "snCodigoPostal": "90400",
-        "snColonia": "1P DE MAYO",
-        "snFrecuenciaVisita": "DIARIO",
-        "snNombre": "NICOLAS",
-        "snNumExterior": "23",
-        "snTelefono": "333333"
+        "-snApellidoMaterno": "SMITH",
+        "-snApellidoPaterno": "JOHSON",
+        "-snCalle": "LOS ZOMBIES",
+        "-snCodigoPostal": "90400",
+        "-snColonia": "1P DE MAYO",
+        "-snFrecuenciaVisita": "DIARIO",
+        "-snNombre": "NICOLAS",
+        "-snNumExterior": "23",
+        "-snTelefono": "333333"
     }]
 }

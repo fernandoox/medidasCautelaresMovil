@@ -15,7 +15,6 @@ import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
 
 const { width, height } = Dimensions.get('window');
 
-
 export default class Domicilios extends React.Component {
 
   constructor(props){
@@ -98,12 +97,10 @@ export default class Domicilios extends React.Component {
     return this.state.TiposDomicilioCat.find(tipoDomicilio).nombre;
   }
 
-  
-
   render() {
     return (
       <View accessible={true}>
-      <ScrollView keyboardShouldPersistTaps="always">
+      <ScrollView>
       <Grid>
 
         <Row>
@@ -131,7 +128,7 @@ export default class Domicilios extends React.Component {
           {
             this.state.domicilios.map((domicilio, i) => {
               return (
-                <Card key={i}>
+                <Card key={i} accessible={true}>
                   <CardItem style={{marginBottom:-10}}>
                     <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
                     <Text>{this.domicilioToString(domicilio)}</Text>
