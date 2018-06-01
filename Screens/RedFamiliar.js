@@ -81,6 +81,22 @@ export default class RedFamiliar extends React.Component {
     return this.state.ParentescosCat.find(parentesco).nombre;
   }
 
+  getResponseIndex = (index) => {
+    let response = "";
+    switch (index) {
+      case 1:
+        response = "SI";
+        break;
+      case 0:
+        response = "NO";
+        break;
+      default:
+        response = "";
+        break;
+    }
+    return response;
+  }
+
   render() {
     return (
     <View>
@@ -108,6 +124,14 @@ export default class RedFamiliar extends React.Component {
                 <CardItem style={{marginBottom:-10}}>
                   <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
                   <Text>Parentesco: {(familiar.parentesco != null) ? this.getParentescoById(familiar.parentesco) : ""}</Text>
+                </CardItem>
+                <CardItem style={{marginBottom:-10}}>
+                  <Icon active name="dollar" style={{fontSize: 18, marginRight:8}} />
+                  <Text>Dependiente económico: {(familiar.indDependienteEconomico != null) ? this.getResponseIndex(familiar.indDependienteEconomico) : ""}</Text>
+                </CardItem>
+                <CardItem style={{marginBottom:-10}}>
+                  <Icon active name="home" style={{fontSize: 18, marginRight:8}} />
+                  <Text>Vive con usted: {(familiar.indMismaVivienda != null) ? this.getResponseIndex(familiar.indMismaVivienda) : ""}</Text>
                 </CardItem>
                 <CardItem style={{marginBottom:-10}}>
                   <Col>
