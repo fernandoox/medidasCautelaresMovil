@@ -1,0 +1,18 @@
+[
+    {
+      "id": 1,
+      "nombre": "Primaria"
+    },
+    {
+      "id": 2,
+      "nombre": "Secundaria"
+    },
+    {
+      "id": 3,
+      "nombre": "Preparatoria"
+    },
+    {
+      "id": 4,
+      "nombre": "Universidad"
+    }
+  ]

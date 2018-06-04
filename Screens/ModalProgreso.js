@@ -16,7 +16,8 @@ export default class ModalProgreso extends React.Component {
       jsonBase: {},
       jsonGenerales: {},
       jsonDomicilios: {},
-      jsonRedFamiliar: {}
+      jsonRedFamiliar: {},
+      jsonEstudios: {}
     };
     jsonBaseEntrevistaLocal = {}
   }
@@ -45,6 +46,17 @@ export default class ModalProgreso extends React.Component {
     
     // Load JSON Domicilios
     storage.load({
+      key: 'datosDomiciliosStorage',
+    }).then((response) => {
+      jsonBaseEntrevistaLocal.domicilios = response;
+      this.setState({jsonDomicilios: response});
+      this.setState({jsonBase: jsonBaseEntrevistaLocal});
+    }).catch(err => {
+      console.warn("ERROR ASYNC DOMICILIOS: "+err.message);
+    })
+
+    // Load JSON Red Familiares
+    storage.load({
       key: 'datosFamiliaresStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.redFamiliar = response;
@@ -54,15 +66,16 @@ export default class ModalProgreso extends React.Component {
       console.error("ERROR ASYNC RED FAMILIAR: "+err.message);
     })
 
-    // Load JSON Red Familiares
-    storage.load({
-      key: 'datosDomiciliosStorage',
+
+     // Load JSON Estudios
+     storage.load({
+      key: 'datosEstudiosStorage',
     }).then((response) => {
-      jsonBaseEntrevistaLocal.domicilios = response;
-      this.setState({jsonDomicilios: response});
+      jsonBaseEntrevistaLocal.estudios = response;
+      this.setState({jsonEstudios: response});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
-      console.warn("ERROR ASYNC DOMICILIOS: "+err.message);
+      console.warn("ERROR ASYNC ESTUDIOS: "+err.message);
     })
 
   }
@@ -145,9 +158,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(3) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Estudios</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1 ,borderColor: COLORS.LIGHT_SUCCESS}}>
-            <Icon name="check" style={{ marginRight:10, fontSize: 15, color: COLORS.LIGHT_SUCCESS, position:'absolute', top:5, left:5}}/>
-            <Text style={{marginLeft:10,  color: COLORS.LIGHT_SUCCESS }}>Completo</Text>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonEstudios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+            <Icon 
+              name={(this.state.jsonEstudios.completo) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonEstudios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+            />
+            <Text style={{marginLeft:10,  color: (this.state.jsonEstudios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>

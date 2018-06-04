@@ -111,6 +111,7 @@ export default class Domicilios extends React.Component {
           </Col>
         </Row>
 
+        {/* Pregunta general, fuera del arreglo de domicilios (se muestra cuando se agrega mas de 1 domicilio) */}
         <Display enable={this.state.numeroDomicilios > 1}
           enterDuration={500} enter="fadeInDown">
           <Row>

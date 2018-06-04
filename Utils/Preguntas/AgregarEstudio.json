@@ -1,0 +1,42 @@
+[
+    {
+        "node": "snNombreEscuela",
+        "pregunta": "Nombre",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snDireccionEscuela",
+        "pregunta": "Dirección",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snTelefonoEscuela",
+        "pregunta": "Teléfono",
+        "tipoEntrada": "numeric"
+    },
+    {
+        "node": "dtmFechaInicioEscuela",
+        "pregunta": "Fecha inicio",
+        "tipoEntrada": "date"
+    },
+    {
+        "node": "snGradoEstudios",
+        "pregunta": "Grado",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snDiasEscuela",
+        "pregunta": "Días",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snTurnoEscuela",
+        "pregunta": "Turno",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "indEscuelaActual",
+        "pregunta": "Escuela actual",
+        "tipoEntrada": "boolean"
+    }
+]

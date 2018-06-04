@@ -6,6 +6,7 @@
     "slug": "entrevistaMedidas",
     "sdkVersion": "26.0.0",
     "assetBundlePatterns": [
+      "Utils/*",
       "assets/img/*",
       "native-base/Fonts/*",
       "node_modules/native-base/Fonts/*"
