@@ -1,0 +1,52 @@
+[
+    {
+        "node": "snNombre",
+        "pregunta": "Nombre",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snDireccion",
+        "pregunta": "Dirección",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snTelefono",
+        "pregunta": "Teléfono",
+        "tipoEntrada": "numeric"
+    },
+    {
+        "node": "dtmFechaInicio",
+        "pregunta": "Fecha inicio",
+        "tipoEntrada": "date"
+    },
+    {
+        "node": "snSalario",
+        "pregunta": "Salario",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snPuesto",
+        "pregunta": "Puesto",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snActividades",
+        "pregunta": "Actividades",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "indEmpleoActual",
+        "pregunta": "Empleo actual",
+        "tipoEntrada": "boolean"
+    },
+    {
+        "node": "snNombreJefe",
+        "pregunta": "Jefe",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snPeriodoLaboral",
+        "pregunta": "Periodo laboral",
+        "tipoEntrada": "default"
+    }
+]
