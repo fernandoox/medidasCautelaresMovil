@@ -68,7 +68,7 @@ export default class ModalProgreso extends React.Component {
 
 
      // Load JSON Estudios
-     storage.load({
+    storage.load({
       key: 'datosEstudiosStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.estudios = response;

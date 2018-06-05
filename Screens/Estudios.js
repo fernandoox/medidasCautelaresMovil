@@ -17,16 +17,19 @@ export default class Estudios extends React.Component {
     super(props)
     this.state = {
       isModalVisible: false,
+      estudios: [],
+      numeroEstudios: 0,
       selectedEstudiaActualmente: undefined,
       selectedUltimoGrado: undefined,
       razonDejarEstudiar: null,
       EscolaridadesCat: CatEscolaridadesData,
-      estudios: [],
-      numeroEstudios: 0,
     };
     jsonRespEstudios = {
+      estudiaActualmente: null,
+      ultimoGrado: null,
+      razonDejarEstudiar: null,
       completo: false,
-      jsonEscuelas: []
+      jsonEstudios: []
     }
   }
 
@@ -42,35 +45,31 @@ export default class Estudios extends React.Component {
   }
 
   agregarEstudio = (stateEstudioFromChild) => {
-    console.log("Agregar estudio: " + JSON.stringify(stateEstudioFromChild));
     this.state.estudios.push(stateEstudioFromChild);
     this.saveJsonLocalEstudios(this.state.estudios);
     this.setState({numeroEstudios: Object.keys(this.state.estudios).length});
     this._toggleModal();
   }
 
-  removeFamiliarByIndex = (indexJSON) => {
-    console.log("Remove item index: " + indexJSON);
-    let jsonEstudios = this.state.estudios;
+  removeEstudioByIndex = (indexJSON) => {
+    let jsonAuxEstudios = this.state.estudios;
     // Remove 1 element from index indexJSON
-    jsonEstudios.splice(indexJSON, 1);
-    this.setState({estudios: jsonEstudios});
+    jsonAuxEstudios.splice(indexJSON, 1);
+    this.setState({estudios: jsonAuxEstudios});
     this.saveJsonLocalEstudios(this.state.estudios);
     this.setState({numeroEstudios: Object.keys(this.state.estudios).length});
   }
 
   saveJsonLocalEstudios = (jsonFromAnswers) => {
-    jsonRespEstudios.jsonEscuelas = jsonFromAnswers;
+    jsonRespEstudios.jsonEstudios = jsonFromAnswers;
     jsonRespEstudios.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
     jsonRespEstudios.estudiaActualmente = this.state.selectedEstudiaActualmente;
     jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
     jsonRespEstudios.razonDejarEstudiar = this.state.razonDejarEstudiar;
-    console.log("Estudios: " + JSON.stringify(this.state.estudios));
-
-    /*storage.save({
+    storage.save({
       key: 'datosEstudiosStorage',
       data: jsonRespEstudios,
-    });*/
+    });
   }
 
   render() {
@@ -83,7 +82,7 @@ export default class Estudios extends React.Component {
       <Row>
         <Col style={{ paddingHorizontal:15 }}>
           <Text style={{marginVertical:10, textAlign:'center', color:  COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
-            ESTUDIOS
+            ESTUDIOS ({this.state.numeroEstudios})
           </Text>
         </Col>
       </Row>
@@ -161,7 +160,7 @@ export default class Estudios extends React.Component {
                 </CardItem>
                 <CardItem style={{marginBottom:-10}}>
                   <Col>
-                    <Button transparent full onPress={() => { this.removeFamiliarByIndex(i) }}>
+                    <Button transparent full onPress={() => { this.removeEstudioByIndex(i) }}>
                       <Icon active name="trash" style={{color: COLORS.TEXT_WARN, fontSize:17}}/>
                       <Text style={{color: COLORS.TEXT_WARN}}>Eliminar estudio</Text>
                     </Button>

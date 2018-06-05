@@ -11,7 +11,6 @@ import Modal from "react-native-modal";
 import AgregarFamiliar from './AgregarFamiliar';
 import CatParentescosData from '../Utils/Catalogos/Parentescos.json';
 
-
 export default class RedFamiliar extends React.Component {
 
   constructor(props){
@@ -47,7 +46,6 @@ export default class RedFamiliar extends React.Component {
   }
 
   removeFamiliarByIndex = (indexJSON) => {
-    console.log("Remove item index: " + indexJSON);
     let jsonFamiliares = this.state.familiares;
     // Remove 1 element from index indexJSON
     jsonFamiliares.splice(indexJSON, 1);
@@ -57,7 +55,6 @@ export default class RedFamiliar extends React.Component {
   }
 
   saveJsonLocalFamiliares = (jsonFromAnswers) => {
-    console.log("New storage: "+JSON.stringify(jsonFromAnswers));
     jsonRespFamiliares.jsonRedFamiliar = jsonFromAnswers;
     jsonRespFamiliares.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
     storage.save({

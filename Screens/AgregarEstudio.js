@@ -4,8 +4,8 @@ import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Ale
 import { Button, Text, Item, Input, Label, H3, Picker, Toast } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
+import DatePicker from 'react-native-datepicker';
 import GLOBALS from '../Utils/Globals';
-import DatePicker from 'react-native-datepicker'
 import preguntasAgregarEstudio from '../Utils/Preguntas/AgregarEstudio.json';
 
 export default class AgregarEstudio extends React.Component { 
@@ -17,28 +17,18 @@ export default class AgregarEstudio extends React.Component {
       dtmFechaInicioEscuela: null,
       indEscuelaActual: null,
     };
-    jsonRespEstudios = {}
+    jsonRespEstudio = {}
   }
 
   componentDidMount(){
     // Se clona json de preguntas a respuestas con solo su nodo en nulo
     this.state.preguntas.map((preg, i) => {
-      jsonRespEstudios[preg.node] = null;
+      jsonRespEstudio[preg.node] = null;
     })  
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
-    jsonRespEstudios[nodeQuestion] = valueData;
-  }
-  setValueAnswerDate = (dateData, nodeQuestion) => {
-    switch (nodeQuestion) {
-      case "dtmFechaInicioEscuela":
-        this.setState({dtmFechaInicioEscuela:dateData})
-        break;
-      default:
-        break;
-    }
-    jsonRespEstudios[nodeQuestion] = dateData;
+    jsonRespEstudio[nodeQuestion] = valueData;
   }
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
@@ -49,12 +39,23 @@ export default class AgregarEstudio extends React.Component {
       default:
         break;
     }
-    jsonRespEstudios[nodeQuestion] = itemSelected;
+    jsonRespEstudio[nodeQuestion] = itemSelected;
+  }
+
+  setValueAnswerDate = (dateData, nodeQuestion) => {
+    switch (nodeQuestion) {
+      case "dtmFechaInicioEscuela":
+        this.setState({dtmFechaInicioEscuela:dateData})
+        break;
+      default:
+        break;
+    }
+    jsonRespEstudio[nodeQuestion] = dateData;
   }
 
   agregarEstudio = () => {
     if(this.validateForm()){
-      this.props.agregarEstudioChild(jsonRespEstudios);
+      this.props.agregarEstudioChild(jsonRespEstudio);
     }
   }
 
@@ -63,7 +64,7 @@ export default class AgregarEstudio extends React.Component {
     let numQuestions =  Object.keys(this.state.preguntas).length;
     let formValido = true;
     this.state.preguntas.map((preg, i) => {
-      if(jsonRespEstudios[preg.node] === null || jsonRespEstudios[preg.node] === ""){
+      if(jsonRespEstudio[preg.node] === null || jsonRespEstudio[preg.node] === ""){
         countNull++;
       }
     })
