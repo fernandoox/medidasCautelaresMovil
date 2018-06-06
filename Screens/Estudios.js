@@ -74,10 +74,10 @@ export default class Estudios extends React.Component {
 
   render() {
     return (
-    <View>
+    <View style={{flex:1}}>
 
-    <ScrollView>
-    <Grid>
+    <ScrollView style={{flex:1}}>
+    <Grid style={{flex:1}}>
       
       <Row>
         <Col style={{ paddingHorizontal:15 }}>
@@ -141,7 +141,7 @@ export default class Estudios extends React.Component {
 
         </Col>
       </Row>
-      <Content>
+      <Content style={{flex:1}}>
         {
           this.state.estudios.map((estudio, i) => {
             return (

@@ -1,0 +1,29 @@
+[
+    {
+        "node": "sustancia",
+        "pregunta": "Sustancia",
+        "tipoEntrada": "catalogo",
+        "catalogo": "SustanciasCat"
+    },
+    {
+        "node": "snCantidad",
+        "pregunta": "Cantidad",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "snFrecuenciaConsumo",
+        "pregunta": "Frecuencia de consumo",
+        "tipoEntrada": "default"
+    },
+    {
+        "node": "dtmUltimoConsumo",
+        "pregunta": "Último consumo",
+        "tipoEntrada": "date"
+    },
+    {
+        "node": "nuEdadInicio",
+        "pregunta": "Edad de inicio",
+        "tipoEntrada": "numeric"
+    }
+  ]
+  
