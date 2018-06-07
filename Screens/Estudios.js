@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Label, Input, Picker, H3, Content, Card, CardItem, Body } from 'native-base';
+import { Button, Text, Item, Label, Input, Picker, H3, Content, List, ListItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
@@ -141,32 +141,34 @@ export default class Estudios extends React.Component {
 
         </Col>
       </Row>
-      <Content style={{flex:1}}>
+      <Content>
         {
           this.state.estudios.map((estudio, i) => {
             return (
-              <Card key={i} accessible={true}>
-                <CardItem style={{marginBottom:-10}}>
+              <Col key={i} style={{elevation: 2, backgroundColor:'white', marginVertical:5}}>
+              <List accessible={true}>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="bookmark" style={{fontSize: 18, marginRight:8}} />
                   <Text>Nombre: {(estudio.snNombreEscuela != null) ? estudio.snNombreEscuela : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="map-marker" style={{fontSize: 18, marginRight:8}} />
                   <Text>Dirección: {(estudio.snDireccionEscuela != null) ? estudio.snDireccionEscuela : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="phone" style={{fontSize: 18, marginRight:8}} />
                   <Text>Teléfono: {(estudio.snTelefonoEscuela != null) ? estudio.snTelefonoEscuela : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-12, marginBottom:-12}}>
                   <Col>
                     <Button transparent full onPress={() => { this.removeEstudioByIndex(i) }}>
                       <Icon active name="trash" style={{color: COLORS.TEXT_WARN, fontSize:17}}/>
                       <Text style={{color: COLORS.TEXT_WARN}}>Eliminar estudio</Text>
                     </Button>
                   </Col>
-                </CardItem>
-              </Card>
+                </ListItem>
+              </List>
+              </Col>
             );
           })
         }

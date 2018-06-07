@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Label, Input, Picker, H3, Content, Card, CardItem, Body } from 'native-base';
+import { Button, Text, Item, Label, Input, Picker, H3, Content, List, ListItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
@@ -77,7 +77,7 @@ export default class Sustancias extends React.Component {
     <View style={{flex:1}}>
 
     <ScrollView style={{flex:1}}>
-    <Grid style={{flex:1}}>
+    <Grid>
       
       <Row>
         <Col style={{ paddingHorizontal:15 }}>
@@ -111,36 +111,38 @@ export default class Sustancias extends React.Component {
         </Col>
       </Row>
       
-      <Content style={{flex:1}}>
+      <Content>
         {
           this.state.sustancias.map((sustancia, i) => {
             return (
-              <Card key={i} accessible={true}>
-                <CardItem style={{marginBottom:-10}}>
+              <Col key={i} style={{elevation: 2, backgroundColor:'white', marginVertical:5}}>
+              <List accessible={true}>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="tint" style={{fontSize: 18, marginRight:8}} />
                   <Text>Sustancia: {(sustancia.sustancia != null) ? this.getSustanciaById(sustancia.sustancia) : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="database" style={{fontSize: 18, marginRight:8}} />
                   <Text>Cantidad: {(sustancia.snCantidad != null) ? sustancia.snCantidad : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="history" style={{fontSize: 18, marginRight:8}} />
                   <Text>Periodicidad: {(sustancia.snFrecuenciaConsumo != null) ? sustancia.snFrecuenciaConsumo : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-8, marginBottom:-8}}>
                   <Icon active name="calendar" style={{fontSize: 18, marginRight:8}} />
                   <Text>Último consumo: {(sustancia.dtmUltimoConsumo != null) ? sustancia.dtmUltimoConsumo : ""}</Text>
-                </CardItem>
-                <CardItem style={{marginBottom:-10}}>
+                </ListItem>
+                <ListItem style={{marginTop:-12, marginBottom:-12}}>
                   <Col>
                     <Button transparent full onPress={() => { this.removeSustanciaByIndex(i) }}>
                       <Icon active name="trash" style={{color: COLORS.TEXT_WARN, fontSize:17}}/>
                       <Text style={{color: COLORS.TEXT_WARN}}>Eliminar sustancia</Text>
                     </Button>
                   </Col>
-                </CardItem>
-              </Card>
+                </ListItem>
+              </List>
+              </Col>
             );
           })
         }

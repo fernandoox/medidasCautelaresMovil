@@ -53,8 +53,8 @@ global.COLORS = {
 // Steps config
 global.labelsSteps = ["Generales","Domicilios","Familia","Estudios","Ocupación", "Sustancias"];
 global.customStylesSteps = {
-      stepIndicatorSize: 25,
-      currentStepIndicatorSize:28,
+      stepIndicatorSize: 30,
+      currentStepIndicatorSize:32,
       separatorStrokeWidth: 1,
       currentStepStrokeWidth: 2,
       stepStrokeCurrentColor: COLORS.BACKGROUND_PRIMARY,
@@ -66,8 +66,8 @@ global.customStylesSteps = {
       stepIndicatorFinishedColor: COLORS.BACKGROUND_PRIMARY,
       stepIndicatorUnFinishedColor: '#ffffff',
       stepIndicatorCurrentColor: '#ffffff',
-      stepIndicatorLabelFontSize: 11,
-      currentStepIndicatorLabelFontSize: 11,
+      stepIndicatorLabelFontSize: 12,
+      currentStepIndicatorLabelFontSize: 12,
       stepIndicatorLabelCurrentColor: COLORS.BACKGROUND_PRIMARY,
       stepIndicatorLabelFinishedColor: '#ffffff',
       stepIndicatorLabelUnFinishedColor: '#aaaaaa',

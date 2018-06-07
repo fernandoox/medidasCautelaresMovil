@@ -76,9 +76,7 @@ export default class AgregarSustancia extends React.Component {
       }
     }
   }
-
-  //
-
+  
   validateForm = () => {
     let countNull = 0;
     let numQuestions =  Object.keys(this.state.preguntas).length;
