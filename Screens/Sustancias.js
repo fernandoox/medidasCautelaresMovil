@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import Storage from 'react-native-storage';
+import Display from 'react-native-display';
 import GLOBALS from '../Utils/Globals';
 import Modal from "react-native-modal";
 import AgregarSustancia from './AgregarSustancia';
@@ -17,7 +18,7 @@ export default class Sustancias extends React.Component {
     super(props)
     this.state = {
       isModalVisible: false,
-      selectedIndConsumeSustancias: undefined,
+      selectedIndConsumeSustancias: null,
       sustancias: [],
       numeroSustancias: 0,
       SustanciasCat: CatSustanciasData,
@@ -40,6 +41,25 @@ export default class Sustancias extends React.Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
+  setValueConsumeSustancias = (valueConsumeSustancias) => {
+    /*
+      Since setState works in an asynchronous way. 
+      That means after calling setState the this.state is not immediately changed. 
+      So if you want to perform an action immediately after setting state, 
+      use 2nd argument as callback on setState
+    */
+    this.setState({
+      selectedIndConsumeSustancias: valueConsumeSustancias
+    }, () => {
+      if (!valueConsumeSustancias) {
+        this.setState({sustancias: []});
+      }
+      this.saveJsonLocalSustancia(this.state.sustancias);
+      this.setState({numeroSustancias: Object.keys(this.state.sustancias).length});
+    });
+    
+  }
+
   agregarSustancia = (stateSustanciaFromChild) => {
     this.state.sustancias.push(stateSustanciaFromChild);
     this.saveJsonLocalSustancia(this.state.sustancias);
@@ -59,7 +79,14 @@ export default class Sustancias extends React.Component {
   saveJsonLocalSustancia = (jsonFromAnswers) => {
     jsonRespSustancias.sustancias = jsonFromAnswers;
     jsonRespSustancias.indConsumeSustancias = this.state.selectedIndConsumeSustancias;
-    jsonRespSustancias.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
+    if (Object.keys(jsonFromAnswers).length == 0 && !this.state.selectedIndConsumeSustancias) {
+      jsonRespSustancias.completo = true;
+    }else if(Object.keys(jsonFromAnswers).length > 0){
+      jsonRespSustancias.completo = true;
+    }
+    else{
+      jsonRespSustancias.completo = false;
+    }
     storage.save({
       key: 'datosSustanciasStorage',
       data: jsonRespSustancias,
@@ -101,7 +128,9 @@ export default class Sustancias extends React.Component {
               mode="dropdown"
               supportedOrientations={['portrait','landscape']}
               selectedValue={this.state.selectedIndConsumeSustancias}
-              onValueChange={(selectedIndConsumeSustancias) => this.setState({selectedIndConsumeSustancias})}>
+              onValueChange={(itemSelected) => {
+                this.setValueConsumeSustancias(itemSelected)
+              }}>
               <Item label="Seleccionar una opción" value={null} />
               <Item label="SI" value={1} />
               <Item label="NO" value={0} />
@@ -159,9 +188,15 @@ export default class Sustancias extends React.Component {
     </Modal>
 
     <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
+    <Display enable={this.state.selectedIndConsumeSustancias}
+      enterDuration={500}
+      exitDuration={500}
+      enter="fadeInDown"
+      exit="fadeOutDown">
       <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}>
         <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />
       </Button>
+    </Display>
     </View>
 
     </View>
