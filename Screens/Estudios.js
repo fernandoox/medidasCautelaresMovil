@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import Storage from 'react-native-storage';
+import Display from 'react-native-display';
 import GLOBALS from '../Utils/Globals';
 import Modal from "react-native-modal";
 import AgregarEstudio from './AgregarEstudio';
@@ -44,6 +45,20 @@ export default class Estudios extends React.Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
+  setValueUltimoGrado = (valueUltimoGrado) => {
+    console.log("Value: " + valueUltimoGrado)
+    this.setState({
+      selectedUltimoGrado: valueUltimoGrado
+    }, () => {
+      if (valueUltimoGrado == 23) {
+        this.setState({estudios: []});
+      }
+      this.saveJsonLocalEstudios(this.state.estudios);
+      this.setState({numeroEstudios: Object.keys(this.state.estudios).length});
+    });
+    
+  }
+
   agregarEstudio = (stateEstudioFromChild) => {
     this.state.estudios.push(stateEstudioFromChild);
     this.saveJsonLocalEstudios(this.state.estudios);
@@ -62,10 +77,19 @@ export default class Estudios extends React.Component {
 
   saveJsonLocalEstudios = (jsonFromAnswers) => {
     jsonRespEstudios.jsonEstudios = jsonFromAnswers;
-    jsonRespEstudios.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
     jsonRespEstudios.estudiaActualmente = this.state.selectedEstudiaActualmente;
     jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
     jsonRespEstudios.razonDejarEstudiar = this.state.razonDejarEstudiar;
+    jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
+    if (Object.keys(jsonFromAnswers).length == 0 && this.state.selectedUltimoGrado == 23) {
+      jsonRespEstudios.completo = true;
+    }else if(Object.keys(jsonFromAnswers).length > 0){
+      jsonRespEstudios.completo = true;
+    }
+    else{
+      jsonRespEstudios.completo = false;
+    }
+
     storage.save({
       key: 'datosEstudiosStorage',
       data: jsonRespEstudios,
@@ -118,7 +142,9 @@ export default class Estudios extends React.Component {
               mode="dropdown"
               supportedOrientations={['portrait','landscape']}
               selectedValue={this.state.selectedUltimoGrado}
-              onValueChange={(selectedUltimoGrado) => this.setState({selectedUltimoGrado})}>
+              onValueChange={(itemSelected) => {
+                this.setValueUltimoGrado(itemSelected)
+              }}>
               <Item label="Seleccionar una opción" value={null} />
               {
                 this.state.EscolaridadesCat.map((catalogo) => {
@@ -184,9 +210,15 @@ export default class Estudios extends React.Component {
     </Modal>
 
     <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
-      <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}>
-        <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />
-      </Button>
+      <Display enable={this.state.selectedUltimoGrado != 23}
+        enterDuration={500}
+        exitDuration={500}
+        enter="fadeInDown"
+        exit="fadeOutDown">
+        <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}>
+          <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />
+        </Button>
+      </Display>
     </View>
 
     </View>
