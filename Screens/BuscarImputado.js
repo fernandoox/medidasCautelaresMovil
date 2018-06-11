@@ -40,8 +40,9 @@ export default class BuscarImputado extends React.Component {
     console.log("Buscando imputados con carpeta: "+this.state.carpetaJudicial);
     console.log("Online: "+this.state.isConnected);
     this.setState({isLoading: true});
-    axios.get('/imputados', {
+    axios.get('/imputado/getByCarpetaJudicial', {
       params: {
+        idEvaluador: 545,
         numeroCarpeta: this.state.carpetaJudicial
       }
     })

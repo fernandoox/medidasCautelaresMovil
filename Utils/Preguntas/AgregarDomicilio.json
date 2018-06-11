@@ -1,51 +1,68 @@
-[
+[ 
     {
-      "node": "SN_CODIGO_POSTAL",
+      "node": "idNuEntidadFederativa",
+      "pregunta": "Entidad federativa",
+      "tipoEntrada": "catalogo",
+      "catalogo": "EntidadesFederativasCat"
+    },
+    {
+      "node": "snCodigoPostal",
       "pregunta": "Código postal",
       "tipoEntrada": "numeric",
       "maxLength": 5
     },
     {
-      "node": "ID_NU_MUNICIPIO",
+      "node": "municipio",
       "pregunta": "Municipio",
       "tipoEntrada": "catalogo",
       "catalogo": "DelegacionesCat"
     },
     {
-      "node": "SN_COLONIA",
+      "node": "snColonia",
       "pregunta": "Colonia",
       "tipoEntrada": "default"
     },
     {
-      "node": "SN_CALLE",
+      "node": "snCalle",
       "pregunta": "Calle",
       "tipoEntrada": "default"
     },
     {
-      "node": "SN_NUM_EXTERIOR",
+      "node": "snNumExterior",
       "pregunta": "Número exterior",
       "tipoEntrada": "default"
     },
     {
-      "node": "SN_REFERENCIAS_DOMICILIO",
-      "pregunta": "Cómo llegar",
+      "node": "snNumInterior",
+      "pregunta": "Número interior",
       "tipoEntrada": "default"
     },
     {
-      "node": "SN_TIEMPO_VIVIR",
+      "node": "snReferenciasDomicilio",
+      "pregunta": "Referencias",
+      "tipoEntrada": "default"
+    },
+    {
+      "node": "snTiempoVivir",
       "pregunta": "Tiempo de vivir en el domicilio",
       "tipoEntrada": "default"
     },
     {
-      "node": "TELEFONO",
+      "node": "snTelefono",
       "pregunta": "Teléfono",
       "tipoEntrada": "numeric"
     },
     {
-      "node": "ID_NU_TIPO_DOMICILIO",
+      "node": "tipoDomicilio",
       "pregunta": "Tipo de domicilio",
       "tipoEntrada": "catalogo",
       "catalogo": "TiposDomicilioCat"
+    },
+    {
+      "node": "tipoVivienda",
+      "pregunta": "Tipo de vivienda",
+      "tipoEntrada": "catalogo",
+      "catalogo": "TiposViviendaCat"
     }
   ]
   

@@ -6,8 +6,10 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import preguntasAgregarMunicipio from '../Utils/Preguntas/AgregarDomicilio.json';
+import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
 import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
+import CatTiposViviendaData from '../Utils/Catalogos/TiposVivienda.json';
 
 export default class AgregarDomicilio extends React.Component { 
 
@@ -15,10 +17,14 @@ export default class AgregarDomicilio extends React.Component {
     super(props)
     this.state = {
       preguntas: preguntasAgregarMunicipio,
+      EntidadesFederativasCat: CatEntidadesFederativasData,
       DelegacionesCat: CatDelegacionesData,
       TiposDomicilioCat: CatTiposDomicilioData,
-      ID_NU_TIPO_DOMICILIO:null,
-      ID_NU_MUNICIPIO:null
+      TiposViviendaCat: CatTiposViviendaData,
+      idNuEntidadFederativa: null,
+      municipio:null,
+      tipoDomicilio:null,
+      tipoVivienda:null,
     };
     jsonRespDomicilio = {}
   }
@@ -36,11 +42,17 @@ export default class AgregarDomicilio extends React.Component {
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
     switch (nodeQuestion) {
-      case "ID_NU_TIPO_DOMICILIO":
-        this.setState({ID_NU_TIPO_DOMICILIO:itemSelected})
+      case "idNuEntidadFederativa":
+        this.setState({idNuEntidadFederativa:itemSelected})
         break;
-      case "ID_NU_MUNICIPIO":
-        this.setState({ID_NU_MUNICIPIO:itemSelected})
+      case "municipio":
+        this.setState({municipio:itemSelected})
+        break;
+      case "tipoDomicilio":
+        this.setState({tipoDomicilio:itemSelected})
+        break;
+      case "tipoVivienda":
+        this.setState({tipoVivienda:itemSelected})
         break;
       default:
         break;

@@ -164,7 +164,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
                     <Item stackedLabel>
-                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
+                      <Label>{preg.pregunta}:</Label>
                       <Input
                         keyboardType={preg.tipoEntrada}
                         style={{fontSize: 16}}
@@ -177,7 +177,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "date" || preg.tipoEntrada == "time") ?
                     <Item style={{marginVertical: 5}} stackedLabel>
-                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
+                      <Label>{preg.pregunta}:</Label>
                       <DatePicker
                         style={{width: 310}}
                         customStyles={{dateInput:{borderWidth: 0}}}
@@ -195,7 +195,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "catalogo") ?
                     <Item style={{marginVertical: 5}} stackedLabel>
-                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
+                      <Label>{preg.pregunta}:</Label>
                       <Picker
                         style={{width: 310}}
                         iosHeader="Seleccionar una opción"
@@ -224,7 +224,7 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "boolean") ?
                     <Item style={{marginVertical: 5}} stackedLabel>
-                      <Label>{(i + 1) + " - " + preg.pregunta}:</Label>
+                      <Label>{preg.pregunta}:</Label>
                       <Picker
                         style={{width: 310}}
                         iosHeader="Seleccionar una opción"
