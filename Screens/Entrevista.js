@@ -18,7 +18,6 @@ import Estudios from './Estudios';
 import Ocupacion from './Ocupacion';
 import Sustancias from './Sustancias';
 
-
 const { width, height } = Dimensions.get('window');
 
 export default class Entrevista extends React.Component {
@@ -153,7 +152,12 @@ export default class Entrevista extends React.Component {
 
         <Modal onSwipe={() => this.setState({ isModalVisible: false })}
           swipeDirection="right" isVisible={this.state.isModalVisible}>
-          <ModalProgreso changeStepChild={this.changeStepInProgress} imputado={this.state.imputado} carpetaJudicial={this.state.carpetaJudicial}/>
+          <ModalProgreso 
+            changeStepChild={this.changeStepInProgress} 
+            imputado={this.state.imputado} 
+            carpetaJudicial={this.state.carpetaJudicial}
+            nav={this.props.navigation}
+            cerrarModalProgrsoChild={this._toggleModalProgress}/>
         </Modal>
 
       </Grid>

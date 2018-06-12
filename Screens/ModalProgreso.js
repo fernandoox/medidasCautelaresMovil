@@ -1,6 +1,6 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, ActivityIndicator, Alert, NetInfo, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,14 +14,15 @@ export default class ModalProgreso extends React.Component {
     super(props)
     this.state = {
       jsonBase: {},
-      jsonGenerales: {},
-      jsonDomicilios: {},
-      jsonRedFamiliar: {},
-      jsonEstudios: {},
-      jsonOcupaciones: {},
-      jsonSustancias: {}
+      jsonGeneralesCompleto: null,
+      jsonDomiciliosCompleto: null,
+      jsonRedFamiliarCompleto: null,
+      jsonEstudiosCompleto: null,
+      jsonOcupacionesCompleto: null,
+      jsonSustanciasCompleto: null
     };
     jsonBaseEntrevistaLocal = {}
+    const nav = this.props.nav;
   }
 
   componentDidMount(){
@@ -40,7 +41,7 @@ export default class ModalProgreso extends React.Component {
       key: 'datosGeneralesStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.datosGenerales = response;
-      this.setState({jsonGenerales: response});
+      this.setState({jsonGeneralesCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
       console.error("ERROR ASYNC GENERALES: "+err.message);
@@ -51,7 +52,7 @@ export default class ModalProgreso extends React.Component {
       key: 'datosDomiciliosStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.domicilios = response;
-      this.setState({jsonDomicilios: response});
+      this.setState({jsonDomiciliosCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
       console.warn("ERROR ASYNC DOMICILIOS: "+err.message);
@@ -62,7 +63,7 @@ export default class ModalProgreso extends React.Component {
       key: 'datosFamiliaresStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.redFamiliar = response;
-      this.setState({jsonRedFamiliar: response});
+      this.setState({jsonRedFamiliarCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
       console.error("ERROR ASYNC RED FAMILIAR: "+err.message);
@@ -73,7 +74,7 @@ export default class ModalProgreso extends React.Component {
       key: 'datosEstudiosStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.estudios = response;
-      this.setState({jsonEstudios: response});
+      this.setState({jsonEstudiosCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
       console.warn("ERROR ASYNC ESTUDIOS: "+err.message);
@@ -84,7 +85,7 @@ export default class ModalProgreso extends React.Component {
       key: 'datosOcupacionesStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.ocupaciones = response;
-      this.setState({jsonOcupaciones: response});
+      this.setState({jsonOcupacionesCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
       console.warn("ERROR ASYNC OCUPACIONES: "+err.message);
@@ -95,17 +96,37 @@ export default class ModalProgreso extends React.Component {
       key: 'datosSustanciasStorage',
     }).then((response) => {
       jsonBaseEntrevistaLocal.sustancias = response;
-      this.setState({jsonSustancias: response});
+      this.setState({jsonSustanciasCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
       console.warn("ERROR ASYNC SUSTANCIAS: "+err.message);
     })
-
   }
 
   changeStep = (numberStep) => {
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
     this.props.changeStepChild(numberStep);
+  }
+
+  saveInfoTotal = () => {
+    console.log("Save info total.");
+    console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
+    axios({
+      method: 'post',
+      url: '/evaluacion/update',
+      data: this.state.jsonBase
+    })
+    .then((res) => {
+      console.log(JSON.stringify(res.data));
+      Alert.alert('OK', JSON.stringify(res.data), [{text: 'OK'}], { cancelable: false });
+    })
+    .catch(async (error) => {
+      console.log("CATCH ERROR: "+error);
+      Alert.alert('OK', error, [{text: 'OK'}], { cancelable: false });
+    });
+    
+    //this.props.cerrarModalProgrsoChild();
+    //this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545 });
   }
 
   render() {
@@ -138,12 +159,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(0) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Generales</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonGenerales.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonGeneralesCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
             <Icon 
-              name={(this.state.jsonGenerales.completo) ? "check" : "times"} 
-              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonGenerales.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+              name={(this.state.jsonGeneralesCompleto) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonGeneralesCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
             />
-            <Text style={{marginLeft:10,  color: (this.state.jsonGenerales.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
+            <Text style={{marginLeft:10,  color: (this.state.jsonGeneralesCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -151,12 +172,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(1) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Domicilios</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonDomicilios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonDomiciliosCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
             <Icon 
-              name={(this.state.jsonDomicilios.completo) ? "check" : "times"} 
-              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonDomicilios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+              name={(this.state.jsonDomiciliosCompleto) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonDomiciliosCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
             />
-            <Text style={{marginLeft:10,  color: (this.state.jsonDomicilios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
+            <Text style={{marginLeft:10,  color: (this.state.jsonDomiciliosCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -168,12 +189,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(2) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Red Familiar</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonRedFamiliar.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonRedFamiliarCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
             <Icon 
-              name={(this.state.jsonRedFamiliar.completo) ? "check" : "times"} 
-              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonRedFamiliar.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+              name={(this.state.jsonRedFamiliarCompleto) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonRedFamiliarCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
             />
-            <Text style={{marginLeft:10,  color: (this.state.jsonRedFamiliar.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
+            <Text style={{marginLeft:10,  color: (this.state.jsonRedFamiliarCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -181,12 +202,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(3) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Estudios</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonEstudios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonEstudiosCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
             <Icon 
-              name={(this.state.jsonEstudios.completo) ? "check" : "times"} 
-              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonEstudios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+              name={(this.state.jsonEstudiosCompleto) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonEstudiosCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
             />
-            <Text style={{marginLeft:10,  color: (this.state.jsonEstudios.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
+            <Text style={{marginLeft:10,  color: (this.state.jsonEstudiosCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -198,12 +219,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(4) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Ocupaciones</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonOcupaciones.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonOcupacionesCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
             <Icon 
-              name={(this.state.jsonOcupaciones.completo) ? "check" : "times"} 
-              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonOcupaciones.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+              name={(this.state.jsonOcupacionesCompleto) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonOcupacionesCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
             />
-            <Text style={{marginLeft:10,  color: (this.state.jsonOcupaciones.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
+            <Text style={{marginLeft:10,  color: (this.state.jsonOcupacionesCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -211,12 +232,12 @@ export default class ModalProgreso extends React.Component {
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(5) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Sustancias</Text>
-          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonSustancias.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
+          <Badge style={{marginVertical:5, backgroundColor:'transparent',  borderWidth:1, borderColor: (this.state.jsonSustanciasCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN}}>
             <Icon 
-              name={(this.state.jsonSustancias.completo) ? "check" : "times"} 
-              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonSustancias.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
+              name={(this.state.jsonSustanciasCompleto) ? "check" : "times"} 
+              style={{ marginRight:10, fontSize: 15, color: (this.state.jsonSustanciasCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN, position:'absolute', top:5, left:5}}
             />
-            <Text style={{marginLeft:10,  color: (this.state.jsonSustancias.completo) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
+            <Text style={{marginLeft:10,  color: (this.state.jsonSustanciasCompleto) ? COLORS.LIGHT_SUCCESS : COLORS.LIGHT_WARN }}>Completo</Text>
           </Badge>
         </TouchableOpacity>
         </Col>
@@ -231,7 +252,7 @@ export default class ModalProgreso extends React.Component {
 
       <Row>
         <Col style={{ padding:15, justifyContent:'center' }}>
-          <Button danger full>
+          <Button danger full onPress={this.saveInfoTotal}>
             <Text>Terminar entrevista</Text>
           </Button>
         </Col>

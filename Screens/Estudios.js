@@ -26,9 +26,9 @@ export default class Estudios extends React.Component {
       EscolaridadesCat: CatEscolaridadesData,
     };
     jsonRespEstudios = {
-      estudiaActualmente: null,
+      indEstudiaActualmente: null,
       ultimoGrado: null,
-      razonDejarEstudiar: null,
+      snRazonDejarEstudiar: null,
       completo: false,
       jsonEstudios: []
     }
@@ -77,9 +77,9 @@ export default class Estudios extends React.Component {
 
   saveJsonLocalEstudios = (jsonFromAnswers) => {
     jsonRespEstudios.jsonEstudios = jsonFromAnswers;
-    jsonRespEstudios.estudiaActualmente = this.state.selectedEstudiaActualmente;
+    jsonRespEstudios.indEstudiaActualmente = this.state.selectedEstudiaActualmente;
     jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
-    jsonRespEstudios.razonDejarEstudiar = this.state.razonDejarEstudiar;
+    jsonRespEstudios.snRazonDejarEstudiar = this.state.razonDejarEstudiar;
     jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
     if (Object.keys(jsonFromAnswers).length == 0 && this.state.selectedUltimoGrado == 23) {
       jsonRespEstudios.completo = true;

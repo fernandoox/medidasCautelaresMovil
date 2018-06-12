@@ -5,7 +5,7 @@ import { AsyncStorage } from 'react-native';
 
 /*-------------------------------------------------------------------------------------*/
 // REST API with Axios config
-axios.defaults.baseURL = 'http://10.2.51.136:9090/sscmc_ws/api/app';
+axios.defaults.baseURL = 'http://10.2.48.179:60523/SSCMC_WS/api/app';
 axios.defaults.timeout = 3000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 /*-------------------------------------------------------------------------------------*/

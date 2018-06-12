@@ -57,10 +57,10 @@ export default class Sustancias extends React.Component {
       this.saveJsonLocalSustancia(this.state.sustancias);
       this.setState({numeroSustancias: Object.keys(this.state.sustancias).length});
     });
-    
   }
 
   agregarSustancia = (stateSustanciaFromChild) => {
+    stateSustanciaFromChild.nuEdadInicio = Number(stateSustanciaFromChild.nuEdadInicio);
     this.state.sustancias.push(stateSustanciaFromChild);
     this.saveJsonLocalSustancia(this.state.sustancias);
     this.setState({numeroSustancias: Object.keys(this.state.sustancias).length});

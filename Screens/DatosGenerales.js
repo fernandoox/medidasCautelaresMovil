@@ -21,19 +21,19 @@ export default class DatosGenerales extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      DTM_FECHA_ENTREVISTA: null,
-      DTM_FECHA_NACIMIENTO: null,
-      HORA_ENTREVISTA: null,
-      IND_SEXO: null,
-      ID_NU_NACIONALIDAD: null,
-      ID_NU_LUGAR_ENTREVISTA: null,
-      ID_NU_ESTADO_CIVIL: null,
-      IND_DOCUMENTO_MIGRATORIO: null,
-      ID_NU_TIPO_DOC_MIGRATORIO: null,
-      IND_SABE_LEER_ESCRIBIR: null,
-      IND_SITUACION_CALLE: null,
-      ID_NU_MUNICIPIO_LN: null,
-      ID_NU_ENTIDAD_FEDERATIVA: null,
+      dtmFechaEntrevista: null,
+      dtmFechaNacimiento: null,
+      horaEntrevista: null,
+      indSexo: null,
+      snNacionalidad: null,
+      lugarEntrevista: null,
+      estadoCivil: null,
+      indDocumentoMigratorio: null,
+      tipoDocMigratorio: null,
+      indSabeLeerEscribir: null,
+      indSituacionCalle: null,
+      municipioLn: null,
+      idNuEntidadFederativa: null,
       preguntas: preguntasDatosGeneralesData,
       SexoCat: CatSexoData,
       NacionalidesCat: CatNacionalidadesData,
@@ -41,7 +41,7 @@ export default class DatosGenerales extends React.Component {
       EstadosCivilesCat: CatEstadosCivilesData,
       TiposDocMigratorioCat: CatTiposDocMigratorioData,
       DelegacionesCat: CatDelegacionesData,
-      EntidadesFederativasCat: CatEntidadesFederativasData,
+      EntidadesFederativasCat: CatEntidadesFederativasData
     };
     jsonRespDatosGenerales = {}
   }
@@ -66,14 +66,14 @@ export default class DatosGenerales extends React.Component {
 
   setValueAnswerDate = (dateData, nodeQuestion) => {
     switch (nodeQuestion) {
-      case "DTM_FECHA_ENTREVISTA":
-        this.setState({DTM_FECHA_ENTREVISTA:dateData})
+      case "dtmFechaEntrevista":
+        this.setState({dtmFechaEntrevista:dateData})
         break;
-      case "DTM_FECHA_NACIMIENTO":
-        this.setState({DTM_FECHA_NACIMIENTO:dateData})
+      case "dtmFechaNacimiento":
+        this.setState({dtmFechaNacimiento:dateData})
         break;
-      case "HORA_ENTREVISTA":
-        this.setState({HORA_ENTREVISTA:dateData})
+      case "horaEntrevista":
+        this.setState({horaEntrevista:dateData})
         break;
       default:
         break;
@@ -84,35 +84,35 @@ export default class DatosGenerales extends React.Component {
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
     switch (nodeQuestion) {
-      case "ID_NU_LUGAR_ENTREVISTA":
-        this.setState({ID_NU_LUGAR_ENTREVISTA:itemSelected})
+      case "lugarEntrevista":
+        this.setState({lugarEntrevista:itemSelected})
         break;
-      case "IND_SEXO":
-        this.setState({IND_SEXO:itemSelected})
+      case "indSexo":
+        this.setState({indSexo:itemSelected})
         break;
-      case "ID_NU_ESTADO_CIVIL":
-        this.setState({ID_NU_ESTADO_CIVIL:itemSelected})
+      case "estadoCivil":
+        this.setState({estadoCivil:itemSelected})
         break;
-      case "ID_NU_NACIONALIDAD":
-        this.setState({ID_NU_NACIONALIDAD:itemSelected})
+      case "snNacionalidad":
+        this.setState({snNacionalidad:itemSelected})
         break;
-      case "IND_DOCUMENTO_MIGRATORIO":
-        this.setState({IND_DOCUMENTO_MIGRATORIO:itemSelected})
+      case "indDocumentoMigratorio":
+        this.setState({indDocumentoMigratorio:itemSelected})
         break;
-      case "IND_SABE_LEER_ESCRIBIR":
-        this.setState({IND_SABE_LEER_ESCRIBIR:itemSelected})
+      case "indSabeLeerEscribir":
+        this.setState({indSabeLeerEscribir:itemSelected})
         break;
-      case "IND_SITUACION_CALLE":
-        this.setState({IND_SITUACION_CALLE:itemSelected})
+      case "indSituacionCalle":
+        this.setState({indSituacionCalle:itemSelected})
         break;
-      case "ID_NU_MUNICIPIO_LN":
-        this.setState({ID_NU_MUNICIPIO_LN:itemSelected})
+      case "municipioLn":
+        this.setState({municipioLn:itemSelected})
         break;
-      case "ID_NU_TIPO_DOC_MIGRATORIO":
-        this.setState({ID_NU_TIPO_DOC_MIGRATORIO:itemSelected})
+      case "tipoDocMigratorio":
+        this.setState({tipoDocMigratorio:itemSelected})
         break;
-      case "ID_NU_ENTIDAD_FEDERATIVA":
-        this.setState({ID_NU_ENTIDAD_FEDERATIVA:itemSelected})
+      case "idNuEntidadFederativa":
+        this.setState({idNuEntidadFederativa:itemSelected})
         break;
       default:
         break;
@@ -122,7 +122,6 @@ export default class DatosGenerales extends React.Component {
   }
   
   saveJsonLocalGenerales = (jsonFromAnswers) => {
-    console.log("New storage: "+JSON.stringify(jsonFromAnswers));
     jsonFromAnswers.completo = this.validateForm();
     storage.save({
       key: 'datosGeneralesStorage',

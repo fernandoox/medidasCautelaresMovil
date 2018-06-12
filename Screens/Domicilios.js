@@ -74,11 +74,11 @@ export default class Domicilios extends React.Component {
   }
 
   domicilioToString = (domicilio) => {
-    let calle = (domicilio.SN_CALLE != null) ? domicilio.SN_CALLE : "";
-    let numExt = (domicilio.SN_NUM_EXTERIOR != null) ? domicilio.SN_NUM_EXTERIOR : "";
-    let colonia = (domicilio.SN_COLONIA != null) ? domicilio.SN_COLONIA : "";
-    let cPostal = (domicilio.SN_CODIGO_POSTAL != null) ? domicilio.SN_CODIGO_POSTAL : "";
-    let municipio = (domicilio.ID_NU_MUNICIPIO != null) ? this.getDelegacionById(domicilio.ID_NU_MUNICIPIO) : "";
+    let calle = (domicilio.snCalle != null) ? domicilio.snCalle : "";
+    let numExt = (domicilio.snNumExterior != null) ? domicilio.snNumExterior : "";
+    let colonia = (domicilio.snColonia != null) ? domicilio.snColonia : "";
+    let cPostal = (domicilio.snCodigoPostal != null) ? domicilio.snCodigoPostal : "";
+    let municipio = (domicilio.municipio != null) ? this.getDelegacionById(domicilio.municipio) : "";
     let domicilioStr =  calle + " " + numExt + ", " + colonia + ", C.P. " + cPostal + ", " + municipio + ", Ciudad de México";
     return domicilioStr;
   }
@@ -137,15 +137,15 @@ export default class Domicilios extends React.Component {
                   </ListItem>
                   <ListItem style={{marginTop:-8, marginBottom:-8}}>
                     <Icon active name="tag" style={{fontSize: 18, marginRight:8}} />
-                    <Text>Tipo domicilio: {(domicilio.ID_NU_TIPO_DOMICILIO != null) ? this.getTipoDomicilioById(domicilio.ID_NU_TIPO_DOMICILIO) : ""}</Text>
+                    <Text>Tipo domicilio: {(domicilio.tipoDomicilio != null) ? this.getTipoDomicilioById(domicilio.tipoDomicilio) : ""}</Text>
                   </ListItem>
                   <ListItem style={{marginTop:-8, marginBottom:-8}}>
                     <Icon active name="calendar" style={{fontSize: 18, marginRight:8}} />
-                    <Text>Horarios: {(domicilio.SN_TIEMPO_VIVIR != null) ? domicilio.SN_TIEMPO_VIVIR : ""}</Text>
+                    <Text>Horarios: {(domicilio.snTiempoVivir != null) ? domicilio.snTiempoVivir : ""}</Text>
                   </ListItem>
                   <ListItem style={{marginTop:-8, marginBottom:-8}}>
                     <Icon active name="phone" style={{fontSize: 18, marginRight:8}} />
-                    <Text>Teléfono: {(domicilio.TELEFONO != null) ? domicilio.TELEFONO : ""}</Text>
+                    <Text>Teléfono: {(domicilio.snTelefono != null) ? domicilio.snTelefono : ""}</Text>
                   </ListItem>
                   <ListItem style={{marginTop: -12, marginBottom:-12}}>
                     <Col>

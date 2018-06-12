@@ -1,60 +1,102 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Input, H3 } from 'native-base';
+import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { Button, Text, Item, Label, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import Display from 'react-native-display';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
-
 export default class Login extends React.Component {
-  // Header Screen
-  static navigationOptions = {
-    title: 'Login',
-  }
 
   constructor(props){
     super(props)
     this.state = {
+      isLoading: false,
+      isConnected: null,
     };
   }
 
-
-
-  nextPreprocess = () => {
-    console.log("Siguiente login...");
-    // Save step state for use in other steps of the wizard
-    this.props.saveState(2,{otroNodoRespuesta:'valores'});
-    this.props.nextFn()
+  componentDidMount(){
+    NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({isConnected}); }
+    );
   }
-  
-  previousPreprocess = () => {
-    console.log("Anterior login...");
-    // Go to previous step
-    this.props.prevFn();
+
+ componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
+  }
+
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({isConnected});
+  };
+
+  loginEvaluador = () => {
+      const {navigate} = this.props.navigation;
+      navigate('BuscarImputadoScreen',
+        {
+          idEvaludador: 545
+        }
+      )
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
+          <ActivityIndicator size="large"/>
+        </View>
+      );
+    }
+
     return (
-          <Grid>
+      <KeyboardAvoidingView behavior="position">
+        <ScrollView keyboardShouldPersistTaps="always" >
+          <Grid >
             <Row>
               <Col style={{ paddingHorizontal:15 }}>
-                <Text style={{color: 'crimson'}}>LOGIN</Text>
-              </Col>
-            </Row>
 
-            <Row size={20}>
-              <Col style={{padding:5}}>
-                <Button full rounded light onPress={this.previousPreprocess}>
-                  <Text>Anterior</Text>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Image source={require('../assets/img/iconAppRojo.png')} resizeMode="contain"
+                  style={{width:150, marginTop:-5}}></Image>
+                </View>
+
+                <Text style={{fontSize:18, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, marginTop:-15, marginBottom:30}}>
+                  GESTIÓN DE MEDIDAS CAUTELARES
+                </Text>
+
+                <Item rounded style={{marginVertical: 10}}>
+                  <Icon active name='user' style={{fontSize: 22, marginHorizontal:10}}/>
+                  <Input
+                    placeholder="Usuario"
+                    autoCapitalize='none' autoCorrect={false}
+                    style={{fontSize: 18}}
+                  />
+                </Item>
+
+                <Item rounded style={{marginVertical: 10}}>
+                  <Icon active name='unlock' style={{fontSize: 22, marginHorizontal:10}}/>
+                  <Input placeholder="Contraseña" style={{fontSize: 18}} secureTextEntry={true}/>
+                </Item>
+
+                <Button full danger
+                  style={{marginVertical: 10, borderRadius:20, marginTop: 30}}
+                  onPress={this.loginEvaluador}>
+                    <Text>Iniciar sesión</Text>
                 </Button>
-              </Col>
-              <Col style={{padding:5}}>
-                <Button full rounded danger onPress={this.nextPreprocess}>
-                  <Text>Siguiente</Text>
+
+                <Button full danger bordered
+                  style={{marginVertical: 10, borderRadius:20}}
+                  onPress={this.loginEvaluador} disabled={this.state.isConnected}>
+                    <Text>Omitir</Text>
                 </Button>
+
               </Col>
             </Row>
           </Grid>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

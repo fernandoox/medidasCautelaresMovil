@@ -1,182 +1,176 @@
 [
   {
-    "node": "ID_NU_LUGAR_ENTREVISTA",
+    "node": "lugarEntrevista",
     "pregunta": "Lugar de entrevista",
     "tipoEntrada": "catalogo",
     "catalogo": "LugaresEntrevistaCat"
   },
   {
-    "node": "DTM_FECHA_ENTREVISTA",
+    "node": "dtmFechaEntrevista",
     "pregunta": "Fecha de entrevista",
     "tipoEntrada": "date"
   },
   {
-    "node": "HORA_ENTREVISTA",
-    "pregunta": "Hora de entrevista",
-    "tipoEntrada": "time"
-  },
-  {
-    "node": "SN_CARPETA_INVESTIGACION",
+    "node": "snCarpetaInvestigacion",
     "pregunta": "Carpeta de investigación",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_CARPETA_JUDICIAL",
+    "node": "snCarpetaJudicial",
     "pregunta": "Carpeta judicial",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_NOMBRE",
+    "node": "snNombre",
     "pregunta": "Nombre del adolescente",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_APELLIDO_PATERNO",
+    "node": "snApellidoPaterno",
     "pregunta": "Apellido paterno",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_APELLIDO_MATERNO",
+    "node": "snApellidoMaterno",
     "pregunta": "Apellido materno",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_OTROS_NOMBRES",
+    "node": "snOtrosNombres",
     "pregunta": "Otros nombres",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_APODOS",
+    "node": "snApodos",
     "pregunta": "Apodo (s)",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_GRUPO_ETNICO",
+    "node": "snGrupoEtnico",
     "pregunta": "Grupo étnico o indigena",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_SITUACION_DISCAPACIDAD",
+    "node": "snSituacionDiscapacidad",
     "pregunta": "Situación de discapacidad",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_RFC",
+    "node": "snRfc",
     "pregunta": "RFC",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_CURP",
+    "node": "snCurp",
     "pregunta": "CURP",
     "tipoEntrada": "default"
   },
   {
-    "node": "IND_SEXO",
+    "node": "indSexo",
     "pregunta": "Sexo",
     "tipoEntrada": "catalogo",
     "catalogo": "SexoCat"
   },
   {
-    "node": "DTM_FECHA_NACIMIENTO",
+    "node": "dtmFechaNacimiento",
     "pregunta": "Fecha de nacimiento",
     "tipoEntrada": "date"
   },
   {
-    "node": "NU_EDAD",
+    "node": "nuEdad",
     "pregunta": "Edad",
     "tipoEntrada": "numeric"
   },
   {
-    "node": "ID_NU_ESTADO_CIVIL",
+    "node": "estadoCivil",
     "pregunta": "Estado civil",
     "tipoEntrada": "catalogo",
     "catalogo": "EstadosCivilesCat"
   },
   {
-    "node": "SN_DURACION",
+    "node": "snDuracion",
     "pregunta": "Duración",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_PAIS",
+    "node": "snPais",
     "pregunta": "País",
     "tipoEntrada": "default"
   },
   {
-    "node": "ID_NU_NACIONALIDAD",
+    "node": "snNacionalidad",
     "pregunta": "Nacionalidad",
-    "tipoEntrada": "catalogo",
-    "catalogo": "NacionalidesCat"
+    "tipoEntrada": "default"
   },
   {
-    "node": "IND_DOCUMENTO_MIGRATORIO",
+    "node": "indDocumentoMigratorio",
     "pregunta": "Documento migratorio",
     "tipoEntrada": "boolean"
   },
   {
-    "node": "ID_NU_TIPO_DOC_MIGRATORIO",
+    "node": "tipoDocMigratorio",
     "pregunta": "Tipo de documento migratorio",
     "tipoEntrada": "catalogo",
     "catalogo": "TiposDocMigratorioCat"
   },
   {
-    "node": "IND_SABE_LEER_ESCRIBIR",
+    "node": "indSabeLeerEscribir",
     "pregunta": "Sabe leer y escribir",
     "tipoEntrada": "boolean"
   },
   {
-    "node": "IND_SITUACION_CALLE",
+    "node": "indSituacionCalle",
     "pregunta": "Situación de calle",
     "tipoEntrada": "boolean"
   },
   {
-    "node": "SN_TELEFONO",
+    "node": "snTelefono",
     "pregunta": "Teléfono",
     "tipoEntrada": "numeric"
   },
   {
-    "node": "SN_CODIGO_POSTAL",
+    "node": "snCodigoPostal",
     "pregunta": "Código postal",
     "tipoEntrada": "numeric"
   },
   {
-    "node": "ID_NU_MUNICIPIO_LN",
+    "node": "municipioLn",
     "pregunta": "Municipio",
     "tipoEntrada": "catalogo",
     "catalogo": "DelegacionesCat"
   },
   {
-    "node": "SN_COLONIA",
+    "node": "snColonia",
     "pregunta": "Colonia",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_CALLE",
+    "node": "snCalle",
     "pregunta": "Calle",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_NUM_EXTERIOR",
+    "node": "snNumExterior",
     "pregunta": "Número exterior",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_NUM_INTERIOR",
+    "node": "snNumInterior",
     "pregunta": "Número interior",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_MANZANA",
+    "node": "snManzana",
     "pregunta": "Manzana",
     "tipoEntrada": "default"
   },
   {
-    "node": "SN_LOTE",
+    "node": "snLote",
     "pregunta": "País",
     "tipoEntrada": "default"
   },
   {
-    "node": "ID_NU_ENTIDAD_FEDERATIVA",
+    "node": "idNuEntidadFederativa",
     "pregunta": "Entidad federativa",
     "tipoEntrada": "catalogo",
     "catalogo": "EntidadesFederativasCat"

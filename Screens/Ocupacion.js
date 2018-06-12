@@ -22,7 +22,7 @@ export default class Ocupacion extends React.Component {
     };
     jsonRespOcupaciones = {
       completo: false,
-      trabajaActualmente: null,
+      indTrabajaActualmente: null,
       ocupaciones: []
     }
   }
@@ -56,7 +56,7 @@ export default class Ocupacion extends React.Component {
 
   saveJsonLocalOcupaciones = (jsonFromAnswers) => {
     jsonRespOcupaciones.ocupaciones = jsonFromAnswers;
-    jsonRespOcupaciones.trabajaActualmente = this.state.selectedTrabajaActualmente;
+    jsonRespOcupaciones.indTrabajaActualmente = this.state.selectedTrabajaActualmente;
     jsonRespOcupaciones.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
     storage.save({
       key: 'datosOcupacionesStorage',

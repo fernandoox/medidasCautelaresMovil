@@ -1,12 +1,13 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
 import { Button, Text, Item, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 import ImputadoTemporal from './ImputadoTemporal'
+
 export default class BuscarImputado extends React.Component {
 
   constructor(props){
@@ -19,6 +20,7 @@ export default class BuscarImputado extends React.Component {
       numImputados: 0,
       selectedImputado: null,
     };
+    numBack = 0;
   }
 
   componentDidMount(){
@@ -26,10 +28,25 @@ export default class BuscarImputado extends React.Component {
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
     );
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
 
- componentWillUnmount() {
+  componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton() {
+    numBack++;
+    if (numBack > 1) {
+      ToastAndroid.show('Cerró la aplicación.', ToastAndroid.SHORT);
+      BackHandler.exitApp();
+      numBack = 0;
+    }else{
+      ToastAndroid.show('Presione otra vez para salir.', ToastAndroid.SHORT);
+    }
+    console.log("Num backs:" + numBack);
+    return true;
   }
 
   _handleConnectivityChange = (isConnected) => {
@@ -87,7 +104,6 @@ export default class BuscarImputado extends React.Component {
       )
   }
 
-
   render() {
     if (this.state.loading) {
       return (
@@ -117,7 +133,7 @@ export default class BuscarImputado extends React.Component {
                   <Input
                     placeholder='Carpeta juidicial'
                     placeholderTextColor='#2C4743'
-                    autoCapitalize='none' autoCorrect={false}
+                    autoCapitalize='characters' autoCorrect={false}
                     style={{color:'#2C4743', fontSize: 17}}
                     onChangeText={(carpetaJudicial) => this.setState({carpetaJudicial}) }/>
                 </Item>
