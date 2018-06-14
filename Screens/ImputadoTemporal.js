@@ -8,10 +8,6 @@ import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
 
 export default class ImputadoTemporal extends React.Component {
-  // Header Screen
-  static navigationOptions = {
-    title: 'Imputado temporal',
-  }
 
   constructor(props){
     super(props)

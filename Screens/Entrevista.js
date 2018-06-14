@@ -39,9 +39,11 @@ export default class Entrevista extends React.Component {
     // Props contienen los parametros de BuscarImputadoScreen e ImputadoTemporalScreen
     const { params } = this.props.navigation.state;
     this.state = {
+      isLoading: false,
       isConnected: null,
       isModalVisible: false,
       imputado: params.imputadoParam,
+      dataImputado: {},
       carpetaJudicial: params.carpetaJudicialParam,
       tipoCaptura: params.tipoCapturaParam,
       currentPosition: 0,
@@ -62,6 +64,12 @@ export default class Entrevista extends React.Component {
       (isConnected) => { this.setState({isConnected}); }
     );
 
+    if (this.state.imputado.id != null) {
+      this.getDataImputado();
+    }else{
+      console.log("No hay conexion, no se recupera información del imputado");
+    }
+
     storage.save({
       key: 'jsonBaseEntrevistaStorage',
       data: jsonBaseEntrevista,
@@ -75,6 +83,29 @@ export default class Entrevista extends React.Component {
   verificarConexion = (isConnected) => {
     this.setState({isConnected});
   };
+
+  getDataImputado = async () => {
+    this.setState({isLoading: true});
+    axios.get('/evaluacion/get', {
+      params: {
+        idImputado: this.state.imputado.id,
+      }
+    })
+    .then((res) => {
+      if (res.data.status == "ok") {
+        //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion.datosGenerales));
+        this.setState({dataImputado: res.data.evaluacion, isLoading: false});
+      }
+      if (res.data.status == "error") {
+        Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
+        this.setState({isLoading: false});
+      }
+    })
+    .catch(async (error) => {
+      console.log("CATCH ERROR: "+error);
+      this.setState({isLoading: false});
+    });
+  }
 
   _toggleModalProgress = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
@@ -96,6 +127,14 @@ export default class Entrevista extends React.Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
+          <ActivityIndicator size="large"/>
+        </View>
+      );
+    }
+
     return (
       <Grid>
         
@@ -140,9 +179,11 @@ export default class Entrevista extends React.Component {
             currentPage={0}
             onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <DatosGenerales/>
+              <DatosGenerales generalesDB={this.state.dataImputado.datosGenerales}/>
             </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Domicilios/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+              <Domicilios domiciliosDB={this.state.dataImputado.domicilios}/>
+            </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><RedFamiliar/></View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>

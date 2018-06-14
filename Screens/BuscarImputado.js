@@ -45,7 +45,6 @@ export default class BuscarImputado extends React.Component {
     }else{
       ToastAndroid.show('Presione otra vez para salir.', ToastAndroid.SHORT);
     }
-    console.log("Num backs:" + numBack);
     return true;
   }
 
@@ -54,8 +53,6 @@ export default class BuscarImputado extends React.Component {
   };
 
   buscarImputadosByCarpeta = async () => {
-    console.log("Buscando imputados con carpeta: "+this.state.carpetaJudicial);
-    console.log("Online: "+this.state.isConnected);
     this.setState({isLoading: true});
     axios.get('/imputado/getByCarpetaJudicial', {
       params: {
@@ -90,7 +87,6 @@ export default class BuscarImputado extends React.Component {
 
   onSelectImputado(value) {
     this.setState({ selectedImputado: value })
-    console.log("Imputado: " + JSON.stringify(this.state.selectedImputado));
   }
 
   aplicarEntrevistaImputado = () => {

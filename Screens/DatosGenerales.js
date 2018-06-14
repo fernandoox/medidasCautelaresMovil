@@ -20,6 +20,7 @@ export default class DatosGenerales extends React.Component {
 
   constructor(props){
     super(props)
+    
     this.state = {
       dtmFechaEntrevista: null,
       dtmFechaNacimiento: null,
@@ -41,9 +42,12 @@ export default class DatosGenerales extends React.Component {
       EstadosCivilesCat: CatEstadosCivilesData,
       TiposDocMigratorioCat: CatTiposDocMigratorioData,
       DelegacionesCat: CatDelegacionesData,
-      EntidadesFederativasCat: CatEntidadesFederativasData
+      EntidadesFederativasCat: CatEntidadesFederativasData,
+      loadedResponsesBD: false
     };
-    jsonRespDatosGenerales = {}
+    jsonRespDatosGenerales = {
+      completo: false
+    }
   }
 
   componentDidMount(){
@@ -52,11 +56,33 @@ export default class DatosGenerales extends React.Component {
       jsonRespDatosGenerales[preg.node] = null;
     })
 
-    jsonRespDatosGenerales.completo = false;
     storage.save({
       key: 'datosGeneralesStorage',
       data: jsonRespDatosGenerales,
     });
+
+  }
+
+  componentDidUpdate(){
+    if (!this.state.loadedResponsesBD && (this.props.generalesDB != undefined || this.props.generalesDB != null)) {
+      this.setValueAnswerFromBD();
+    }
+  }
+
+  setValueAnswerFromBD = () => {
+    this.setState({loadedResponsesBD: true});
+    let objGeneralesDB = this.props.generalesDB;
+    for (let nodeDB in objGeneralesDB) {
+      if (objGeneralesDB.hasOwnProperty(nodeDB)) {
+        jsonRespDatosGenerales[nodeDB] = objGeneralesDB[nodeDB];
+        this.state.preguntas.map((pregLocal, i) => {
+          if (pregLocal.node == nodeDB) {
+            pregLocal.valueBD = objGeneralesDB[nodeDB];
+          }
+        })
+      }
+    }
+    this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
@@ -65,6 +91,7 @@ export default class DatosGenerales extends React.Component {
   }
 
   setValueAnswerDate = (dateData, nodeQuestion) => {
+    
     switch (nodeQuestion) {
       case "dtmFechaEntrevista":
         this.setState({dtmFechaEntrevista:dateData})
@@ -82,7 +109,9 @@ export default class DatosGenerales extends React.Component {
     this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
+
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
+    
     switch (nodeQuestion) {
       case "lugarEntrevista":
         this.setState({lugarEntrevista:itemSelected})
@@ -119,6 +148,7 @@ export default class DatosGenerales extends React.Component {
     }
     jsonRespDatosGenerales[nodeQuestion] = itemSelected;
     this.saveJsonLocalGenerales(jsonRespDatosGenerales);
+    
   }
   
   saveJsonLocalGenerales = (jsonFromAnswers) => {
@@ -151,7 +181,7 @@ export default class DatosGenerales extends React.Component {
             <Text style={{marginVertical:10, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, fontWeight:'bold'}}>
               DATOS GENERALES
             </Text>
-            </Col>
+          </Col>
         </Row>
 
         {/* Iterar el JSON de Preguntas */}
@@ -163,8 +193,9 @@ export default class DatosGenerales extends React.Component {
                   {
                     (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
                     <Item stackedLabel>
-                      <Label>{preg.pregunta}:</Label>
+                      <Label>{preg.pregunta}</Label>
                       <Input
+                        defaultValue={preg.valueBD}
                         keyboardType={preg.tipoEntrada}
                         style={{fontSize: 16}}
                         onChangeText={(valueData) => {
@@ -180,7 +211,7 @@ export default class DatosGenerales extends React.Component {
                       <DatePicker
                         style={{width: 310}}
                         customStyles={{dateInput:{borderWidth: 0}}}
-                        date={this.state[preg.node]}
+                        date={(preg.valueBD == null) ? this.state[preg.node] : preg.valueBD}
                         placeholder="Seleccionar"
                         mode={preg.tipoEntrada}
                         androidMode="spinner"
@@ -202,7 +233,7 @@ export default class DatosGenerales extends React.Component {
                         itemTextStyle={{ fontSize: 17}}
                         mode="dropdown"
                         supportedOrientations={['portrait','landscape']}
-                        selectedValue={this.state[preg.node]}
+                        selectedValue={(preg.valueBD == null) ? this.state[preg.node] : preg.valueBD}
                         onValueChange={(itemSelected) => {
                           this.setValueAnswerCatalogo(itemSelected, preg.node)
                         }}>
@@ -231,7 +262,7 @@ export default class DatosGenerales extends React.Component {
                         itemTextStyle={{ fontSize: 17}}
                         mode="dropdown"
                         supportedOrientations={['portrait','landscape']}
-                        selectedValue={this.state[preg.node]}
+                        selectedValue={(preg.valueBD == null) ? this.state[preg.node] : preg.valueBD}
                         onValueChange={(itemSelected) => {
                           this.setValueAnswerCatalogo(itemSelected, preg.node)
                         }}>
@@ -246,7 +277,6 @@ export default class DatosGenerales extends React.Component {
             )
           })
         }
-
       </Grid>
       </ScrollView>
       </KeyboardAvoidingView>

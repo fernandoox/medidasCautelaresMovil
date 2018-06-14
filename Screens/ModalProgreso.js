@@ -13,6 +13,8 @@ export default class ModalProgreso extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      isLoading: false,
+      isConnected: null,
       jsonBase: {},
       jsonGeneralesCompleto: null,
       jsonDomiciliosCompleto: null,
@@ -26,6 +28,12 @@ export default class ModalProgreso extends React.Component {
   }
 
   componentDidMount(){
+
+    // Detectar conexion
+    NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({isConnected}); }
+    );
 
     // Load JSON Base
     storage.load({
@@ -103,30 +111,47 @@ export default class ModalProgreso extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
+  }
+
+  _handleConnectivityChange = (isConnected) => {
+    this.setState({isConnected});
+  };
+
   changeStep = (numberStep) => {
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
     this.props.changeStepChild(numberStep);
   }
 
   saveInfoTotal = () => {
-    console.log("Save info total.");
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
-    axios({
-      method: 'post',
-      url: '/evaluacion/update',
-      data: this.state.jsonBase
-    })
-    .then((res) => {
-      console.log(JSON.stringify(res.data));
-      Alert.alert('OK', JSON.stringify(res.data), [{text: 'OK'}], { cancelable: false });
-    })
-    .catch(async (error) => {
-      console.log("CATCH ERROR: "+error);
-      Alert.alert('OK', error, [{text: 'OK'}], { cancelable: false });
-    });
+    console.log("Save info total.");
+    if (this.state.isConnected) {
+      axios({
+        method: 'post',
+        url: '/evaluacion/update',
+        data: this.state.jsonBase
+      })
+      .then((res) => {
+        console.log(JSON.stringify(res.data));
+        Alert.alert('OK', JSON.stringify(res.data), [{text: 'OK'}], { cancelable: false });
+      })
+      .catch(async (error) => {
+        console.log("CATCH ERROR: "+error);
+        Alert.alert('OK', error, [{text: 'OK'}], { cancelable: false });
+      });
+    }else{
+      Alert.alert('Problemas de red', "No hay conexión a internet, se enviará cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
+      /**
+       * Guardar en dispositivo el json aux que se enviará.
+       * Podrá continuar realizando mas entrevistas.
+       * 
+       */
+    }
     
-    //this.props.cerrarModalProgrsoChild();
-    //this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545 });
+    this.props.cerrarModalProgrsoChild();
+    this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545 });
   }
 
   render() {

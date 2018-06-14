@@ -26,6 +26,7 @@ export default class Domicilios extends React.Component {
       motivoVariosDomicilios: null,
       DelegacionesCat: CatDelegacionesData,
       TiposDomicilioCat: CatTiposDomicilioData,
+      loadedResponsesBD: false
     };
     jsonRespDomicilios = {
       completo: false,
@@ -39,6 +40,22 @@ export default class Domicilios extends React.Component {
       key: 'datosDomiciliosStorage',
       data: jsonRespDomicilios,
     });
+  }
+
+  componentDidUpdate(){
+    if(!this.state.loadedResponsesBD && (this.props.domiciliosDB != undefined || this.props.domiciliosDB != null)){
+      this.setDomiciliosFromDB();
+    }
+  }
+
+  setDomiciliosFromDB = () => {
+    this.setState({
+      loadedResponsesBD: true,
+      domicilios:this.props.domiciliosDB.datosDomicilios,
+      numeroDomicilios: Object.keys(this.props.domiciliosDB.datosDomicilios).length,
+      motivoVariosDomicilios:this.props.domiciliosDB.snRazonMultiplesDomicilios
+    });
+    this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);
   }
 
   _toggleModal = () => {
@@ -63,7 +80,6 @@ export default class Domicilios extends React.Component {
   }
 
   saveJsonLocalDomicilios = (jsonFromAnswers) => {
-    console.log("New storage: "+JSON.stringify(jsonFromAnswers));
     jsonRespDomicilios.datosDomicilios = jsonFromAnswers;
     jsonRespDomicilios.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
     jsonRespDomicilios.snRazonMultDomicilios = (Object.keys(jsonFromAnswers).length > 0) ? this.state.motivoVariosDomicilios : null;
@@ -119,6 +135,7 @@ export default class Domicilios extends React.Component {
               <Item style={{marginVertical: 10}} stackedLabel>
                 <Label>Razón de tener mas de un domicilio:</Label>
                 <Input style={{fontSize: 16}} 
+                  defaultValue={this.state.motivoVariosDomicilios}
                   onChangeText={(motivoVariosDomicilios) => this.setState({motivoVariosDomicilios}) }/>
               </Item>
             </Col>
@@ -161,11 +178,7 @@ export default class Domicilios extends React.Component {
             })
           }
           </Content>
-          <Row>
-            <Col style={{padding:5, marginTop:30}}>
-
-            </Col>
-          </Row>
+          <Row><Col style={{padding:5, marginTop:30}}></Col></Row>
         </Grid>
         </ScrollView>
         

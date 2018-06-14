@@ -8,6 +8,7 @@ import BuscarImputado from './Screens/BuscarImputado';
 import ImputadoTemporal from './Screens/ImputadoTemporal';
 import Entrevista from './Screens/Entrevista';
 import GLOBALS from './Utils/Globals';
+import ignoreWarnings from 'react-native-ignore-warnings';
 
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
@@ -49,18 +50,21 @@ const AppNavigation = () => (
 );
 
 export default class App extends React.Component {
-  constructor(props) {
-     super(props);
-     this.state = {
-       loading: true
-     };
-     YellowBox.ignoreWarnings([
-      'Warning: componentWillMount is deprecated',
-      'Warning: componentWillReceiveProps is deprecated',
-      'Warning: componentWillUpdate is deprecated',
-    ]);
+   constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    };
    }
 
+    componentDidMount(){
+      ignoreWarnings([
+         'Warning: componentWillMount is deprecated',
+         'Warning: componentWillReceiveProps is deprecated',
+         'Warning: componentWillUpdate is deprecated'
+      ]);
+    }
+   
   async componentWillMount() {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
