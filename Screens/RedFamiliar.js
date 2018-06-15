@@ -20,6 +20,7 @@ export default class RedFamiliar extends React.Component {
       familiares: [],
       numeroFamiliares: 0,
       ParentescosCat: CatParentescosData,
+      loadedResponsesBD: false,
     };
     jsonRespFamiliares = {
       completo: false,
@@ -32,6 +33,20 @@ export default class RedFamiliar extends React.Component {
       key: 'datosFamiliaresStorage',
       data: jsonRespFamiliares,
     });
+    this.setValueAnswerFromBD();
+  }
+
+  setValueAnswerFromBD = () => {
+    if(!this.state.loadedResponsesBD && (this.props.familiaDB != undefined || this.props.familiaDB != null)){
+      console.log("Set valores familiares!!")
+      this.setState({
+        loadedResponsesBD: true,
+        familiares: this.props.familiaDB.jsonRedFamiliar,
+        numeroFamiliares: Object.keys(this.props.familiaDB.jsonRedFamiliar).length,
+      });
+    }
+    this.setState({loadedResponsesBD: true});
+    this.saveJsonLocalFamiliares(this.props.familiaDB.jsonRedFamiliar);
   }
 
   _toggleModal = () => {

@@ -5,6 +5,7 @@ import { Button, Text, Item, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import axios from 'axios';
+import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import ImputadoTemporal from './ImputadoTemporal'
 
@@ -12,10 +13,11 @@ export default class BuscarImputado extends React.Component {
 
   constructor(props){
     super(props)
+    const { params } = this.props.navigation.state;
     this.state = {
       isLoading: false,
       isConnected: null,
-      carpetaJudicial: null,
+      carpetaJudicial: (params.carpetaJudicialParam == undefined) ? null : params.carpetaJudicialParam,
       imputados: [],
       numImputados: 0,
       selectedImputado: null,
@@ -29,6 +31,7 @@ export default class BuscarImputado extends React.Component {
       (isConnected) => { this.setState({isConnected}); }
     );
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    //storage.clearMap();
   }
 
   componentWillUnmount() {
@@ -127,6 +130,7 @@ export default class BuscarImputado extends React.Component {
 
                 <Item style={{marginVertical: 10}}>
                   <Input
+                    defaultValue={this.state.carpetaJudicial}
                     placeholder='Carpeta juidicial'
                     placeholderTextColor='#2C4743'
                     autoCapitalize='characters' autoCorrect={false}

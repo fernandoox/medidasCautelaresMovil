@@ -109,6 +109,7 @@ export default class AgregarDomicilio extends React.Component {
                       keyboardType={preg.tipoEntrada}
                       maxLength={preg.maxLength}
                       style={{fontSize: 16}}
+                      autoCapitalize='characters'
                       onChangeText={(valueData) => {
                         this.setValueAnswerText(valueData, preg.node);
                       }}/>

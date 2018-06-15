@@ -136,6 +136,7 @@ export default class ModalProgreso extends React.Component {
       .then((res) => {
         console.log(JSON.stringify(res.data));
         Alert.alert('OK', JSON.stringify(res.data), [{text: 'OK'}], { cancelable: false });
+        storage.clearMap();
       })
       .catch(async (error) => {
         console.log("CATCH ERROR: "+error);
@@ -146,12 +147,10 @@ export default class ModalProgreso extends React.Component {
       /**
        * Guardar en dispositivo el json aux que se enviará.
        * Podrá continuar realizando mas entrevistas.
-       * 
        */
     }
-    
     this.props.cerrarModalProgrsoChild();
-    this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545 });
+    this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545, carpetaJudicialParam: this.props.carpetaJudicial});
   }
 
   render() {

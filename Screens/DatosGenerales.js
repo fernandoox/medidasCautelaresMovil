@@ -51,6 +51,7 @@ export default class DatosGenerales extends React.Component {
   }
 
   componentDidMount(){
+
     // Se clona json de preguntas a respuestas con solo su nodo en nulo
     this.state.preguntas.map((preg, i) => {
       jsonRespDatosGenerales[preg.node] = null;
@@ -61,27 +62,26 @@ export default class DatosGenerales extends React.Component {
       data: jsonRespDatosGenerales,
     });
 
-  }
-
-  componentDidUpdate(){
-    if (!this.state.loadedResponsesBD && (this.props.generalesDB != undefined || this.props.generalesDB != null)) {
-      this.setValueAnswerFromBD();
-    }
+    this.setValueAnswerFromBD();
+   
   }
 
   setValueAnswerFromBD = () => {
-    this.setState({loadedResponsesBD: true});
-    let objGeneralesDB = this.props.generalesDB;
-    for (let nodeDB in objGeneralesDB) {
-      if (objGeneralesDB.hasOwnProperty(nodeDB)) {
-        jsonRespDatosGenerales[nodeDB] = objGeneralesDB[nodeDB];
-        this.state.preguntas.map((pregLocal, i) => {
-          if (pregLocal.node == nodeDB) {
-            pregLocal.valueBD = objGeneralesDB[nodeDB];
-          }
-        })
+    if(!this.state.loadedResponsesBD && (this.props.generalesDB != undefined || this.props.generalesDB != null)){
+      console.log("Set valores generales!!")
+      let objGeneralesDB = this.props.generalesDB;
+      for (let nodeDB in objGeneralesDB) {
+        if (objGeneralesDB.hasOwnProperty(nodeDB)) {
+          jsonRespDatosGenerales[nodeDB] = objGeneralesDB[nodeDB];
+          this.state.preguntas.map((pregLocal, i) => {
+            if (pregLocal.node == nodeDB) {
+              pregLocal.valueBD = objGeneralesDB[nodeDB];
+            }
+          })
+        }
       }
     }
+    this.setState({loadedResponsesBD: true});
     this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
@@ -171,7 +171,7 @@ export default class DatosGenerales extends React.Component {
 
   render() {
     return (
-      <View>
+      <View ref="refTestGenerales">
       <KeyboardAvoidingView behavior="position" enabled keyboardVerticalOffset={100}>
       <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
       
@@ -198,6 +198,7 @@ export default class DatosGenerales extends React.Component {
                         defaultValue={preg.valueBD}
                         keyboardType={preg.tipoEntrada}
                         style={{fontSize: 16}}
+                        autoCapitalize='characters'
                         onChangeText={(valueData) => {
                           this.setValueAnswerText(valueData, preg.node);
                         }}/>
@@ -211,8 +212,8 @@ export default class DatosGenerales extends React.Component {
                       <DatePicker
                         style={{width: 310}}
                         customStyles={{dateInput:{borderWidth: 0}}}
-                        date={(preg.valueBD == null) ? this.state[preg.node] : preg.valueBD}
                         placeholder="Seleccionar"
+                        date={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}
                         mode={preg.tipoEntrada}
                         androidMode="spinner"
                         format={(preg.tipoEntrada == "date") ? "DD-MM-YYYY" : "HH:mm"}
@@ -230,10 +231,10 @@ export default class DatosGenerales extends React.Component {
                         style={{width: 310}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
-                        itemTextStyle={{ fontSize: 17}}
+                        itemTextStyle={{fontSize: 17}}
                         mode="dropdown"
                         supportedOrientations={['portrait','landscape']}
-                        selectedValue={(preg.valueBD == null) ? this.state[preg.node] : preg.valueBD}
+                        selectedValue={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}
                         onValueChange={(itemSelected) => {
                           this.setValueAnswerCatalogo(itemSelected, preg.node)
                         }}>
@@ -262,7 +263,7 @@ export default class DatosGenerales extends React.Component {
                         itemTextStyle={{ fontSize: 17}}
                         mode="dropdown"
                         supportedOrientations={['portrait','landscape']}
-                        selectedValue={(preg.valueBD == null) ? this.state[preg.node] : preg.valueBD}
+                        selectedValue={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}
                         onValueChange={(itemSelected) => {
                           this.setValueAnswerCatalogo(itemSelected, preg.node)
                         }}>

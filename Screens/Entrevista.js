@@ -44,6 +44,9 @@ export default class Entrevista extends React.Component {
       isModalVisible: false,
       imputado: params.imputadoParam,
       dataImputado: {},
+      dataGeneralesDB: null,
+      dataDomicilioDB: null,
+      dataFamiliaDB: null,
       carpetaJudicial: params.carpetaJudicialParam,
       tipoCaptura: params.tipoCapturaParam,
       currentPosition: 0,
@@ -57,6 +60,7 @@ export default class Entrevista extends React.Component {
   }
 
   componentDidMount(){
+    
     this.props.navigation.setParams({ handleToggleModalProgress: this._toggleModalProgress });
     
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
@@ -68,6 +72,11 @@ export default class Entrevista extends React.Component {
       this.getDataImputado();
     }else{
       console.log("No hay conexion, no se recupera información del imputado");
+      this.setState({
+        dataGeneralesDB: null,
+        dataDomicilioDB: null,
+        dataFamiliaDB: null
+      });
     }
 
     storage.save({
@@ -91,10 +100,15 @@ export default class Entrevista extends React.Component {
         idImputado: this.state.imputado.id,
       }
     })
-    .then((res) => {
+    .then(async (res) => {
       if (res.data.status == "ok") {
-        //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion.datosGenerales));
-        this.setState({dataImputado: res.data.evaluacion, isLoading: false});
+        //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion));
+        this.setState({
+          dataGeneralesDB: res.data.evaluacion.datosGenerales,
+          dataDomicilioDB: res.data.evaluacion.domicilios,
+          dataFamiliaDB: res.data.evaluacion.redFamiliar,
+          isLoading: false
+        });
       }
       if (res.data.status == "error") {
         Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
@@ -127,7 +141,7 @@ export default class Entrevista extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.state.isLoading) {
       return (
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
           <ActivityIndicator size="large"/>
@@ -179,12 +193,14 @@ export default class Entrevista extends React.Component {
             currentPage={0}
             onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <DatosGenerales generalesDB={this.state.dataImputado.datosGenerales}/>
+              <DatosGenerales generalesDB={this.state.dataGeneralesDB}/>
             </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Domicilios domiciliosDB={this.state.dataImputado.domicilios}/>
+              <Domicilios domiciliosDB={this.state.dataDomicilioDB}/>
             </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><RedFamiliar/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+              <RedFamiliar familiaDB={this.state.dataFamiliaDB}/>
+            </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Sustancias/></View>

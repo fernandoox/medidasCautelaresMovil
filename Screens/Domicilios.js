@@ -26,7 +26,7 @@ export default class Domicilios extends React.Component {
       motivoVariosDomicilios: null,
       DelegacionesCat: CatDelegacionesData,
       TiposDomicilioCat: CatTiposDomicilioData,
-      loadedResponsesBD: false
+      loadedResponsesBD: false,
     };
     jsonRespDomicilios = {
       completo: false,
@@ -40,22 +40,28 @@ export default class Domicilios extends React.Component {
       key: 'datosDomiciliosStorage',
       data: jsonRespDomicilios,
     });
+    this.setValueAnswerFromBD();
   }
 
-  componentDidUpdate(){
+  setValueAnswerFromBD = () => {
     if(!this.state.loadedResponsesBD && (this.props.domiciliosDB != undefined || this.props.domiciliosDB != null)){
-      this.setDomiciliosFromDB();
+      console.log("Set valores domicilios!!")
+      this.setState({
+        loadedResponsesBD: true,
+        domicilios: this.props.domiciliosDB.datosDomicilios,
+        numeroDomicilios: Object.keys(this.props.domiciliosDB.datosDomicilios).length,
+        motivoVariosDomicilios: this.props.domiciliosDB.snRazonMultiplesDomicilios
+      });
     }
+    this.setState({loadedResponsesBD: true});
+    this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);
   }
 
-  setDomiciliosFromDB = () => {
-    this.setState({
-      loadedResponsesBD: true,
-      domicilios:this.props.domiciliosDB.datosDomicilios,
-      numeroDomicilios: Object.keys(this.props.domiciliosDB.datosDomicilios).length,
-      motivoVariosDomicilios:this.props.domiciliosDB.snRazonMultiplesDomicilios
-    });
-    this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);
+  setValueAnswerText = (valueData, nodeQuestion) => {
+    console.log("Node: " + nodeQuestion + " - Value: " + valueData)
+    this.setState({nodeQuestion: valueData});
+    //this.state[nodeQuestion] = valueData;
+    this.saveJsonLocalDomicilios(this.state.domicilios);
   }
 
   _toggleModal = () => {
@@ -115,7 +121,7 @@ export default class Domicilios extends React.Component {
 
   render() {
     return (
-      <View style={{flex:1}}>
+      <View style={{flex:1}}  ref="refTestDomicilios">
       <ScrollView style={{flex:1}}>
       <Grid>
 
@@ -135,8 +141,12 @@ export default class Domicilios extends React.Component {
               <Item style={{marginVertical: 10}} stackedLabel>
                 <Label>Razón de tener mas de un domicilio:</Label>
                 <Input style={{fontSize: 16}} 
+                  autoCapitalize='characters'
                   defaultValue={this.state.motivoVariosDomicilios}
-                  onChangeText={(motivoVariosDomicilios) => this.setState({motivoVariosDomicilios}) }/>
+                  onChangeText={(valueData) => {
+                    this.setValueAnswerText(valueData, "motivoVariosDomicilios");
+                  }}
+                  onChangeText={(motivoVariosDomicilios) => this.setState({motivoVariosDomicilios})}/>
               </Item>
             </Col>
           </Row>
