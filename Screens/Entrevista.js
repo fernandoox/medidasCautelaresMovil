@@ -54,6 +54,7 @@ export default class Entrevista extends React.Component {
       tipoCaptura: params.tipoCapturaParam,
       currentPosition: 0,
       size: { width, height },
+      loadedResponsesBD: false,
     };
     jsonBaseEntrevista = {
       "imputado": params.imputadoParam,
@@ -71,10 +72,6 @@ export default class Entrevista extends React.Component {
       (isConnected) => { this.setState({isConnected}); }
     );
 
-    if (this.state.imputado.id != null) {
-      this.getDataImputado();
-    }
-
     storage.save({
       key: 'jsonBaseEntrevistaStorage',
       data: jsonBaseEntrevista,
@@ -90,6 +87,8 @@ export default class Entrevista extends React.Component {
   };
 
   getDataImputado = async () => {
+    if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
+    console.log("Get data imputado!!");
     this.setState({isLoading: true});
     axios.get('/evaluacion/get', {
       params: {
@@ -106,18 +105,20 @@ export default class Entrevista extends React.Component {
           dataEstudiosBD: res.data.evaluacion.estudios,
           dataOcupacionesDB: res.data.evaluacion.ocupaciones,
           dataSustanciasDB: res.data.evaluacion.sustancias,
-          isLoading: false
+          isLoading: false,
+          loadedResponsesBD: true,
         });
       }
       if (res.data.status == "error") {
         Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
-        this.setState({isLoading: false});
+        this.setState({isLoading: false, loadedResponsesBD: true,});
       }
     })
     .catch(async (error) => {
       console.log("CATCH ERROR: "+error);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false, loadedResponsesBD: true,});
     });
+    }
   }
 
   _toggleModalProgress = () => {
@@ -149,7 +150,7 @@ export default class Entrevista extends React.Component {
     }
 
     return (
-      <Grid>
+      <Grid onLayout={this.getDataImputado}>
         
         <Row style={{backgroundColor: '#607D8B', height:80}}>
           <Col>
