@@ -18,10 +18,11 @@ export default class Sustancias extends React.Component {
     super(props)
     this.state = {
       isModalVisible: false,
-      selectedIndConsumeSustancias: null,
+      indConsumeSustancias: null,
       sustancias: [],
       numeroSustancias: 0,
       SustanciasCat: CatSustanciasData,
+      loadedResponsesBD: false
     };
     jsonRespSustancias = {
       completo: false,
@@ -35,6 +36,23 @@ export default class Sustancias extends React.Component {
       key: 'datosSustanciasStorage',
       data: jsonRespSustancias,
     });
+
+    this.setValueAnswerFromBD();
+  }
+
+  setValueAnswerFromBD = () => {
+    if(!this.state.loadedResponsesBD && this.props.sustanciasDB != null){
+
+      this.setState({
+        loadedResponsesBD: true,
+        sustancias: this.props.sustanciasDB.sustancias,
+        numeroSustancias: Object.keys(this.props.sustanciasDB.sustancias).length,
+        indConsumeSustancias: this.props.sustanciasDB.indConsumeSustancias,
+      }, () => {
+        this.saveJsonLocalSustancia(this.props.sustanciasDB.sustancias);  
+      });
+
+    }
   }
 
   _toggleModal = () => {
@@ -46,16 +64,17 @@ export default class Sustancias extends React.Component {
       Since setState works in an asynchronous way. 
       That means after calling setState the this.state is not immediately changed. 
       So if you want to perform an action immediately after setting state, 
-      use 2nd argument as callback on setState
+      use 2nd argument as callback on setState (2)
     */
     this.setState({
-      selectedIndConsumeSustancias: valueConsumeSustancias
+      indConsumeSustancias: valueConsumeSustancias
     }, () => {
       if (!valueConsumeSustancias) {
-        this.setState({sustancias: []});
+        this.setState({sustancias: []}, () => {
+          this.saveJsonLocalSustancia(this.state.sustancias);
+          this.setState({numeroSustancias: Object.keys(this.state.sustancias).length});
+        });
       }
-      this.saveJsonLocalSustancia(this.state.sustancias);
-      this.setState({numeroSustancias: Object.keys(this.state.sustancias).length});
     });
   }
 
@@ -77,8 +96,8 @@ export default class Sustancias extends React.Component {
 
   saveJsonLocalSustancia = (jsonFromAnswers) => {
     jsonRespSustancias.sustancias = jsonFromAnswers;
-    jsonRespSustancias.indConsumeSustancias = this.state.selectedIndConsumeSustancias;
-    if (Object.keys(jsonFromAnswers).length == 0 && !this.state.selectedIndConsumeSustancias) {
+    jsonRespSustancias.indConsumeSustancias = this.state.indConsumeSustancias;
+    if (Object.keys(jsonFromAnswers).length == 0 && !this.state.indConsumeSustancias) {
       jsonRespSustancias.completo = true;
     }else if(Object.keys(jsonFromAnswers).length > 0){
       jsonRespSustancias.completo = true;
@@ -126,7 +145,7 @@ export default class Sustancias extends React.Component {
               itemTextStyle={{ fontSize: 17}}
               mode="dropdown"
               supportedOrientations={['portrait','landscape']}
-              selectedValue={this.state.selectedIndConsumeSustancias}
+              selectedValue={this.state.indConsumeSustancias}
               onValueChange={(itemSelected) => {
                 this.setValueConsumeSustancias(itemSelected)
               }}>
@@ -187,7 +206,7 @@ export default class Sustancias extends React.Component {
     </Modal>
 
     <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
-    <Display enable={this.state.selectedIndConsumeSustancias}
+    <Display enable={this.state.indConsumeSustancias}
       enterDuration={500}
       exitDuration={500}
       enter="fadeInDown"

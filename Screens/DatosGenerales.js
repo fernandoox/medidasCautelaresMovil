@@ -67,8 +67,7 @@ export default class DatosGenerales extends React.Component {
   }
 
   setValueAnswerFromBD = () => {
-    if(!this.state.loadedResponsesBD && (this.props.generalesDB != undefined || this.props.generalesDB != null)){
-      console.log("Set valores generales!!")
+    if(!this.state.loadedResponsesBD && this.props.generalesDB != null){
       let objGeneralesDB = this.props.generalesDB;
       for (let nodeDB in objGeneralesDB) {
         if (objGeneralesDB.hasOwnProperty(nodeDB)) {
@@ -80,9 +79,10 @@ export default class DatosGenerales extends React.Component {
           })
         }
       }
+
+      this.setState({loadedResponsesBD: true});
+      this.saveJsonLocalGenerales(jsonRespDatosGenerales);
     }
-    this.setState({loadedResponsesBD: true});
-    this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
@@ -171,7 +171,7 @@ export default class DatosGenerales extends React.Component {
 
   render() {
     return (
-      <View ref="refTestGenerales">
+      <View>
       <KeyboardAvoidingView behavior="position" enabled keyboardVerticalOffset={100}>
       <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
       
@@ -196,7 +196,6 @@ export default class DatosGenerales extends React.Component {
                       <Label>{preg.pregunta}</Label>
                       <Input
                         defaultValue={preg.valueBD}
-                        keyboardType={preg.tipoEntrada}
                         style={{fontSize: 16}}
                         autoCapitalize='characters'
                         onChangeText={(valueData) => {
@@ -278,6 +277,7 @@ export default class DatosGenerales extends React.Component {
             )
           })
         }
+        
       </Grid>
       </ScrollView>
       </KeyboardAvoidingView>

@@ -104,7 +104,7 @@ export default class BuscarImputado extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.state.isLoading) {
       return (
         <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
           <ActivityIndicator size="large"/>

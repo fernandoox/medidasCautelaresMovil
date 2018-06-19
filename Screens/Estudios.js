@@ -20,17 +20,19 @@ export default class Estudios extends React.Component {
       isModalVisible: false,
       estudios: [],
       numeroEstudios: 0,
-      selectedEstudiaActualmente: undefined,
-      selectedUltimoGrado: undefined,
-      razonDejarEstudiar: null,
+      indEstudiaActualmente: undefined,
+      ultimoGrado: undefined,
+      snRazonDejarEstudiar: null,
       EscolaridadesCat: CatEscolaridadesData,
+      loadedResponsesBD: false,
     };
     jsonRespEstudios = {
       indEstudiaActualmente: null,
       ultimoGrado: null,
       snRazonDejarEstudiar: null,
       completo: false,
-      jsonEstudios: []
+      jsonEstudios: [],
+      loadedResponsesBD: false
     }
   }
 
@@ -39,7 +41,43 @@ export default class Estudios extends React.Component {
       key: 'datosEstudiosStorage',
       data: jsonRespEstudios,
     });
+    this.setValueAnswerFromBD();
   }
+
+  setValueAnswerFromBD = () => {
+    if(!this.state.loadedResponsesBD && this.props.estudiosDB != null){
+
+      this.setState({
+        loadedResponsesBD: true,
+        estudios: this.props.estudiosDB.jsonEstudios,
+        numeroEstudios: Object.keys(this.props.estudiosDB.jsonEstudios).length,
+        indEstudiaActualmente: this.props.estudiosDB.indEstudiaActualmente,
+        ultimoGrado: this.props.estudiosDB.ultimoGrado,
+        snRazonDejarEstudiar: this.props.estudiosDB.snRazonDejarEstudiar,
+      }, () => {
+        this.saveJsonLocalEstudios(this.props.estudiosDB.jsonEstudios);  
+      });
+
+    }
+  }
+
+  setValueAnswerText = (valueData, nodeQuestion) => {
+    this.state[nodeQuestion] = valueData;
+    this.saveJsonLocalEstudios(this.state.estudios);
+  }
+
+  setValueCatalogo =  (valueData, nodeQuestion) => {
+    switch (nodeQuestion) {
+      case "indEstudiaActualmente":
+        this.setState({indEstudiaActualmente:valueData}, () => {
+          this.saveJsonLocalEstudios(this.state.estudios);
+        })
+        break;
+      default:
+        break;
+    }
+  }
+  
 
   _toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
@@ -48,15 +86,15 @@ export default class Estudios extends React.Component {
   setValueUltimoGrado = (valueUltimoGrado) => {
     console.log("Value: " + valueUltimoGrado)
     this.setState({
-      selectedUltimoGrado: valueUltimoGrado
+      ultimoGrado: valueUltimoGrado
     }, () => {
       if (valueUltimoGrado == 23) {
-        this.setState({estudios: []});
+        this.setState({estudios: []}, () => {
+          this.saveJsonLocalEstudios(this.state.estudios);
+          this.setState({numeroEstudios: 0});
+        });
       }
-      this.saveJsonLocalEstudios(this.state.estudios);
-      this.setState({numeroEstudios: Object.keys(this.state.estudios).length});
     });
-    
   }
 
   agregarEstudio = (stateEstudioFromChild) => {
@@ -77,11 +115,11 @@ export default class Estudios extends React.Component {
 
   saveJsonLocalEstudios = (jsonFromAnswers) => {
     jsonRespEstudios.jsonEstudios = jsonFromAnswers;
-    jsonRespEstudios.indEstudiaActualmente = this.state.selectedEstudiaActualmente;
-    jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
-    jsonRespEstudios.snRazonDejarEstudiar = this.state.razonDejarEstudiar;
-    jsonRespEstudios.ultimoGrado = this.state.selectedUltimoGrado;
-    if (Object.keys(jsonFromAnswers).length == 0 && this.state.selectedUltimoGrado == 23) {
+    jsonRespEstudios.indEstudiaActualmente = this.state.indEstudiaActualmente;
+    jsonRespEstudios.ultimoGrado = this.state.ultimoGrado;
+    jsonRespEstudios.snRazonDejarEstudiar = this.state.snRazonDejarEstudiar;
+
+    if (Object.keys(jsonFromAnswers).length == 0 && this.state.ultimoGrado == 23) {
       jsonRespEstudios.completo = true;
     }else if(Object.keys(jsonFromAnswers).length > 0){
       jsonRespEstudios.completo = true;
@@ -98,8 +136,8 @@ export default class Estudios extends React.Component {
 
   render() {
     return (
+    
     <View style={{flex:1}}>
-
     <ScrollView style={{flex:1}}>
     <Grid style={{flex:1}}>
       
@@ -112,6 +150,7 @@ export default class Estudios extends React.Component {
       </Row>
       
       {/* Preguntas generales, fuera del arreglo de estudios */}
+      <KeyboardAvoidingView behavior="position">
       <Row>
         <Col>
 
@@ -124,8 +163,10 @@ export default class Estudios extends React.Component {
               itemTextStyle={{ fontSize: 17}}
               mode="dropdown"
               supportedOrientations={['portrait','landscape']}
-              selectedValue={this.state.selectedEstudiaActualmente}
-              onValueChange={(selectedEstudiaActualmente) => this.setState({selectedEstudiaActualmente})}>
+              selectedValue={this.state.indEstudiaActualmente}
+              onValueChange={(itemSelected) => {
+                this.setValueCatalogo(itemSelected, "indEstudiaActualmente")
+              }}>
               <Item label="Seleccionar una opción" value={null} />
               <Item label="SI" value={1} />
               <Item label="NO" value={0} />
@@ -141,7 +182,7 @@ export default class Estudios extends React.Component {
               itemTextStyle={{ fontSize: 17}}
               mode="dropdown"
               supportedOrientations={['portrait','landscape']}
-              selectedValue={this.state.selectedUltimoGrado}
+              selectedValue={this.state.ultimoGrado}
               onValueChange={(itemSelected) => {
                 this.setValueUltimoGrado(itemSelected)
               }}>
@@ -161,12 +202,17 @@ export default class Estudios extends React.Component {
           <Item style={{marginVertical: 10}} stackedLabel>
             <Label>Razón para dejar de estudiar:</Label>
             <Input style={{fontSize: 16}}  
-              onChangeText={(razonDejarEstudiar) => this.setState({razonDejarEstudiar})}
+              autoCapitalize='characters'
+              defaultValue={this.state.snRazonDejarEstudiar}
+              onChangeText={(valueData) => {
+                this.setValueAnswerText(valueData, "snRazonDejarEstudiar");
+              }}
             />
           </Item>
 
         </Col>
       </Row>
+      </KeyboardAvoidingView>
       <Content>
         {
           this.state.estudios.map((estudio, i) => {
@@ -200,9 +246,9 @@ export default class Estudios extends React.Component {
         }
       </Content>
       <Row><Col style={{padding:5, marginTop:30}}></Col></Row>
-      
     </Grid>
     </ScrollView>
+    
 
     <Modal onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
       isVisible={this.state.isModalVisible} avoidKeyboard={true}>
@@ -210,7 +256,7 @@ export default class Estudios extends React.Component {
     </Modal>
 
     <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
-      <Display enable={this.state.selectedUltimoGrado != 23}
+      <Display enable={this.state.ultimoGrado != 23}
         enterDuration={500}
         exitDuration={500}
         enter="fadeInDown"
@@ -221,7 +267,7 @@ export default class Estudios extends React.Component {
       </Display>
     </View>
 
-    </View>
+    </View>    
     );
   }
 }

@@ -98,9 +98,9 @@ export default class AgregarEstudio extends React.Component {
                   <Item stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Input
-                      keyboardType={preg.tipoEntrada}
                       maxLength={preg.maxLength}
                       style={{fontSize: 16}}
+                      autoCapitalize='characters'
                       onChangeText={(valueData) => {
                         this.setValueAnswerText(valueData, preg.node);
                       }}/>

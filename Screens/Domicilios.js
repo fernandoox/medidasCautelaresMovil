@@ -44,23 +44,20 @@ export default class Domicilios extends React.Component {
   }
 
   setValueAnswerFromBD = () => {
-    if(!this.state.loadedResponsesBD && (this.props.domiciliosDB != undefined || this.props.domiciliosDB != null)){
-      console.log("Set valores domicilios!!")
+    if(!this.state.loadedResponsesBD &&  this.props.domiciliosDB != null){
       this.setState({
         loadedResponsesBD: true,
         domicilios: this.props.domiciliosDB.datosDomicilios,
         numeroDomicilios: Object.keys(this.props.domiciliosDB.datosDomicilios).length,
         motivoVariosDomicilios: this.props.domiciliosDB.snRazonMultiplesDomicilios
       });
+
+      this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);
     }
-    this.setState({loadedResponsesBD: true});
-    this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);
   }
 
   setValueAnswerText = (valueData, nodeQuestion) => {
-    console.log("Node: " + nodeQuestion + " - Value: " + valueData)
-    this.setState({nodeQuestion: valueData});
-    //this.state[nodeQuestion] = valueData;
+    this.state[nodeQuestion] = valueData;
     this.saveJsonLocalDomicilios(this.state.domicilios);
   }
 
@@ -76,7 +73,6 @@ export default class Domicilios extends React.Component {
   }
 
   removeDomicilioByIndex = (indexJSON) => {
-    console.log("Remove item index: " + indexJSON);
     let jsonDomicilios = this.state.domicilios;
     // Remove 1 element from index indexJSON
     jsonDomicilios.splice(indexJSON, 1);
@@ -145,8 +141,7 @@ export default class Domicilios extends React.Component {
                   defaultValue={this.state.motivoVariosDomicilios}
                   onChangeText={(valueData) => {
                     this.setValueAnswerText(valueData, "motivoVariosDomicilios");
-                  }}
-                  onChangeText={(motivoVariosDomicilios) => this.setState({motivoVariosDomicilios})}/>
+                  }}/>
               </Item>
             </Col>
           </Row>

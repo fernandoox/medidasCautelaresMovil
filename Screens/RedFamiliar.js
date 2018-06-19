@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Input, H3, Content, List, ListItem, Body } from 'native-base';
+import { Button, Text, Item, H3, Content, List, ListItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
@@ -37,16 +37,15 @@ export default class RedFamiliar extends React.Component {
   }
 
   setValueAnswerFromBD = () => {
-    if(!this.state.loadedResponsesBD && (this.props.familiaDB != undefined || this.props.familiaDB != null)){
-      console.log("Set valores familiares!!")
+    if(!this.state.loadedResponsesBD && this.props.familiaDB != null){
       this.setState({
         loadedResponsesBD: true,
         familiares: this.props.familiaDB.jsonRedFamiliar,
         numeroFamiliares: Object.keys(this.props.familiaDB.jsonRedFamiliar).length,
       });
+
+      this.saveJsonLocalFamiliares(this.props.familiaDB.jsonRedFamiliar);
     }
-    this.setState({loadedResponsesBD: true});
-    this.saveJsonLocalFamiliares(this.props.familiaDB.jsonRedFamiliar);
   }
 
   _toggleModal = () => {

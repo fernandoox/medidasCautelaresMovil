@@ -111,7 +111,7 @@ export default class AgregarFamiliar extends React.Component {
                   <Item stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Input
-                      keyboardType={preg.tipoEntrada}
+                      autoCapitalize='characters'
                       maxLength={preg.maxLength}
                       style={{fontSize: 16}}
                       onChangeText={(valueData) => {

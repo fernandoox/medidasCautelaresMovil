@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions, StyleSheet } from 'react-native';
-import { Root, Button, Text, Item, Input, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
+import { Root, Button, Text, Item, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
@@ -47,6 +47,9 @@ export default class Entrevista extends React.Component {
       dataGeneralesDB: null,
       dataDomicilioDB: null,
       dataFamiliaDB: null,
+      dataEstudiosBD: null,
+      dataOcupacionesDB: null,
+      dataSustanciasDB: null,
       carpetaJudicial: params.carpetaJudicialParam,
       tipoCaptura: params.tipoCapturaParam,
       currentPosition: 0,
@@ -70,13 +73,6 @@ export default class Entrevista extends React.Component {
 
     if (this.state.imputado.id != null) {
       this.getDataImputado();
-    }else{
-      console.log("No hay conexion, no se recupera información del imputado");
-      this.setState({
-        dataGeneralesDB: null,
-        dataDomicilioDB: null,
-        dataFamiliaDB: null
-      });
     }
 
     storage.save({
@@ -107,6 +103,9 @@ export default class Entrevista extends React.Component {
           dataGeneralesDB: res.data.evaluacion.datosGenerales,
           dataDomicilioDB: res.data.evaluacion.domicilios,
           dataFamiliaDB: res.data.evaluacion.redFamiliar,
+          dataEstudiosBD: res.data.evaluacion.estudios,
+          dataOcupacionesDB: res.data.evaluacion.ocupaciones,
+          dataSustanciasDB: res.data.evaluacion.sustancias,
           isLoading: false
         });
       }
@@ -201,9 +200,15 @@ export default class Entrevista extends React.Component {
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
               <RedFamiliar familiaDB={this.state.dataFamiliaDB}/>
             </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Estudios/></View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Ocupacion/></View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}><Sustancias/></View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+              <Estudios estudiosDB={this.state.dataEstudiosBD}/>
+            </View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+              <Ocupacion ocupacionesDB={this.state.dataOcupacionesDB}/>
+            </View>
+            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
+              <Sustancias sustanciasDB={this.state.dataSustanciasDB}/>
+            </View>
           </Carousel>
         </View>
 

@@ -16,9 +16,10 @@ export default class Ocupacion extends React.Component {
     super(props)
     this.state = {
       isModalVisible: false,
-      selectedTrabajaActualmente: undefined,
+      indTrabajaActualmente: undefined,
       ocupaciones: [],
       numeroOcupaciones: 0,
+      loadedResponsesBD: false
     };
     jsonRespOcupaciones = {
       completo: false,
@@ -32,6 +33,36 @@ export default class Ocupacion extends React.Component {
       key: 'datosOcupacionesStorage',
       data: jsonRespOcupaciones,
     });
+
+    this.setValueAnswerFromBD();
+  }
+
+  setValueAnswerFromBD = () => {
+    if(!this.state.loadedResponsesBD && this.props.ocupacionesDB != null){
+
+      this.setState({
+        loadedResponsesBD: true,
+        ocupaciones: this.props.ocupacionesDB.ocupaciones,
+        numeroOcupaciones: Object.keys(this.props.ocupacionesDB.ocupaciones).length,
+        indTrabajaActualmente: this.props.ocupacionesDB.indTrabajaActualmente,
+      }, () => {
+        this.saveJsonLocalOcupaciones(this.props.ocupacionesDB.ocupaciones);  
+      });
+
+    }
+  }
+
+  
+  setValueCatalogo =  (valueData, nodeQuestion) => {
+    switch (nodeQuestion) {
+      case "indTrabajaActualmente":
+        this.setState({indTrabajaActualmente:valueData}, () => {
+          this.saveJsonLocalOcupaciones(this.state.ocupaciones);
+        })
+        break;
+      default:
+        break;
+    }
   }
 
   _toggleModal = () => {
@@ -56,7 +87,7 @@ export default class Ocupacion extends React.Component {
 
   saveJsonLocalOcupaciones = (jsonFromAnswers) => {
     jsonRespOcupaciones.ocupaciones = jsonFromAnswers;
-    jsonRespOcupaciones.indTrabajaActualmente = this.state.selectedTrabajaActualmente;
+    jsonRespOcupaciones.indTrabajaActualmente = this.state.indTrabajaActualmente;
     jsonRespOcupaciones.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
     storage.save({
       key: 'datosOcupacionesStorage',
@@ -92,8 +123,10 @@ export default class Ocupacion extends React.Component {
               itemTextStyle={{ fontSize: 17}}
               mode="dropdown"
               supportedOrientations={['portrait','landscape']}
-              selectedValue={this.state.selectedTrabajaActualmente}
-              onValueChange={(selectedTrabajaActualmente) => this.setState({selectedTrabajaActualmente})}>
+              selectedValue={this.state.indTrabajaActualmente}
+              onValueChange={(itemSelected) => {
+                this.setValueCatalogo(itemSelected, "indTrabajaActualmente")
+              }}>
               <Item label="Seleccionar una opción" value={null} />
               <Item label="SI" value={1} />
               <Item label="NO" value={0} />

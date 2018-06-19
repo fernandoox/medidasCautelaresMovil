@@ -135,22 +135,27 @@ export default class ModalProgreso extends React.Component {
       })
       .then((res) => {
         console.log(JSON.stringify(res.data));
-        Alert.alert('OK', JSON.stringify(res.data), [{text: 'OK'}], { cancelable: false });
-        storage.clearMap();
+        if(res.data.status == "ok"){
+          Alert.alert('Guardado', res.data.message, [{text: 'OK'}], { cancelable: false });
+          storage.clearMap();
+          this.props.cerrarModalProgrsoChild();
+          this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545, carpetaJudicialParam: this.props.carpetaJudicial});
+        }
       })
       .catch(async (error) => {
         console.log("CATCH ERROR: "+error);
-        Alert.alert('OK', error, [{text: 'OK'}], { cancelable: false });
+        Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
       });
     }else{
       Alert.alert('Problemas de red', "No hay conexión a internet, se enviará cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
+      this.props.cerrarModalProgrsoChild();
+      this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545, carpetaJudicialParam: this.props.carpetaJudicial});
       /**
        * Guardar en dispositivo el json aux que se enviará.
        * Podrá continuar realizando mas entrevistas.
        */
     }
-    this.props.cerrarModalProgrsoChild();
-    this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545, carpetaJudicialParam: this.props.carpetaJudicial});
+    
   }
 
   render() {
