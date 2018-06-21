@@ -97,7 +97,7 @@ export default class Sustancias extends React.Component {
   saveJsonLocalSustancia = (jsonFromAnswers) => {
     jsonRespSustancias.sustancias = jsonFromAnswers;
     jsonRespSustancias.indConsumeSustancias = this.state.indConsumeSustancias;
-    if (Object.keys(jsonFromAnswers).length == 0 && !this.state.indConsumeSustancias) {
+    if (Object.keys(jsonFromAnswers).length == 0 && (!this.state.indConsumeSustancias && this.state.indConsumeSustancias != null)) {
       jsonRespSustancias.completo = true;
     }else if(Object.keys(jsonFromAnswers).length > 0){
       jsonRespSustancias.completo = true;

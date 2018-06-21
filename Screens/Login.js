@@ -14,6 +14,8 @@ export default class Login extends React.Component {
     this.state = {
       isLoading: false,
       isConnected: null,
+      user: null,
+      password: null
     };
   }
 
@@ -33,12 +35,34 @@ export default class Login extends React.Component {
   };
 
   loginEvaluador = () => {
-      const {navigate} = this.props.navigation;
-      navigate('BuscarImputadoScreen',
-        {
-          idEvaludador: 545
+    const {navigate} = this.props.navigation;
+    navigate('BuscarImputadoScreen',{idEvaludador: 545});
+    /*if(this.state.user != null && this.state.password != null){
+      console.log("User: " + this.state.user + " - Pass: " + this.state.password);
+      this.setState({isLoading: true});
+      axios.post('/login', {
+        username: this.state.user,
+        password: this.state.password,
+      })
+      .then(async (response) => {
+        console.log("Data login: " + JSON.stringify(response.data));
+        if (response.data.status == 'ok') {
+          Alert.alert('Éxito', response.data.message, [{text: 'OK'}], { cancelable: false })
+          navigate('BuscarImputadoScreen',{idEvaludador: 545});
         }
-      )
+        if (response.data.status == 'error') {
+          Alert.alert('Error', response.data.message, [{text: 'OK'}], { cancelable: false })
+        }
+        this.setState({isLoading: false});
+      })
+      .catch(async (error) => {
+        console.log("ERROR: " + error)
+        this.setState({isLoading: false});
+        Alert.alert('Conexión', error,[{text: 'OK'}],{ cancelable: false })
+      });
+    }else{
+        Alert.alert('Error', 'Los campos usuario y contraseña son obligatorios', [{text: 'OK'}], { cancelable: false });
+    }*/
   }
 
   render() {
@@ -70,6 +94,7 @@ export default class Login extends React.Component {
                   <Icon active name='user' style={{fontSize: 22, marginHorizontal:10}}/>
                   <Input
                     placeholder="Usuario"
+                    onChangeText={(user) => this.setState({user}) }
                     autoCapitalize='none' autoCorrect={false}
                     style={{fontSize: 18}}
                   />
@@ -77,7 +102,9 @@ export default class Login extends React.Component {
 
                 <Item rounded style={{marginVertical: 10}}>
                   <Icon active name='unlock' style={{fontSize: 22, marginHorizontal:10}}/>
-                  <Input placeholder="Contraseña" style={{fontSize: 18}} secureTextEntry={true}/>
+                  <Input placeholder="Contraseña" 
+                    onChangeText={(password) => this.setState({password}) }
+                    style={{fontSize: 18}} secureTextEntry={true}/>
                 </Item>
 
                 <Button full danger

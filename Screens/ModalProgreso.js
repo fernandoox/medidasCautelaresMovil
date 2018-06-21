@@ -129,7 +129,7 @@ export default class ModalProgreso extends React.Component {
     console.log("Save info total.");
     if (this.state.isConnected) {
       axios({
-        method: 'post',
+        method: 'POST',
         url: '/evaluacion/update',
         data: this.state.jsonBase
       })

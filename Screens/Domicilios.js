@@ -23,14 +23,14 @@ export default class Domicilios extends React.Component {
       isModalVisible: false,
       domicilios: [],
       numeroDomicilios: 0,
-      motivoVariosDomicilios: null,
+      snRazonMultiplesDomicilios: null,
       DelegacionesCat: CatDelegacionesData,
       TiposDomicilioCat: CatTiposDomicilioData,
       loadedResponsesBD: false,
     };
     jsonRespDomicilios = {
       completo: false,
-      snRazonMultDomicilios: null,
+      snRazonMultiplesDomicilios: null,
       datosDomicilios: []
     }
   }
@@ -49,10 +49,11 @@ export default class Domicilios extends React.Component {
         loadedResponsesBD: true,
         domicilios: this.props.domiciliosDB.datosDomicilios,
         numeroDomicilios: Object.keys(this.props.domiciliosDB.datosDomicilios).length,
-        motivoVariosDomicilios: this.props.domiciliosDB.snRazonMultiplesDomicilios
+        snRazonMultiplesDomicilios: this.props.domiciliosDB.snRazonMultiplesDomicilios
+      }, () => {
+        this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);  
       });
-
-      this.saveJsonLocalDomicilios(this.props.domiciliosDB.datosDomicilios);
+      
     }
   }
 
@@ -84,7 +85,7 @@ export default class Domicilios extends React.Component {
   saveJsonLocalDomicilios = (jsonFromAnswers) => {
     jsonRespDomicilios.datosDomicilios = jsonFromAnswers;
     jsonRespDomicilios.completo = (Object.keys(jsonFromAnswers).length > 0) ? true : false;
-    jsonRespDomicilios.snRazonMultDomicilios = (Object.keys(jsonFromAnswers).length > 0) ? this.state.motivoVariosDomicilios : null;
+    jsonRespDomicilios.snRazonMultiplesDomicilios = (Object.keys(jsonFromAnswers).length > 0) ? this.state.snRazonMultiplesDomicilios : null;
     storage.save({
       key: 'datosDomiciliosStorage',
       data: jsonRespDomicilios,
@@ -138,9 +139,9 @@ export default class Domicilios extends React.Component {
                 <Label>Razón de tener mas de un domicilio:</Label>
                 <Input style={{fontSize: 16}} 
                   autoCapitalize='characters'
-                  defaultValue={this.state.motivoVariosDomicilios}
+                  defaultValue={this.state.snRazonMultiplesDomicilios}
                   onChangeText={(valueData) => {
-                    this.setValueAnswerText(valueData, "motivoVariosDomicilios");
+                    this.setValueAnswerText(valueData, "snRazonMultiplesDomicilios");
                   }}/>
               </Item>
             </Col>
