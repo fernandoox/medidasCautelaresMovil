@@ -8,12 +8,14 @@
     {
         "node": "snCantidad",
         "pregunta": "Cantidad",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snFrecuenciaConsumo",
         "pregunta": "Frecuencia de consumo",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "dtmUltimoConsumo",
@@ -23,7 +25,8 @@
     {
         "node": "nuEdadInicio",
         "pregunta": "Edad de inicio",
-        "tipoEntrada": "numeric"
+        "tipoEntrada": "numeric",
+        "maxLongitud": 2
     }
   ]
   

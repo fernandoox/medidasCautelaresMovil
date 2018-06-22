@@ -1,12 +1,14 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View, ActivityIndicator, Alert, NetInfo, AsyncStorage, Image, ScrollView, KeyboardAvoidingView, Keyboard, ToastAndroid } from 'react-native';
 import { Button, Text, Item, Label, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
+import Storage from 'react-native-storage';
+
 export default class Login extends React.Component {
 
   constructor(props){
@@ -20,12 +22,25 @@ export default class Login extends React.Component {
   }
 
   componentDidMount(){
+    const {navigate} = this.props.navigation;
+
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
     );
-  }
 
+    storage.load({
+      key: 'evaluadorLogueado',
+    }).then((response) => {
+      console.log("Data sesion storage: " + JSON.stringify(response))
+      navigate('BuscarImputadoScreen', {evaluador: response});
+    }).catch(async (err) => {
+      console.log("ERROR ASYNC LOGIN: "+err.message);
+      await AsyncStorage.clear();
+    })
+
+  }
+  
  componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
   }
@@ -36,22 +51,23 @@ export default class Login extends React.Component {
 
   loginEvaluador = () => {
     const {navigate} = this.props.navigation;
-    navigate('BuscarImputadoScreen',{idEvaludador: 545});
-    /*if(this.state.user != null && this.state.password != null){
-      console.log("User: " + this.state.user + " - Pass: " + this.state.password);
+    console.log("User: " + this.state.user + " - Pass: " + this.state.password);
+    if(this.state.user != null && this.state.password != null){
       this.setState({isLoading: true});
-      axios.post('/login', {
-        username: this.state.user,
-        password: this.state.password,
-      })
+      axios.post(`/login?username=${this.state.user}&password=${this.state.password}`)
       .then(async (response) => {
-        console.log("Data login: " + JSON.stringify(response.data));
+        console.log("Data login req: " + JSON.stringify(response.data));
         if (response.data.status == 'ok') {
-          Alert.alert('Éxito', response.data.message, [{text: 'OK'}], { cancelable: false })
-          navigate('BuscarImputadoScreen',{idEvaludador: 545});
+          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+          storage.save({
+            key: 'evaluadorLogueado',
+            data: response.data.evaluador,
+          });
+          navigate('BuscarImputadoScreen', {evaluador: response.data.evaluador});
+          Keyboard.dismiss();
         }
         if (response.data.status == 'error') {
-          Alert.alert('Error', response.data.message, [{text: 'OK'}], { cancelable: false })
+          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
         }
         this.setState({isLoading: false});
       })
@@ -61,8 +77,13 @@ export default class Login extends React.Component {
         Alert.alert('Conexión', error,[{text: 'OK'}],{ cancelable: false })
       });
     }else{
-        Alert.alert('Error', 'Los campos usuario y contraseña son obligatorios', [{text: 'OK'}], { cancelable: false });
-    }*/
+      ToastAndroid.show('Usuario y contraseña son obligatorios', ToastAndroid.SHORT);
+    }
+  }
+
+  omitirSesion = () => {
+    const {navigate} = this.props.navigation;
+    navigate('BuscarImputadoScreen');
   }
 
   render() {
@@ -108,6 +129,7 @@ export default class Login extends React.Component {
                 </Item>
 
                 <Button full danger
+                   disabled={!this.state.isConnected}
                   style={{marginVertical: 10, borderRadius:20, marginTop: 30}}
                   onPress={this.loginEvaluador}>
                     <Text>Iniciar sesión</Text>
@@ -115,7 +137,7 @@ export default class Login extends React.Component {
 
                 <Button full danger bordered
                   style={{marginVertical: 10, borderRadius:20}}
-                  onPress={this.loginEvaluador} disabled={this.state.isConnected}>
+                  onPress={this.omitirSesion} disabled={this.state.isConnected}>
                     <Text>Omitir</Text>
                 </Button>
 

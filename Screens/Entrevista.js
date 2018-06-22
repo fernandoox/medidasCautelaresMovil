@@ -51,6 +51,7 @@ export default class Entrevista extends React.Component {
       dataOcupacionesDB: null,
       dataSustanciasDB: null,
       carpetaJudicial: params.carpetaJudicialParam,
+      evaluador: (params.evaluador != null) ? params.evaluador : null,
       tipoCaptura: params.tipoCapturaParam,
       currentPosition: 0,
       size: { width, height },
@@ -193,22 +194,22 @@ export default class Entrevista extends React.Component {
             currentPage={0}
             onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <DatosGenerales generalesDB={this.state.dataGeneralesDB}/>
+              <DatosGenerales generalesDB={this.state.dataGeneralesDB} imputadoProp={this.state.imputado}/>
             </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Domicilios domiciliosDB={this.state.dataDomicilioDB}/>
+              <Domicilios domiciliosDB={this.state.dataDomicilioDB} imputadoProp={this.state.imputado}/>
             </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <RedFamiliar familiaDB={this.state.dataFamiliaDB}/>
+              <RedFamiliar familiaDB={this.state.dataFamiliaDB} imputadoProp={this.state.imputado}/>
             </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Estudios estudiosDB={this.state.dataEstudiosBD}/>
+              <Estudios estudiosDB={this.state.dataEstudiosBD} imputadoProp={this.state.imputado}/>
             </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Ocupacion ocupacionesDB={this.state.dataOcupacionesDB}/>
+              <Ocupacion ocupacionesDB={this.state.dataOcupacionesDB} imputadoProp={this.state.imputado}/>
             </View>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Sustancias sustanciasDB={this.state.dataSustanciasDB}/>
+              <Sustancias sustanciasDB={this.state.dataSustanciasDB} imputadoProp={this.state.imputado}/>
             </View>
           </Carousel>
         </View>
@@ -220,6 +221,7 @@ export default class Entrevista extends React.Component {
             imputado={this.state.imputado} 
             carpetaJudicial={this.state.carpetaJudicial}
             nav={this.props.navigation}
+            evaluador={this.state.evaluador}
             cerrarModalProgrsoChild={this._toggleModalProgress}/>
         </Modal>
 

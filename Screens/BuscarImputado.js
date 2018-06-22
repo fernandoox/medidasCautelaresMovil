@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
-import { Button, Text, Item, Input, Picker } from 'native-base';
+import { AsyncStorage, View, ActivityIndicator, TouchableOpacity, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
+import { Button, Text, ListItem, CheckBox, Body, Item, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import axios from 'axios';
@@ -17,10 +17,13 @@ export default class BuscarImputado extends React.Component {
     this.state = {
       isLoading: false,
       isConnected: null,
-      carpetaJudicial: (params.carpetaJudicialParam == undefined) ? null : params.carpetaJudicialParam,
+      carpetaJudicial: (params.carpetaJudicialParam != undefined || params.carpetaJudicialParam != null) ? params.carpetaJudicialParam : null,
+      evaluador: (params.evaluador !=  undefined || params.evaluador !=  null) ? params.evaluador : null,
       imputados: [],
       numImputados: 0,
       selectedImputado: null,
+      buscarAsignados: true,
+      buscarConcluidos: false
     };
     numBack = 0;
   }
@@ -31,7 +34,6 @@ export default class BuscarImputado extends React.Component {
       (isConnected) => { this.setState({isConnected}); }
     );
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    //storage.clearMap();
   }
 
   componentWillUnmount() {
@@ -55,37 +57,54 @@ export default class BuscarImputado extends React.Component {
     this.setState({isConnected});
   };
 
+  _selectCheckBoxSearchAsignados = () => {
+    this.setState({ buscarAsignados: !this.state.buscarAsignados });
+  }
+
+  _selectCheckBoxSearchConcluidos = () => {
+    this.setState({ buscarConcluidos: !this.state.buscarConcluidos });
+  }
+  
   buscarImputadosByCarpeta = async () => {
-    this.setState({isLoading: true});
-    axios.get('/imputado/getByCarpetaJudicial', {
-      params: {
-        idEvaluador: 545,
-        numeroCarpeta: this.state.carpetaJudicial
-      }
-    })
-    .then((res) => {
-      if (res.data.status == "ok") {
-        Keyboard.dismiss();
-        this.setState({
-          imputados: res.data.imputados,
-          numImputados: Object.keys(res.data.imputados).length,
-          isLoading: false,
-        })
-      }
-      if (res.data.status == "error") {
-        Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
-        this.setState({
-          imputados: [],
-          numImputados: 0,
-          isLoading: false,
-        })
-      }
-    })
-    .catch(async (error) => {
-      console.log("CATCH ERROR: "+error);
-      Alert.alert('External error', error, [{text: 'OK'}],{ cancelable: false });
-      this.setState({isLoading: false});
-    });
+    console.log("Asignados: " + this.state.buscarAsignados + " - Concluidos: " + this.state.buscarConcluidos)
+    const {navigate} = this.props.navigation;
+    if(this.state.evaluador){
+      this.setState({isLoading: true});
+      axios.get('/imputado/getByCarpetaJudicial', {
+        params: {
+          idEvaluador: this.state.evaluador.id,
+          numeroCarpeta: this.state.carpetaJudicial,
+          buscarAsignados: this.state.buscarAsignados,
+          buscarConcluidos: this.state.buscarConcluidos
+        }
+      })
+      .then((res) => {
+        if (res.data.status == "ok") {
+          Keyboard.dismiss();
+          this.setState({
+            imputados: res.data.imputados,
+            numImputados: Object.keys(res.data.imputados).length,
+            isLoading: false,
+          })
+        }
+        if (res.data.status == "error") {
+          Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
+          this.setState({
+            imputados: [],
+            numImputados: 0,
+            isLoading: false,
+          })
+        }
+      })
+      .catch(async (error) => {
+        console.log("CATCH ERROR: "+error);
+        Alert.alert('External error', error, [{text: 'OK'}],{ cancelable: false });
+        this.setState({isLoading: false});
+      });
+    }else{
+      Alert.alert('Error', "No ha iniciado sesión un evaluador.", [{text: 'OK'}],{ cancelable: false });
+      navigate('LoginScreen');
+    }
   }
 
   onSelectImputado(value) {
@@ -98,9 +117,18 @@ export default class BuscarImputado extends React.Component {
         {
           imputadoParam: this.state.selectedImputado,
           carpetaJudicialParam: this.state.carpetaJudicial,
-          tipoCapturaParam: "ONLINE"
+          tipoCapturaParam: "ONLINE",
+          evaluador: this.state.evaluador
         }
       )
+  }
+
+  cerrarSesion = async () => {
+    console.log("Logout");
+    const {navigate} = this.props.navigation;
+    await AsyncStorage.clear();
+    ToastAndroid.show('Cerró sesión correctamente.', ToastAndroid.SHORT);
+    navigate('LoginScreen');
   }
 
   render() {
@@ -124,8 +152,28 @@ export default class BuscarImputado extends React.Component {
                   style={{width:250, marginTop:-25}}></Image>
                 </View>
 
-                <Text style={{textAlign:'center', color: '#D66F59', fontWeight:'bold', marginTop:-30}}>
-                  Buscar imputados por Carpeta Judicial:
+                <Display enable={this.state.evaluador != null}
+                  enterDuration={500}
+                  enter="fadeInDown">
+                  <Row style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>             
+                    <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:-35}}>
+                      {this.state.evaluador.nombre} {this.state.evaluador.apellidoPaterno} {this.state.evaluador.apellidoMaterno}
+                    </Text>
+                  </Row>
+
+                  <Row style={{marginTop: -20, marginBottom:20}}>
+                   <Col>
+                   <Button transparent full danger
+                      style={{marginVertical: 10}}
+                      onPress={this.cerrarSesion}>
+                      <Text style={{fontSize:16, textDecorationLine: "underline", textDecorationStyle: "solid",}}>Cerrar sesión</Text>
+                    </Button>
+                   </Col>
+                  </Row>
+                </Display>
+
+                <Text style={{textAlign:'center', color:COLORS.TEXT_PRIMARY, fontWeight:'bold', marginTop:-20, marginBottom:-10}}>
+                  Buscar imputados por carpeta judicial:
                 </Text>
 
                 <Item style={{marginVertical: 10}}>
@@ -142,9 +190,28 @@ export default class BuscarImputado extends React.Component {
                 <Display enable={this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
+                  <ListItem>
+                    <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarAsignados} 
+                      onPress={this._selectCheckBoxSearchAsignados}/>
+                    <TouchableOpacity onPress={this._selectCheckBoxSearchAsignados}>
+                      <Body>
+                        <Text>Asignados</Text>
+                      </Body>
+                    </TouchableOpacity>
+                  </ListItem>
+                  <ListItem>
+                    <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarConcluidos}
+                       onPress={this._selectCheckBoxSearchConcluidos}/>
+                     <TouchableOpacity onPress={this._selectCheckBoxSearchConcluidos}>
+                      <Body>
+                        <Text>Concluidos</Text>
+                      </Body>
+                    </TouchableOpacity>
+                  </ListItem>
                   <Button full light
                     style={{marginVertical: 10, borderRadius:20}}
-                    disabled={!this.state.isConnected || this.state.carpetaJudicial == null}
+                    disabled={!this.state.isConnected || this.state.carpetaJudicial == null || this.state.carpetaJudicial == "" || 
+                      (!this.state.buscarAsignados && !this.state.buscarConcluidos)}
                     onPress={this.buscarImputadosByCarpeta}>
                      <Text>Buscar por Carpeta</Text>
                   </Button>

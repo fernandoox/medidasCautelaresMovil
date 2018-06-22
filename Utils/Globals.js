@@ -23,7 +23,7 @@ global.storage = new Storage({
 	// can be null, which means never expire.
 	defaultExpires: 1000 * 3600 * 24,
 	// cache data in the memory. default is true.
-	enableCache: true,
+	enableCache: false,
 	// if data was not found in storage or expired,
 	// the corresponding sync method will be invoked and return 
 	// the latest data.
@@ -38,7 +38,7 @@ global.storage = new Storage({
 // Colores default
 global.COLORS = {
     BACKGROUND_PRIMARY: 	"#d9534f",
-    TEXT_PRIMARY: 			"#F58A1F",
+    TEXT_PRIMARY: 			"#5c5c5c",
     TEXT_SECONDARY: 		"#464646",
 	TEXT_WARN: 				"#ed143d",
 	

@@ -139,7 +139,8 @@ export default class ModalProgreso extends React.Component {
           Alert.alert('Guardado', res.data.message, [{text: 'OK'}], { cancelable: false });
           storage.clearMap();
           this.props.cerrarModalProgrsoChild();
-          this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545, carpetaJudicialParam: this.props.carpetaJudicial});
+
+          this.props.nav.navigate('BuscarImputadoScreen', {carpetaJudicialParam: this.props.carpetaJudicial, evaluador:this.props.evaluador});
         }
       })
       .catch(async (error) => {
@@ -149,7 +150,7 @@ export default class ModalProgreso extends React.Component {
     }else{
       Alert.alert('Problemas de red', "No hay conexión a internet, se enviará cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
       this.props.cerrarModalProgrsoChild();
-      this.props.nav.navigate('BuscarImputadoScreen', { idEvaludador: 545, carpetaJudicialParam: this.props.carpetaJudicial});
+      this.props.nav.navigate('BuscarImputadoScreen', {carpetaJudicialParam: this.props.carpetaJudicial});
       /**
        * Guardar en dispositivo el json aux que se enviará.
        * Podrá continuar realizando mas entrevistas.

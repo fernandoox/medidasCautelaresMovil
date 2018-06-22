@@ -1,12 +1,13 @@
 import React from 'react';
 import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView, AsyncStorage } from 'react-native';
+import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView, AsyncStorage, Dimensions } from 'react-native';
 import { Button, Text, Item, Input, Label, H3, Separator, ListItem, Picker, Toast } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker';
 import axios from 'axios';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
+import CONSTANTS from '../Utils/ConstantsNG';
 import preguntasDatosGeneralesData from '../Utils/Preguntas/DatosGenerales.json';
 import CatSexoData from '../Utils/Catalogos/Sexo.json';
 import CatNacionalidadesData from '../Utils/Catalogos/Nacionalidades.json';
@@ -15,6 +16,8 @@ import CatEstadosCivilesData from '../Utils/Catalogos/EstadosCiviles.json';
 import CatTiposDocMigratorioData from '../Utils/Catalogos/TiposDocMigratorio.json';
 import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
+
+const screenWidth = Dimensions.get('window').width - 30;
 
 export default class DatosGenerales extends React.Component {
 
@@ -85,8 +88,12 @@ export default class DatosGenerales extends React.Component {
     }
   }
 
-  setValueAnswerText = (valueData, nodeQuestion) => {
-    jsonRespDatosGenerales[nodeQuestion] = valueData;
+  setValueAnswerText = (valueData, nodeQuestion, tipoEntrada) => {
+    if(tipoEntrada == "default"){
+      jsonRespDatosGenerales[nodeQuestion] = valueData.toUpperCase();
+    }else{
+      jsonRespDatosGenerales[nodeQuestion] = valueData;
+    }
     this.saveJsonLocalGenerales(jsonRespDatosGenerales);
   }
 
@@ -195,11 +202,14 @@ export default class DatosGenerales extends React.Component {
                     <Item stackedLabel>
                       <Label>{preg.pregunta}</Label>
                       <Input
+                        disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
+                        maxLength={preg.maxLongitud}
                         defaultValue={preg.valueBD}
                         style={{fontSize: 16}}
-                        autoCapitalize='characters'
+                        keyboardType={preg.tipoEntrada}
+                        autoCapitalize="characters"
                         onChangeText={(valueData) => {
-                          this.setValueAnswerText(valueData, preg.node);
+                          this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
                         }}/>
                     </Item> : null
                   }
@@ -209,7 +219,8 @@ export default class DatosGenerales extends React.Component {
                     <Item style={{marginVertical: 5}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <DatePicker
-                        style={{width: 310}}
+                        disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
+                        style={{width: screenWidth}}
                         customStyles={{dateInput:{borderWidth: 0}}}
                         placeholder="Seleccionar"
                         date={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}
@@ -227,7 +238,8 @@ export default class DatosGenerales extends React.Component {
                     <Item style={{marginVertical: 5}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Picker
-                        style={{width: 310}}
+                        enabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.ASIGNADO)}
+                        style={{width: screenWidth}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
                         itemTextStyle={{fontSize: 17}}
@@ -256,7 +268,8 @@ export default class DatosGenerales extends React.Component {
                     <Item style={{marginVertical: 5}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Picker
-                        style={{width: 310}}
+                        enabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.ASIGNADO)}
+                        style={{width: screenWidth}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
                         itemTextStyle={{ fontSize: 17}}

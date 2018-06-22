@@ -2,17 +2,20 @@
     {
         "node": "snNombre",
         "pregunta": "Nombre",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snApellidoPaterno",
         "pregunta": "Apellido paterno",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snApellidoMaterno",
         "pregunta": "Apellido materno",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "parentesco",
@@ -23,7 +26,8 @@
     {
         "node": "nuEdad",
         "pregunta": "Edad",
-        "tipoEntrada": "numeric"
+        "tipoEntrada": "numeric",
+        "maxLongitud": 2
     },
     {
         "node": "indApoyoEconomico",
@@ -41,20 +45,34 @@
         "tipoEntrada": "boolean"
     },
     {
+        "node": "snFrecuenciaVisita",
+        "pregunta": "Frecuencia de visita",
+        "tipoEntrada": "default",
+        "maxLongitud": 50
+    },
+    {
+        "node": "snTelefono",
+        "pregunta": "Teléfono",
+        "tipoEntrada": "numeric",
+        "maxLongitud": 15
+    },
+    {
         "node": "snCodigoPostal",
         "pregunta": "Código postal",
         "tipoEntrada": "numeric",
-        "maxLength": 5
+        "maxLongitud": 5
     },
     {
         "node": "snCalle",
         "pregunta": "Calle",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 300
     },
     {
         "node": "snNumExterior",
         "pregunta": "Número exterior",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 10
     },
     {
         "node": "municipio",
@@ -65,28 +83,14 @@
     {
         "node": "snColonia",
         "pregunta": "Colonia",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "idNuEnitidadFederativa",
         "pregunta": "Entidad federativa",
         "tipoEntrada": "catalogo",
         "catalogo": "EntidadesFederativasCat"
-    },
-    {
-        "node": "snTelefono",
-        "pregunta": "Teléfono",
-        "tipoEntrada": "numeric"
-    },
-    {
-        "node": "snFrecuenciaVisita",
-        "pregunta": "Frecuencia de visita",
-        "tipoEntrada": "numeric"
-    },
-    {
-        "node": "snTiempoDeConocerlo",
-        "pregunta": "Tiempo de conocerlo",
-        "tipoEntrada": "default"
     }
   ]
   

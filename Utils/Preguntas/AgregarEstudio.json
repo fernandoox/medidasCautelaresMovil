@@ -2,17 +2,20 @@
     {
         "node": "snNombreEscuela",
         "pregunta": "Nombre",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 200
     },
     {
         "node": "snDireccionEscuela",
         "pregunta": "Dirección",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 500
     },
     {
         "node": "snTelefonoEscuela",
         "pregunta": "Teléfono",
-        "tipoEntrada": "numeric"
+        "tipoEntrada": "numeric",
+        "maxLongitud": 15
     },
     {
         "node": "dtmFechaInicioEscuela",
@@ -22,17 +25,20 @@
     {
         "node": "snGradoEstudios",
         "pregunta": "Grado",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snDiasEscuela",
         "pregunta": "Días",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 100
     },
     {
         "node": "snTurnoEscuela",
         "pregunta": "Turno",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "indEscuelaActual",

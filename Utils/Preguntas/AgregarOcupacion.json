@@ -2,17 +2,20 @@
     {
         "node": "snNombre",
         "pregunta": "Nombre",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 200
     },
     {
         "node": "snDireccion",
         "pregunta": "Dirección",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 500
     },
     {
         "node": "snTelefono",
         "pregunta": "Teléfono",
-        "tipoEntrada": "numeric"
+        "tipoEntrada": "numeric",
+        "maxLongitud": 15
     },
     {
         "node": "dtmFechaInicio",
@@ -22,17 +25,20 @@
     {
         "node": "snSalario",
         "pregunta": "Salario",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snPuesto",
         "pregunta": "Puesto",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snActividades",
         "pregunta": "Actividades",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 300
     },
     {
         "node": "indEmpleoActual",
@@ -42,11 +48,13 @@
     {
         "node": "snNombreJefe",
         "pregunta": "Jefe",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 150
     },
     {
         "node": "snPeriodoLaboral",
         "pregunta": "Periodo laboral",
-        "tipoEntrada": "default"
+        "tipoEntrada": "default",
+        "maxLongitud": 150
     }
 ]

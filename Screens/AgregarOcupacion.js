@@ -27,8 +27,12 @@ export default class AgregarOcupacion extends React.Component {
     })  
   }
 
-  setValueAnswerText = (valueData, nodeQuestion) => {
-    jsonRespOcupacion[nodeQuestion] = valueData;
+  setValueAnswerText = (valueData, nodeQuestion, tipoEntrada) => {
+    if(tipoEntrada == "default"){
+      jsonRespOcupacion[nodeQuestion] = valueData.toUpperCase();
+    }else{
+      jsonRespOcupacion[nodeQuestion] = valueData;
+    }
   }
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
@@ -98,11 +102,12 @@ export default class AgregarOcupacion extends React.Component {
                   <Item stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Input
-                      autoCapitalize='characters'
-                      maxLength={preg.maxLength}
+                      maxLength={preg.maxLongitud}
                       style={{fontSize: 16}}
+                      keyboardType={preg.tipoEntrada}
+                      autoCapitalize="characters"
                       onChangeText={(valueData) => {
-                        this.setValueAnswerText(valueData, preg.node);
+                        this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
                       }}/>
                    </Item> : null
                 }

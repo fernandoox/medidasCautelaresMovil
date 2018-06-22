@@ -36,8 +36,12 @@ export default class AgregarDomicilio extends React.Component {
     })  
   }
 
-  setValueAnswerText = (valueData, nodeQuestion) => {
-    jsonRespDomicilio[nodeQuestion] = valueData;
+  setValueAnswerText = (valueData, nodeQuestion, tipoEntrada) => {
+    if(tipoEntrada == "default"){
+      jsonRespDomicilio[nodeQuestion] = valueData.toUpperCase();
+    }else{
+      jsonRespDomicilio[nodeQuestion] = valueData;
+    }
   }
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
@@ -106,11 +110,12 @@ export default class AgregarDomicilio extends React.Component {
                   <Item stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Input
-                      maxLength={preg.maxLength}
+                      maxLength={preg.maxLongitud}
                       style={{fontSize: 16}}
-                      autoCapitalize='characters'
+                      keyboardType={preg.tipoEntrada}
+                      autoCapitalize="characters"
                       onChangeText={(valueData) => {
-                        this.setValueAnswerText(valueData, preg.node);
+                        this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
                       }}/>
                    </Item> : null
                 }

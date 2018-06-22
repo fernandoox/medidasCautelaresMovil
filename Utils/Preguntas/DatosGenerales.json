@@ -11,59 +11,75 @@
     "tipoEntrada": "date"
   },
   {
+    "node": "snHoraEntrevista",
+    "pregunta": "Hora de entrevista",
+    "tipoEntrada": "time"
+  },
+  {
     "node": "snCarpetaInvestigacion",
     "pregunta": "Carpeta de investigación",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snCarpetaJudicial",
     "pregunta": "Carpeta judicial",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 25
   },
   {
     "node": "snNombre",
     "pregunta": "Nombre del adolescente",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snApellidoPaterno",
     "pregunta": "Apellido paterno",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snApellidoMaterno",
     "pregunta": "Apellido materno",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snOtrosNombres",
     "pregunta": "Otros nombres",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snApodos",
     "pregunta": "Apodo (s)",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 250
   },
   {
     "node": "snGrupoEtnico",
     "pregunta": "Grupo étnico o indigena",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snSituacionDiscapacidad",
     "pregunta": "Situación de discapacidad",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snRfc",
     "pregunta": "RFC",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 13
   },
   {
     "node": "snCurp",
     "pregunta": "CURP",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 18
   },
   {
     "node": "indSexo",
@@ -79,7 +95,8 @@
   {
     "node": "nuEdad",
     "pregunta": "Edad",
-    "tipoEntrada": "numeric"
+    "tipoEntrada": "numeric",
+    "maxLongitud": 2
   },
   {
     "node": "estadoCivil",
@@ -90,17 +107,20 @@
   {
     "node": "snDuracion",
     "pregunta": "Duración",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snPais",
     "pregunta": "País",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snNacionalidad",
     "pregunta": "Nacionalidad",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "indDocumentoMigratorio",
@@ -126,12 +146,14 @@
   {
     "node": "snTelefono",
     "pregunta": "Teléfono",
-    "tipoEntrada": "numeric"
+    "tipoEntrada": "numeric",
+    "maxLongitud": 15
   },
   {
     "node": "snCodigoPostal",
     "pregunta": "Código postal",
-    "tipoEntrada": "numeric"
+    "tipoEntrada": "numeric",
+    "maxLongitud": 5
   },
   {
     "node": "municipioLn",
@@ -142,32 +164,38 @@
   {
     "node": "snColonia",
     "pregunta": "Colonia",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 50
   },
   {
     "node": "snCalle",
     "pregunta": "Calle",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 200
   },
   {
     "node": "snNumExterior",
     "pregunta": "Número exterior",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 10
   },
   {
     "node": "snNumInterior",
     "pregunta": "Número interior",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 10
   },
   {
     "node": "snManzana",
     "pregunta": "Manzana",
-    "tipoEntrada": "default"
+    "tipoEntrada": "default",
+    "maxLongitud": 100
   },
   {
     "node": "snLote",
-    "pregunta": "País",
-    "tipoEntrada": "default"
+    "pregunta": "Lote",
+    "tipoEntrada": "default",
+    "maxLongitud": 100
   },
   {
     "node": "idNuEntidadFederativa",

@@ -20,6 +20,7 @@ const ScreensMedidasCautelares = StackNavigator({
       headerStyle: {backgroundColor: COLORS.BACKGROUND_PRIMARY},
       headerTitleStyle: {color:'white'},
       headerTintColor: 'white',
+      headerLeft: null,
     },
   },
   

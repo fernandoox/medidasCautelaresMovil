@@ -29,8 +29,12 @@ export default class AgregarSustancia extends React.Component {
     })  
   }
 
-  setValueAnswerText = (valueData, nodeQuestion) => {
-    jsonRespSustancia[nodeQuestion] = valueData;
+  setValueAnswerText = (valueData, nodeQuestion, tipoEntrada) => {
+    if(tipoEntrada == "default"){
+      jsonRespSustancia[nodeQuestion] = valueData.toUpperCase();
+    }else{
+      jsonRespSustancia[nodeQuestion] = valueData;
+    }
   }
 
   setValueAnswerCatalogo = (itemSelected, nodeQuestion) => {
@@ -117,10 +121,11 @@ export default class AgregarSustancia extends React.Component {
                     <Label>{preg.pregunta}:</Label>
                     <Input
                       autoCapitalize='characters'
-                      maxLength={preg.maxLength}
-                      style={{fontSize: 16}}
+                      maxLength={preg.maxLongitud}
+                      keyboardType={preg.tipoEntrada}
+                      autoCapitalize="characters"
                       onChangeText={(valueData) => {
-                        this.setValueAnswerText(valueData, preg.node);
+                        this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
                       }}/>
                    </Item> : null
                 }
