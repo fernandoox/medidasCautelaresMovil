@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
+import CONSTANTS from '../Utils/ConstantsNG';
 import Storage from 'react-native-storage';
 import StepIndicator from 'react-native-step-indicator';
 import Carousel from 'react-native-looped-carousel';
@@ -164,8 +165,11 @@ export default class Entrevista extends React.Component {
                 </Body>
               </CardItem>
               <CardItem style={{ marginTop:-10, marginBottom:0, paddingTop:-20, paddingBottom:-10 }}>
-                <Body>
-                  <Text style={{ fontSize:14, fontWeight:'bold' }}>
+                <Body style={{flex: 1, flexDirection: 'row'}}>
+                  <Icon active name={(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? "ban" : "edit"} 
+                  style={{marginRight:5, fontSize: 20, color:(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? "crimson" : "teal"}}/>
+                  <Text style={{ fontSize:14, fontWeight:'bold',
+                    color:(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? "crimson" : "teal"}}>
                     IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.primerApellido + " " + this.state.imputado.segundoApellido}
                   </Text>
                 </Body>
@@ -218,7 +222,7 @@ export default class Entrevista extends React.Component {
           swipeDirection="right" isVisible={this.state.isModalVisible}>
           <ModalProgreso 
             changeStepChild={this.changeStepInProgress} 
-            imputado={this.state.imputado} 
+            imputadoProp={this.state.imputado} 
             carpetaJudicial={this.state.carpetaJudicial}
             nav={this.props.navigation}
             evaluador={this.state.evaluador}

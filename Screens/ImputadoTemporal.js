@@ -49,6 +49,7 @@ export default class ImputadoTemporal extends React.Component {
               <Input
                 placeholder='Nombre'
                 style={{fontSize: 18}}
+                autoCapitalize='characters'
                 onChangeText={(imputadoTmpNombre) => this.setState({imputadoTmpNombre}) }/>
             </Item>
 
@@ -56,6 +57,7 @@ export default class ImputadoTemporal extends React.Component {
               <Input
                 placeholder='Apellido paterno'
                 style={{fontSize: 18}}
+                autoCapitalize='characters'
                 onChangeText={(imputadoTmpApellidoP) => this.setState({imputadoTmpApellidoP}) }/>
             </Item>
 
@@ -63,6 +65,7 @@ export default class ImputadoTemporal extends React.Component {
               <Input
                 placeholder='Apellido materno'
                 style={{fontSize: 18}}
+                autoCapitalize='characters'
                 onChangeText={(imputadoTmpApellidoM) => this.setState({imputadoTmpApellidoM}) }/>
             </Item>
 

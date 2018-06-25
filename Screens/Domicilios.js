@@ -7,6 +7,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import axios from 'axios';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
+import CONSTANTS from '../Utils/ConstantsNG';
 import Modal from "react-native-modal";
 import Display from 'react-native-display';
 import AgregarDomicilio from './AgregarDomicilio'
@@ -138,6 +139,7 @@ export default class Domicilios extends React.Component {
               <Item style={{marginVertical: 10}} stackedLabel>
                 <Label>Razón de tener mas de un domicilio:</Label>
                 <Input style={{fontSize: 16}} 
+                  disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
                   autoCapitalize='characters'
                   defaultValue={this.state.snRazonMultiplesDomicilios}
                   onChangeText={(valueData) => {
@@ -172,7 +174,8 @@ export default class Domicilios extends React.Component {
                   </ListItem>
                   <ListItem style={{marginTop: -12, marginBottom:-12}}>
                     <Col>
-                      <Button transparent full onPress={() => { this.removeDomicilioByIndex(i) }}>
+                      <Button transparent full onPress={() => { this.removeDomicilioByIndex(i) }}
+                        disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
                         <Icon active name="trash" style={{color: COLORS.TEXT_WARN, fontSize:17}}/>
                         <Text style={{color: COLORS.TEXT_WARN}}>Eliminar domicilio</Text>
                       </Button>
@@ -194,7 +197,8 @@ export default class Domicilios extends React.Component {
         </Modal>
 
         <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
-          <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}>
+          <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}
+            disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
             <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />
           </Button>
         </View>

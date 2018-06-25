@@ -83,7 +83,7 @@ export default class Login extends React.Component {
 
   omitirSesion = () => {
     const {navigate} = this.props.navigation;
-    navigate('BuscarImputadoScreen');
+    navigate('BuscarImputadoScreen', {carpetaJudicialParam: ""});
   }
 
   render() {

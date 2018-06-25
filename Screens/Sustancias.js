@@ -8,6 +8,7 @@ import axios from 'axios';
 import Storage from 'react-native-storage';
 import Display from 'react-native-display';
 import GLOBALS from '../Utils/Globals';
+import CONSTANTS from '../Utils/ConstantsNG';
 import Modal from "react-native-modal";
 import AgregarSustancia from './AgregarSustancia';
 import CatSustanciasData from '../Utils/Catalogos/Sustancias.json';
@@ -139,6 +140,7 @@ export default class Sustancias extends React.Component {
           <Item style={{marginVertical: 5}} stackedLabel>
             <Label>Consume sustancias:</Label>
             <Picker
+              enabled={(this.props.imputadoProp.idEstatus != ESTATUS_SOLICITUD.CONCLUIDO)}
               style={{width: 310}}
               iosHeader="Seleccionar una opción"
               placeholder="Seleccionar una opción"
@@ -182,7 +184,8 @@ export default class Sustancias extends React.Component {
                 </ListItem>
                 <ListItem style={{marginTop:-12, marginBottom:-12}}>
                   <Col>
-                    <Button transparent full onPress={() => { this.removeSustanciaByIndex(i) }}>
+                    <Button transparent full onPress={() => { this.removeSustanciaByIndex(i) }}
+                      disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
                       <Icon active name="trash" style={{color: COLORS.TEXT_WARN, fontSize:17}}/>
                       <Text style={{color: COLORS.TEXT_WARN}}>Eliminar sustancia</Text>
                     </Button>
@@ -211,7 +214,8 @@ export default class Sustancias extends React.Component {
       exitDuration={500}
       enter="fadeInDown"
       exit="fadeOutDown">
-      <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}>
+      <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}
+        disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
         <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />
       </Button>
     </Display>

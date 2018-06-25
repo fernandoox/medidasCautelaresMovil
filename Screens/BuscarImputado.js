@@ -7,6 +7,7 @@ import Display from 'react-native-display';
 import axios from 'axios';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
+import CONSTANTS from '../Utils/ConstantsNG';
 import ImputadoTemporal from './ImputadoTemporal'
 
 export default class BuscarImputado extends React.Component {
@@ -17,7 +18,7 @@ export default class BuscarImputado extends React.Component {
     this.state = {
       isLoading: false,
       isConnected: null,
-      carpetaJudicial: (params.carpetaJudicialParam != undefined || params.carpetaJudicialParam != null) ? params.carpetaJudicialParam : null,
+      carpetaJudicial: (params.carpetaJudicialParam != undefined) ? params.carpetaJudicialParam : null,
       evaluador: (params.evaluador !=  undefined || params.evaluador !=  null) ? params.evaluador : null,
       imputados: [],
       numImputados: 0,
@@ -112,15 +113,26 @@ export default class BuscarImputado extends React.Component {
   }
 
   aplicarEntrevistaImputado = () => {
-      const {navigate} = this.props.navigation;
-      navigate('EntrevistaScreen',
-        {
-          imputadoParam: this.state.selectedImputado,
-          carpetaJudicialParam: this.state.carpetaJudicial,
-          tipoCapturaParam: "ONLINE",
-          evaluador: this.state.evaluador
-        }
-      )
+    const {navigate} = this.props.navigation;
+    navigate('EntrevistaScreen',
+      {
+        imputadoParam: this.state.selectedImputado,
+        carpetaJudicialParam: this.state.carpetaJudicial,
+        tipoCapturaParam: "ONLINE",
+        evaluador: this.state.evaluador
+      }
+    )
+  }
+
+  getNombreEvaluador= () => {
+    let nombreEvaluador = "";
+    if (this.state.evaluador != null) {
+      console.log("Nombre evaluador: " + this.state.evaluador.nombre);
+      nombreEvaluador = this.state.evaluador.nombre + " " + this.state.evaluador.apellidoPaterno + " " + this.state.evaluador.apellidoMaterno
+    }else{
+      console.log("Sin nombre evaluador")
+    }
+    return nombreEvaluador;
   }
 
   cerrarSesion = async () => {
@@ -157,7 +169,7 @@ export default class BuscarImputado extends React.Component {
                   enter="fadeInDown">
                   <Row style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>             
                     <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:-35}}>
-                      {this.state.evaluador.nombre} {this.state.evaluador.apellidoPaterno} {this.state.evaluador.apellidoMaterno}
+                      {this.getNombreEvaluador()}
                     </Text>
                   </Row>
 
@@ -236,7 +248,7 @@ export default class BuscarImputado extends React.Component {
                       this.state.imputados.map((imputado) => {
                         return (
                           <Item
-                            label={imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido}
+                            label={imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido + ((imputado.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? " (A) " : " (C)")}
                             value={imputado} key={imputado.id}/>
                         );
                       })

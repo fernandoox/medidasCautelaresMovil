@@ -6,6 +6,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import GLOBALS from '../Utils/Globals';
+import CONSTANTS from '../Utils/ConstantsNG';
 import Storage from 'react-native-storage';
 
 export default class ModalProgreso extends React.Component {
@@ -176,7 +177,7 @@ export default class ModalProgreso extends React.Component {
             <CardItem style={{ marginTop:-10, marginBottom:0, paddingTop:-20, paddingBottom:-10 }}>
               <Body>
                 <Text style={[styles.labelInfo]}>
-                  IMPUTADO: {this.props.imputado.nombre + " " + this.props.imputado.primerApellido + " " + this.props.imputado.segundoApellido}
+                  IMPUTADO: {this.props.imputadoProp.nombre + " " + this.props.imputadoProp.primerApellido + " " + this.props.imputadoProp.segundoApellido}
                 </Text>
               </Body>
             </CardItem>
@@ -282,7 +283,8 @@ export default class ModalProgreso extends React.Component {
 
       <Row>
         <Col style={{ padding:15, justifyContent:'center' }}>
-          <Button danger full onPress={this.saveInfoTotal}>
+          <Button danger full onPress={this.saveInfoTotal} 
+            disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
             <Text>Terminar entrevista</Text>
           </Button>
         </Col>
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
   labelInfo: {
     fontSize:15, 
     fontWeight:'bold', 
-    color: COLORS.BACKGROUND_PRIMARY
+    color: COLORS.TEXT_PRIMARY
   },
   columnStep: {
     flex: 1,

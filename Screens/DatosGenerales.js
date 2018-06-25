@@ -26,6 +26,7 @@ export default class DatosGenerales extends React.Component {
     
     this.state = {
       dtmFechaEntrevista: null,
+      snHoraEntrevista: null,
       dtmFechaNacimiento: null,
       horaEntrevista: null,
       indSexo: null,
@@ -98,10 +99,12 @@ export default class DatosGenerales extends React.Component {
   }
 
   setValueAnswerDate = (dateData, nodeQuestion) => {
-    
     switch (nodeQuestion) {
       case "dtmFechaEntrevista":
         this.setState({dtmFechaEntrevista:dateData})
+        break;
+      case "snHoraEntrevista":
+        this.setState({snHoraEntrevista:dateData})
         break;
       case "dtmFechaNacimiento":
         this.setState({dtmFechaNacimiento:dateData})
@@ -238,7 +241,7 @@ export default class DatosGenerales extends React.Component {
                     <Item style={{marginVertical: 5}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Picker
-                        enabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.ASIGNADO)}
+                        enabled={(this.props.imputadoProp.idEstatus != ESTATUS_SOLICITUD.CONCLUIDO)}
                         style={{width: screenWidth}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
@@ -268,7 +271,7 @@ export default class DatosGenerales extends React.Component {
                     <Item style={{marginVertical: 5}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Picker
-                        enabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.ASIGNADO)}
+                        enabled={(this.props.imputadoProp.idEstatus != ESTATUS_SOLICITUD.CONCLUIDO)}
                         style={{width: screenWidth}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
