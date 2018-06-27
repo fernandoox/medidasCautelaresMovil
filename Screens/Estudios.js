@@ -139,7 +139,9 @@ export default class Estudios extends React.Component {
     return (
     
     <View style={{flex:1}}>
-    <ScrollView style={{flex:1}}>
+    <KeyboardAvoidingView behavior="position" enabled keyboardVerticalOffset={100}>
+    <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
+      
     <Grid style={{flex:1}}>
       
       <Row>
@@ -272,7 +274,7 @@ export default class Estudios extends React.Component {
         </Button>
       </Display>
     </View>
-
+    </KeyboardAvoidingView>
     </View>    
     );
   }

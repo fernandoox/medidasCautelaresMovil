@@ -27,8 +27,8 @@ export default class Entrevista extends React.Component {
     return{
       headerRight: (
         <Root>
-          <Button style={{marginRight:10}} onPress={params.handleToggleModalProgress} transparent>
-            <Icon active name="tasks" style={{color:'white', fontSize:22}}/>
+          <Button style={{marginRight:10, paddingHorizontal: 12}} onPress={params.handleToggleModalProgress} light transparent>
+            <Icon active name="sliders" style={{color:'white', fontSize:26}}/>
           </Button>
         </Root>
       )
@@ -128,7 +128,6 @@ export default class Entrevista extends React.Component {
   }
 
   changeStep = (stepNumber) => {
-    console.log("Step: "+stepNumber);
     this.setState({currentPosition: stepNumber});
   }
 
@@ -153,12 +152,16 @@ export default class Entrevista extends React.Component {
 
     return (
       <Grid onLayout={this.getDataImputado}>
-        
         <Row style={{backgroundColor: '#607D8B', height:80}}>
           <Col>
             <Card>
               <CardItem>
-                <Body>
+                <Body style={{flex: 1, flexDirection: 'row'}}>
+                  {
+                    (this.state.imputado.evaluacionMensual) ?
+                    <Icon active name="calendar" style={{marginRight:5, fontSize: 20, color: "#3c85ea"}}/> : 
+                    <Icon active name="bell" style={{marginRight:5, fontSize: 20, color: "#3c85ea"}}/>
+                  }
                   <Text style={{ fontSize:14, fontWeight:'bold' }}>
                     CARPETA JUDICIAL: {this.state.carpetaJudicial}
                   </Text>
@@ -167,9 +170,9 @@ export default class Entrevista extends React.Component {
               <CardItem style={{ marginTop:-10, marginBottom:0, paddingTop:-20, paddingBottom:-10 }}>
                 <Body style={{flex: 1, flexDirection: 'row'}}>
                   <Icon active name={(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? "ban" : "edit"} 
-                  style={{marginRight:5, fontSize: 20, color:(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? "crimson" : "teal"}}/>
+                  style={{marginRight:5, fontSize: 20, color:(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? COLORS.LIGHT_WARN : "teal"}}/>
                   <Text style={{ fontSize:14, fontWeight:'bold',
-                    color:(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? "crimson" : "teal"}}>
+                    color:(this.state.imputado.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO) ? COLORS.LIGHT_WARN : "teal"}}>
                     IMPUTADO: {this.state.imputado.nombre + " " + this.state.imputado.primerApellido + " " + this.state.imputado.segundoApellido}
                   </Text>
                 </Body>
@@ -196,7 +199,7 @@ export default class Entrevista extends React.Component {
             autoplay={false}
             isLooped={true}
             currentPage={0}
-            onAnimateNextPage={(numberPage) => this.changeStep(numberPage)}>
+            onAnimateNextPage={(numberPage) => {this.changeStep(numberPage)}}>
             <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
               <DatosGenerales generalesDB={this.state.dataGeneralesDB} imputadoProp={this.state.imputado}/>
             </View>

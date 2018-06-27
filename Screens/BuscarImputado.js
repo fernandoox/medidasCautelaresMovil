@@ -1,9 +1,10 @@
 import React from 'react';
 import { Font } from 'expo';
 import { AsyncStorage, View, ActivityIndicator, TouchableOpacity, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
-import { Button, Text, ListItem, CheckBox, Body, Item, Input, Picker } from 'native-base';
+import { Button, Text, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
@@ -127,10 +128,7 @@ export default class BuscarImputado extends React.Component {
   getNombreEvaluador= () => {
     let nombreEvaluador = "";
     if (this.state.evaluador != null) {
-      console.log("Nombre evaluador: " + this.state.evaluador.nombre);
       nombreEvaluador = this.state.evaluador.nombre + " " + this.state.evaluador.apellidoPaterno + " " + this.state.evaluador.apellidoMaterno
-    }else{
-      console.log("Sin nombre evaluador")
     }
     return nombreEvaluador;
   }
@@ -156,35 +154,41 @@ export default class BuscarImputado extends React.Component {
       <KeyboardAvoidingView behavior="position">
         <ScrollView keyboardShouldPersistTaps="always">
           <Grid>
-            <Row>
+            <Row style={{marginTop: 20}}>
               <Col style={{ paddingHorizontal:15 }}>
 
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                {/*<View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Image source={require('../assets/img/medidasCautelares.png')} resizeMode="contain"
                   style={{width:250, marginTop:-25}}></Image>
-                </View>
+                  </View>*/}
 
                 <Display enable={this.state.evaluador != null}
                   enterDuration={500}
                   enter="fadeInDown">
-                  <Row style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>             
-                    <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:-35}}>
-                      {this.getNombreEvaluador()}
-                    </Text>
-                  </Row>
+                  <Card>
+                    <CardItem>
+                      <Body>
+                        <Row style={{marginTop: -20, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>             
+                          <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:25}}>
+                            EVALUADOR: {this.getNombreEvaluador()}
+                          </Text>
+                        </Row>
 
-                  <Row style={{marginTop: -20, marginBottom:20}}>
-                   <Col>
-                   <Button transparent full danger
-                      style={{marginVertical: 10}}
-                      onPress={this.cerrarSesion}>
-                      <Text style={{fontSize:16, textDecorationLine: "underline", textDecorationStyle: "solid",}}>Cerrar sesión</Text>
-                    </Button>
-                   </Col>
-                  </Row>
+                        <Row style={{marginTop: -15, marginBottom:-20}}>
+                          <Col>
+                            <Button transparent full danger
+                                style={{marginVertical: 10}}
+                                onPress={this.cerrarSesion}>
+                                <Text style={{fontSize:16, textDecorationLine: "underline", textDecorationStyle: "solid",}}>Cerrar sesión</Text>
+                              </Button>
+                          </Col>
+                        </Row>
+                      </Body>
+                    </CardItem>
+                  </Card>
                 </Display>
 
-                <Text style={{textAlign:'center', color:COLORS.TEXT_PRIMARY, fontWeight:'bold', marginTop:-20, marginBottom:-10}}>
+                <Text style={{textAlign:'center', color:COLORS.TEXT_PRIMARY, fontWeight:'bold', marginTop:10, marginBottom:-10}}>
                   Buscar imputados por carpeta judicial:
                 </Text>
 
@@ -248,8 +252,10 @@ export default class BuscarImputado extends React.Component {
                       this.state.imputados.map((imputado) => {
                         return (
                           <Item
-                            label={imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido + ((imputado.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? " (A) " : " (C)")}
-                            value={imputado} key={imputado.id}/>
+                            value={imputado} key={imputado.id}
+                            label={( (imputado.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? "✔️ (A) - " : "🚫 (C) - ") + 
+                                  imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido +
+                                  ((imputado.evaluacionMensual) ? " 📅" : "")}/>
                         );
                       })
                     }

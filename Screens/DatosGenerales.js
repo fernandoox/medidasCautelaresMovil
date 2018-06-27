@@ -182,8 +182,8 @@ export default class DatosGenerales extends React.Component {
   render() {
     return (
       <View>
-      <KeyboardAvoidingView behavior="position" enabled keyboardVerticalOffset={100}>
-      <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
+      <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={230}>
+      <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode='none'>
       
       <Grid>
         <Row>
@@ -196,14 +196,14 @@ export default class DatosGenerales extends React.Component {
 
         {/* Iterar el JSON de Preguntas */}
         {
-          this.state.preguntas.map((preg, i) => {
+          this.state.preguntas.map((preg, index) => {
             return (
-              <Row style={{flexDirection: "row", alignItems:'center'}} key={i}>
+              <Row style={{flexDirection: "row", alignItems:'center'}} key={index}>
               <Col>
                   {
                     (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
                     <Item stackedLabel>
-                      <Label>{preg.pregunta}</Label>
+                      <Label>{preg.pregunta}:</Label>
                       <Input
                         disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
                         maxLength={preg.maxLongitud}
