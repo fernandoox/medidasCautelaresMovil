@@ -127,7 +127,6 @@ export default class ModalProgreso extends React.Component {
 
   saveInfoTotal = () => {
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
-    console.log("Save info total.");
     if (this.state.isConnected) {
       axios({
         method: 'POST',
@@ -135,17 +134,14 @@ export default class ModalProgreso extends React.Component {
         data: this.state.jsonBase
       })
       .then((res) => {
-        console.log(JSON.stringify(res.data));
         if(res.data.status == "ok"){
           Alert.alert('Guardado', res.data.message, [{text: 'OK'}], { cancelable: false });
           storage.clearMap();
           this.props.cerrarModalProgrsoChild();
-
           this.props.nav.navigate('BuscarImputadoScreen', {carpetaJudicialParam: this.props.carpetaJudicial, evaluador:this.props.evaluador});
         }
       })
       .catch(async (error) => {
-        console.log("CATCH ERROR: "+error);
         Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
       });
     }else{

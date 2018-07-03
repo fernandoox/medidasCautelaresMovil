@@ -68,7 +68,6 @@ export default class BuscarImputado extends React.Component {
   }
   
   buscarImputadosByCarpeta = async () => {
-    console.log("Asignados: " + this.state.buscarAsignados + " - Concluidos: " + this.state.buscarConcluidos)
     const {navigate} = this.props.navigation;
     if(this.state.evaluador){
       this.setState({isLoading: true});
@@ -99,7 +98,6 @@ export default class BuscarImputado extends React.Component {
         }
       })
       .catch(async (error) => {
-        console.log("CATCH ERROR: "+error);
         Alert.alert('External error', error, [{text: 'OK'}],{ cancelable: false });
         this.setState({isLoading: false});
       });
@@ -134,7 +132,6 @@ export default class BuscarImputado extends React.Component {
   }
 
   cerrarSesion = async () => {
-    console.log("Logout");
     const {navigate} = this.props.navigation;
     await AsyncStorage.clear();
     ToastAndroid.show('Cerró sesión correctamente.', ToastAndroid.SHORT);

@@ -32,10 +32,8 @@ export default class Login extends React.Component {
     storage.load({
       key: 'evaluadorLogueado',
     }).then((response) => {
-      console.log("Data sesion storage: " + JSON.stringify(response))
       navigate('BuscarImputadoScreen', {evaluador: response});
     }).catch(async (err) => {
-      console.log("ERROR ASYNC LOGIN: "+err.message);
       await AsyncStorage.clear();
     })
 
@@ -51,12 +49,10 @@ export default class Login extends React.Component {
 
   loginEvaluador = () => {
     const {navigate} = this.props.navigation;
-    console.log("User: " + this.state.user + " - Pass: " + this.state.password);
     if(this.state.user != null && this.state.password != null){
       this.setState({isLoading: true});
       axios.post(`/login?username=${this.state.user}&password=${this.state.password}`)
       .then(async (response) => {
-        console.log("Data login req: " + JSON.stringify(response.data));
         if (response.data.status == 'ok') {
           ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
           storage.save({
@@ -72,7 +68,6 @@ export default class Login extends React.Component {
         this.setState({isLoading: false});
       })
       .catch(async (error) => {
-        console.log("ERROR: " + error)
         this.setState({isLoading: false});
         Alert.alert('Conexión', error,[{text: 'OK'}],{ cancelable: false })
       });

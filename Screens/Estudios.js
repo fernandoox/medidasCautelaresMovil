@@ -32,8 +32,7 @@ export default class Estudios extends React.Component {
       ultimoGrado: null,
       snRazonDejarEstudiar: null,
       completo: false,
-      jsonEstudios: [],
-      loadedResponsesBD: false
+      jsonEstudios: []
     }
   }
 
@@ -78,26 +77,26 @@ export default class Estudios extends React.Component {
         break;
     }
   }
-  
-
-  _toggleModal = () => {
-    this.setState({ isModalVisible: !this.state.isModalVisible });
-  }
 
   setValueUltimoGrado = (valueUltimoGrado) => {
-    console.log("Value: " + valueUltimoGrado)
     this.setState({
       ultimoGrado: valueUltimoGrado
     }, () => {
       if (valueUltimoGrado == 23) {
         this.setState({estudios: []}, () => {
-          this.saveJsonLocalEstudios(this.state.estudios);
           this.setState({numeroEstudios: 0});
+          this.saveJsonLocalEstudios(this.state.estudios);
         });
+      }else{
+        this.saveJsonLocalEstudios(this.state.estudios);
       }
     });
   }
-
+  
+  _toggleModal = () => {
+    this.setState({ isModalVisible: !this.state.isModalVisible });
+  }
+  
   agregarEstudio = (stateEstudioFromChild) => {
     this.state.estudios.push(stateEstudioFromChild);
     this.saveJsonLocalEstudios(this.state.estudios);

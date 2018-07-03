@@ -66,7 +66,6 @@ export default class AgregarDomicilio extends React.Component {
 
   agregarDomicilio = () => {
     if(this.validateForm()){
-      console.log("JSON Domicilio: "+JSON.stringify(jsonRespDomicilio))
       this.props.agregarDomicilioChild(jsonRespDomicilio);
     }
   }
