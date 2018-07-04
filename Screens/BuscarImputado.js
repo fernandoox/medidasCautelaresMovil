@@ -25,7 +25,9 @@ export default class BuscarImputado extends React.Component {
       numImputados: 0,
       selectedImputado: null,
       buscarAsignados: true,
-      buscarConcluidos: false
+      buscarConcluidos: false,
+      jsonEntrevistaPendiente: null,
+      entrevistaPendienteGuardada: false
     };
     numBack = 0;
   }
@@ -33,7 +35,12 @@ export default class BuscarImputado extends React.Component {
   componentDidMount(){
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
-      (isConnected) => { this.setState({isConnected}); }
+      (isConnected) => { 
+        this.setState({isConnected}); 
+        if (isConnected) {
+          this.enviarEntrevistaPendiente();
+        }
+      }
     );
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
@@ -56,7 +63,11 @@ export default class BuscarImputado extends React.Component {
   }
 
   _handleConnectivityChange = (isConnected) => {
-    this.setState({isConnected});
+    this.setState({isConnected}, () => {
+      if (this.state.isConnected && !this.state.entrevistaPendienteGuardada) {
+        this.enviarEntrevistaPendiente();
+      }
+    });
   };
 
   _selectCheckBoxSearchAsignados = () => {
@@ -89,7 +100,7 @@ export default class BuscarImputado extends React.Component {
           })
         }
         if (res.data.status == "error") {
-          Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
+          Alert.alert('Sin resultados', res.data.message, [{text: 'OK'}], { cancelable: false });
           this.setState({
             imputados: [],
             numImputados: 0,
@@ -98,13 +109,54 @@ export default class BuscarImputado extends React.Component {
         }
       })
       .catch(async (error) => {
-        Alert.alert('External error', error, [{text: 'OK'}],{ cancelable: false });
+        Alert.alert('Sin red', error, [{text: 'OK'}],{ cancelable: false });
         this.setState({isLoading: false});
       });
     }else{
-      Alert.alert('Error', "No ha iniciado sesión un evaluador.", [{text: 'OK'}],{ cancelable: false });
+      Alert.alert('Evaluador', "No ha iniciado sesión un evaluador.", [{text: 'OK'}],{ cancelable: false });
       navigate('LoginScreen');
     }
+  }
+
+  enviarEntrevistaPendiente = () => {
+    if (!this.state.entrevistaPendienteGuardada) {
+      this.setState({entrevistaPendienteGuardada: true});
+      storage.load({
+        key: 'entrevistaPendiente',
+      }).then((responseStorage) => {
+        let imputadoEntrevistaPendiente = responseStorage.imputado.nombre + " "+ responseStorage.imputado.nombre + " " + responseStorage.imputado.nombre;
+        ToastAndroid.show('Enviando entrevista pendiente para: ' + imputadoEntrevistaPendiente,  ToastAndroid.LONG);
+        this.setState({jsonEntrevistaPendiente: responseStorage}, () => {
+          this._reqGuardarEntrevista(imputadoEntrevistaPendiente);
+        });
+      }).catch(err => {
+        this.setState({jsonEntrevistaPendiente: null});
+        //console.log("ENTREVISTA PENDIENTE: "+err.message);
+      })
+    }
+  }
+
+  _reqGuardarEntrevista = (paramImputado) => {
+    console.log("Entrevista pendiente to save: " + JSON.stringify(this.state.jsonEntrevistaPendiente));
+    axios({
+      method: 'POST',
+      url: '/evaluacion/update',
+      data: this.state.jsonEntrevistaPendiente,
+    })
+    .then((res) => {
+      console.log("Res request to save pendding... " + JSON.stringify(res.data));
+      if(res.data.status == "ok"){
+        Alert.alert('Guardado', res.data.message + " Imputado: " + paramImputado,  [{text: 'OK'}], { cancelable: false });
+        storage.remove({
+          key: 'entrevistaPendiente'
+        });
+        this.setState({jsonEntrevistaPendiente: null});
+      }
+    })
+    .catch(async (error) => {
+      console.log("Error to save: " + error)
+      Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
+    });
   }
 
   onSelectImputado(value) {
@@ -137,6 +189,7 @@ export default class BuscarImputado extends React.Component {
     ToastAndroid.show('Cerró sesión correctamente.', ToastAndroid.SHORT);
     navigate('LoginScreen');
   }
+  
 
   render() {
     if (this.state.isLoading) {
@@ -170,7 +223,6 @@ export default class BuscarImputado extends React.Component {
                             EVALUADOR: {this.getNombreEvaluador()}
                           </Text>
                         </Row>
-
                         <Row style={{marginTop: -15, marginBottom:-20}}>
                           <Col>
                             <Button transparent full danger
@@ -186,13 +238,13 @@ export default class BuscarImputado extends React.Component {
                 </Display>
 
                 <Text style={{textAlign:'center', color:COLORS.TEXT_PRIMARY, fontWeight:'bold', marginTop:10, marginBottom:-10}}>
-                  Buscar imputados por carpeta judicial:
+                  Buscar imputados por:
                 </Text>
 
                 <Item style={{marginVertical: 10}}>
                   <Input
                     defaultValue={this.state.carpetaJudicial}
-                    placeholder='Carpeta juidicial'
+                    placeholder='Carpeta juidicial / investigación'
                     placeholderTextColor='#2C4743'
                     autoCapitalize='characters' autoCorrect={false}
                     style={{color:'#2C4743', fontSize: 17}}

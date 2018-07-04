@@ -70,7 +70,7 @@ export default class AgregarSustancia extends React.Component {
         this.props.sustanciasChild.map((sustancia, i) => {
           if(sustancia.sustancia === jsonRespSustancia.sustancia){
             sustanciaRepetida = true;
-            Alert.alert('Error', 'Ya se agrego la sustancia, no se pueden repetir.', [{text: 'OK'}], { cancelable: false });
+            Alert.alert('Datos duplicados', 'Ya se agrego la sustancia, no se pueden repetir.', [{text: 'OK'}], { cancelable: false });
             return false; // Break
           }
         });
@@ -92,7 +92,7 @@ export default class AgregarSustancia extends React.Component {
     })
     if(countNull == numQuestions){
       formValido = false;
-      Alert.alert('Error', 'Debe llenar por lo menos un campo de la sustancia', [{text: 'OK'}], { cancelable: false });
+      Alert.alert('Faltan datos', 'Debe llenar por lo menos un campo de la sustancia', [{text: 'OK'}], { cancelable: false });
     }
     return formValido;
   }

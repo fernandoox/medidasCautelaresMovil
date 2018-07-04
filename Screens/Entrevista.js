@@ -68,7 +68,6 @@ export default class Entrevista extends React.Component {
   componentDidMount(){
     
     this.props.navigation.setParams({ handleToggleModalProgress: this._toggleModalProgress });
-    
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }

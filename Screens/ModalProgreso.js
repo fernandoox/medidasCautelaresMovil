@@ -1,10 +1,11 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, Alert, NetInfo, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge } from 'native-base';
+import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import Display from 'react-native-display';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
 import Storage from 'react-native-storage';
@@ -22,19 +23,32 @@ export default class ModalProgreso extends React.Component {
       jsonRedFamiliarCompleto: null,
       jsonEstudiosCompleto: null,
       jsonOcupacionesCompleto: null,
-      jsonSustanciasCompleto: null
+      jsonSustanciasCompleto: null,
+      evaluador: null
     };
     jsonBaseEntrevistaLocal = {}
     const nav = this.props.nav;
   }
 
   componentDidMount(){
-
     // Detectar conexion
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
     );
+
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+    });
+
+    // Load evaluador logueado
+    storage.load({
+      key: 'evaluadorLogueado',
+    }).then((response) => {
+      this.setState({evaluador: response})
+    }).catch(async (err) => {
+      console.error("ERROR EVALUADOR: "+err.message);
+    })
 
     // Load JSON Base
     storage.load({
@@ -114,10 +128,14 @@ export default class ModalProgreso extends React.Component {
 
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      console.log('Change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+    });
   }
 
   _handleConnectivityChange = (isConnected) => {
     this.setState({isConnected});
+    
   };
 
   changeStep = (numberStep) => {
@@ -128,30 +146,46 @@ export default class ModalProgreso extends React.Component {
   saveInfoTotal = () => {
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
     if (this.state.isConnected) {
+      this.setState({isLoading:true});
       axios({
         method: 'POST',
         url: '/evaluacion/update',
-        data: this.state.jsonBase
+        data: this.state.jsonBase,
+        timeout: 2500
       })
       .then((res) => {
+        console.log("Res request to save: " + JSON.stringify(res.data));
         if(res.data.status == "ok"){
           Alert.alert('Guardado', res.data.message, [{text: 'OK'}], { cancelable: false });
-          storage.clearMap();
+          // Pendiente: Limpiar storage
           this.props.cerrarModalProgrsoChild();
           this.props.nav.navigate('BuscarImputadoScreen', {carpetaJudicialParam: this.props.carpetaJudicial, evaluador:this.props.evaluador});
         }
+        this.setState({isLoading:false});
       })
       .catch(async (error) => {
+        this.setState({isLoading:false});
+        console.warn("Error to save: " + error)
         Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
       });
     }else{
       Alert.alert('Problemas de red', "No hay conexión a internet, se enviará cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
-      this.props.cerrarModalProgrsoChild();
-      this.props.nav.navigate('BuscarImputadoScreen', {carpetaJudicialParam: this.props.carpetaJudicial});
       /**
-       * Guardar en dispositivo el json aux que se enviará.
-       * Podrá continuar realizando mas entrevistas.
-       */
+      * Guardar en dispositivo el json aux que se enviará.
+      * Podrá continuar realizando mas entrevistas.
+      */
+      storage.save({
+        key: 'entrevistaPendiente',
+        data: this.state.jsonBase,
+      });
+      this.props.cerrarModalProgrsoChild();
+      this.props.nav.navigate('BuscarImputadoScreen', 
+        {
+          carpetaJudicialParam: this.props.carpetaJudicial,
+          evaluador: this.state.evaluador
+        }
+      );
+
     }
     
   }
@@ -182,7 +216,6 @@ export default class ModalProgreso extends React.Component {
       </Row>
 
       <Row>
-        
         <Col style={[styles.columnStep]}>
         <TouchableOpacity onPress={() => { this.changeStep(0) }} style={{ padding:15 }}>
           <Text style={[styles.titleStep]}>Generales</Text>
@@ -208,7 +241,6 @@ export default class ModalProgreso extends React.Component {
           </Badge>
         </TouchableOpacity>
         </Col>
-
       </Row>
 
       <Row>
@@ -279,9 +311,16 @@ export default class ModalProgreso extends React.Component {
 
       <Row>
         <Col style={{ padding:15, justifyContent:'center' }}>
+          <Display enable={this.state.ultimoGrado != 23}
+            enterDuration={100}
+            exitDuration={100}
+            enter="fadeInDown"
+            exit="fadeOutDown">
+            <Spinner color='red'/>
+          </Display>
           <Button danger full onPress={this.saveInfoTotal} 
             disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
-            <Text>Terminar entrevista</Text>
+            <Text>Terminar entrevista {(this.state.isLoading) ? "Cargando..." : "Listo"}</Text>
           </Button>
         </Col>
       </Row>

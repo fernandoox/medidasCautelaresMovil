@@ -87,7 +87,7 @@ export default class AgregarFamiliar extends React.Component {
     })
     if(countNull == numQuestions){
       formValido = false;
-      Alert.alert('Error', 'Debe llenar por lo menos un campo del familiar', [{text: 'OK'}], { cancelable: false });
+      Alert.alert('Faltan datos', 'Debe llenar por lo menos un campo del familiar', [{text: 'OK'}], { cancelable: false });
     }
     return formValido;
   }
