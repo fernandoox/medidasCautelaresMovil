@@ -37,10 +37,6 @@ export default class ModalProgreso extends React.Component {
       (isConnected) => { this.setState({isConnected}); }
     );
 
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-    });
-
     // Load evaluador logueado
     storage.load({
       key: 'evaluadorLogueado',
@@ -128,9 +124,6 @@ export default class ModalProgreso extends React.Component {
 
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-      console.log('Change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-    });
   }
 
   _handleConnectivityChange = (isConnected) => {
@@ -147,7 +140,7 @@ export default class ModalProgreso extends React.Component {
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
     if (this.state.isConnected) {
       this.setState({isLoading:true});
-      axios({
+      instanceAxios({
         method: 'POST',
         url: '/evaluacion/update',
         data: this.state.jsonBase,
@@ -311,16 +304,18 @@ export default class ModalProgreso extends React.Component {
 
       <Row>
         <Col style={{ padding:15, justifyContent:'center' }}>
-          <Display enable={this.state.ultimoGrado != 23}
-            enterDuration={100}
-            exitDuration={100}
-            enter="fadeInDown"
-            exit="fadeOutDown">
-            <Spinner color='red'/>
+          
+          <Display enable={this.state.isLoading}
+            enterDuration={300}
+            exitDuration={300}
+            enter="fadeIn"
+            exit="fadeOut">
+            <Spinner color='red' style={{ marginTop:-20, marginBottom:-20}}/>
           </Display>
+
           <Button danger full onPress={this.saveInfoTotal} 
             disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
-            <Text>Terminar entrevista {(this.state.isLoading) ? "Cargando..." : "Listo"}</Text>
+            <Text>Terminar entrevista</Text>
           </Button>
         </Col>
       </Row>

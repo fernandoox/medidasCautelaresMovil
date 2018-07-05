@@ -4,7 +4,6 @@ import { View, ActivityIndicator, ScrollView, KeyboardAvoidingView, Dimensions }
 import { Container, Content, Button, Text, Item, Input, Label, List, ListItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import axios from 'axios';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';

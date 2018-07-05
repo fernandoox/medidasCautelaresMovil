@@ -91,7 +91,7 @@ export default class Entrevista extends React.Component {
     if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
     console.log("Get data imputado!!");
     this.setState({isLoading: true});
-    axios.get('/evaluacion/get', {
+    instanceAxios.get('/evaluacion/get', {
       params: {
         idImputado: this.state.imputado.id,
       }
@@ -116,8 +116,9 @@ export default class Entrevista extends React.Component {
       }
     })
     .catch(async (error) => {
-      console.log("CATCH ERROR: "+error);
-      this.setState({isLoading: false, loadedResponsesBD: true,});
+      this.setState({isLoading: false});
+      //console.warn(JSON.stringify(error))
+      Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
     });
     }
   }

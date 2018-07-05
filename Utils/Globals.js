@@ -7,9 +7,12 @@ import { AsyncStorage } from 'react-native';
 // REST API with Axios config
 let urlDev = 'http://10.2.48.179:60523/SSCMC_WS/api/app';
 let urlProd = 'http://10.8.2.130:8080/SSCMC_WS/api/app';
-axios.defaults.baseURL = urlDev;
-axios.defaults.timeout = 3000;
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+var initAxios = axios.create({
+    baseURL: urlDev,
+    timeout: 3000
+});
+initAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+global.instanceAxios = initAxios;
 /*-------------------------------------------------------------------------------------*/
 
 

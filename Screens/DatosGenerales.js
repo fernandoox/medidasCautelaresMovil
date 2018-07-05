@@ -4,7 +4,6 @@ import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView, Async
 import { Button, Text, Item, Input, Label, H3, Separator, ListItem, Picker, Toast } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker';
-import axios from 'axios';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { View, ActivityIndicator, Alert, NetInfo, AsyncStorage, Image, ScrollView, KeyboardAvoidingView, Keyboard, ToastAndroid } from 'react-native';
-import { Button, Text, Item, Label, Input, Picker } from 'native-base';
+import { Button, Text, Item, Label, Input, Picker, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -51,7 +51,7 @@ export default class Login extends React.Component {
     const {navigate} = this.props.navigation;
     if(this.state.user != null && this.state.password != null){
       this.setState({isLoading: true});
-      axios.post(`/login?username=${this.state.user}&password=${this.state.password}`)
+      instanceAxios.post(`/login?username=${this.state.user}&password=${this.state.password}`)
       .then(async (response) => {
         if (response.data.status == 'ok') {
           ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
@@ -69,7 +69,8 @@ export default class Login extends React.Component {
       })
       .catch(async (error) => {
         this.setState({isLoading: false});
-        Alert.alert('Conexión', error,[{text: 'OK'}],{ cancelable: false })
+        //console.warn(JSON.stringify(error))
+        Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
       });
     }else{
       ToastAndroid.show('Usuario y contraseña son obligatorios', ToastAndroid.SHORT);
@@ -82,14 +83,6 @@ export default class Login extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-          <ActivityIndicator size="large"/>
-        </View>
-      );
-    }
-
     return (
       <KeyboardAvoidingView behavior="position">
         <ScrollView keyboardShouldPersistTaps="always" >
@@ -102,7 +95,7 @@ export default class Login extends React.Component {
                   style={{width:150, marginTop:-5}}></Image>
                 </View>
 
-                <Text style={{fontSize:18, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, marginTop:-15, marginBottom:30}}>
+                <Text style={{fontSize:18, textAlign:'center', color: COLORS.BACKGROUND_PRIMARY, marginTop:-15, marginBottom:20}}>
                   GESTIÓN DE MEDIDAS CAUTELARES
                 </Text>
 
@@ -123,9 +116,17 @@ export default class Login extends React.Component {
                     style={{fontSize: 18}} secureTextEntry={true}/>
                 </Item>
 
+                <Display enable={this.state.isLoading}
+                  enterDuration={300}
+                  exitDuration={300}
+                  enter="fadeIn"
+                  exit="fadeOut">
+                  <Spinner color='red' style={{ marginTop:-20, marginBottom:-20}}/>
+                </Display>
+
                 <Button full danger
-                   disabled={!this.state.isConnected}
-                  style={{marginVertical: 10, borderRadius:20, marginTop: 30}}
+                  disabled={!this.state.isConnected}
+                  style={{marginVertical: 10, borderRadius:20, marginTop: 20}}
                   onPress={this.loginEvaluador}>
                     <Text>Iniciar sesión</Text>
                 </Button>

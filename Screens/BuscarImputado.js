@@ -1,7 +1,7 @@
 import React from 'react';
 import { Font } from 'expo';
 import { AsyncStorage, View, ActivityIndicator, TouchableOpacity, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
-import { Button, Text, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker } from 'native-base';
+import { Button, Text, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -82,7 +82,7 @@ export default class BuscarImputado extends React.Component {
     const {navigate} = this.props.navigation;
     if(this.state.evaluador){
       this.setState({isLoading: true});
-      axios.get('/imputado/getByCarpetaJudicial', {
+      instanceAxios.get('/imputado/getByCarpetaJudicial', {
         params: {
           idEvaluador: this.state.evaluador.id,
           numeroCarpeta: this.state.carpetaJudicial,
@@ -109,8 +109,9 @@ export default class BuscarImputado extends React.Component {
         }
       })
       .catch(async (error) => {
-        Alert.alert('Sin red', error, [{text: 'OK'}],{ cancelable: false });
         this.setState({isLoading: false});
+        //console.warn(JSON.stringify(error))
+        Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
       });
     }else{
       Alert.alert('Evaluador', "No ha iniciado sesión un evaluador.", [{text: 'OK'}],{ cancelable: false });
@@ -124,7 +125,7 @@ export default class BuscarImputado extends React.Component {
       storage.load({
         key: 'entrevistaPendiente',
       }).then((responseStorage) => {
-        let imputadoEntrevistaPendiente = responseStorage.imputado.nombre + " "+ responseStorage.imputado.nombre + " " + responseStorage.imputado.nombre;
+        let imputadoEntrevistaPendiente = responseStorage.imputado.nombre + " "+ responseStorage.imputado.primerApellido + " " + responseStorage.imputado.segundoApellido;
         ToastAndroid.show('Enviando entrevista pendiente para: ' + imputadoEntrevistaPendiente,  ToastAndroid.LONG);
         this.setState({jsonEntrevistaPendiente: responseStorage}, () => {
           this._reqGuardarEntrevista(imputadoEntrevistaPendiente);
@@ -138,7 +139,7 @@ export default class BuscarImputado extends React.Component {
 
   _reqGuardarEntrevista = (paramImputado) => {
     console.log("Entrevista pendiente to save: " + JSON.stringify(this.state.jsonEntrevistaPendiente));
-    axios({
+    instanceAxios({
       method: 'POST',
       url: '/evaluacion/update',
       data: this.state.jsonEntrevistaPendiente,
@@ -154,8 +155,9 @@ export default class BuscarImputado extends React.Component {
       }
     })
     .catch(async (error) => {
-      console.log("Error to save: " + error)
-      Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
+      this.setState({isLoading: false});
+      //console.warn(JSON.stringify(error))
+      Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
     });
   }
 
@@ -192,13 +194,6 @@ export default class BuscarImputado extends React.Component {
   
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
-          <ActivityIndicator size="large"/>
-        </View>
-      );
-    }
 
     return (
       <KeyboardAvoidingView behavior="position">
@@ -273,6 +268,15 @@ export default class BuscarImputado extends React.Component {
                       </Body>
                     </TouchableOpacity>
                   </ListItem>
+
+                  <Display enable={this.state.isLoading}
+                    enterDuration={300}
+                    exitDuration={300}
+                    enter="fadeIn"
+                    exit="fadeOut">
+                    <Spinner color='red' style={{ marginTop:-20, marginBottom:-20}}/>
+                  </Display>
+
                   <Button full light
                     style={{marginVertical: 10, borderRadius:20}}
                     disabled={!this.state.isConnected || this.state.carpetaJudicial == null || this.state.carpetaJudicial == "" || 
