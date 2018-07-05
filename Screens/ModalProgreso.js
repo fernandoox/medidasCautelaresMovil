@@ -138,7 +138,7 @@ export default class ModalProgreso extends React.Component {
 
   saveInfoTotal = () => {
     console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
-    if (this.state.isConnected) {
+    if (this.state.isConnected && this.state.jsonBase.tipoCaptura == "ONLINE") {
       this.setState({isLoading:true});
       instanceAxios({
         method: 'POST',
@@ -161,7 +161,7 @@ export default class ModalProgreso extends React.Component {
         console.warn("Error to save: " + error)
         Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
       });
-    }else{
+    }else if(!this.state.isConnected && this.state.jsonBase.tipoCaptura == "ONLINE"){
       Alert.alert('Problemas de red', "No hay conexión a internet, se enviará cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
       /**
       * Guardar en dispositivo el json aux que se enviará.
@@ -178,7 +178,20 @@ export default class ModalProgreso extends React.Component {
           evaluador: this.state.evaluador
         }
       );
-
+    }else{
+      /**
+       * Cuando se envia una entrevista de tipo captura OFFLINE
+       * Solo se hace la nevgacion, no se guarda en storage ni se hace peticion
+       * (Pendiente)
+       */
+      Alert.alert('Carga offline', "Pendiente...", [{text: 'OK'}], { cancelable: false });
+      this.props.cerrarModalProgrsoChild();
+      this.props.nav.navigate('BuscarImputadoScreen', 
+        {
+          carpetaJudicialParam: this.props.carpetaJudicial,
+          evaluador: this.state.evaluador
+        }
+      );
     }
     
   }
