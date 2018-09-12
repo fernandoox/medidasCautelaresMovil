@@ -1,17 +1,33 @@
 import React from 'react';
-import { Font } from 'expo';
+import { SQLite, Font } from 'expo';
 import { AsyncStorage, View, ActivityIndicator, TouchableOpacity, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
-import { Button, Text, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker, Spinner } from 'native-base';
+import { Root, Button, Text, Badge, H3, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import ProgressIndicator from 'react-native-progress-indicator';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
 import ImputadoTemporal from './ImputadoTemporal'
-
+const db = SQLite.openDatabase('db.db');
 export default class BuscarImputado extends React.Component {
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return{
+      headerRight: (
+        <Root>
+          <Button style={{marginRight:10, paddingLeft:10}} light bordered iconLeft 
+            onPress={params.enviarMultiplesEntrevistas} disabled={!params.isConnected || params.countEntrevistasPendientes == 0}>
+            <Icon active name="upload" style={{color: (params.isConnected && params.countEntrevistasPendientes > 0) ? 'white' : 'lightgrey', fontSize:20}}/>
+            <Text style={{fontSize:19}}>{params.countEntrevistasPendientes}</Text>
+          </Button>
+        </Root>
+      )
+    }
+  } 
 
   constructor(props){
     super(props)
@@ -27,19 +43,35 @@ export default class BuscarImputado extends React.Component {
       buscarAsignados: true,
       buscarConcluidos: false,
       jsonEntrevistaPendiente: null,
-      entrevistaPendienteGuardada: false
+      isEntrevistaPendienteGuardada: false,
+      countEntrevistasPendientes: 0
     };
     numBack = 0;
   }
-
+  
   componentDidMount(){
+    // Transactions to SQLite!
+    db.transaction(
+      tx => {
+        tx.executeSql('select * from entrevistasOffline', [], (_, { rows }) => {
+            console.log("SQLite SIZE CDM: "+rows.length)
+            this.setState({countEntrevistasPendientes: rows.length})
+            this.props.navigation.setParams({ 
+              enviarMultiplesEntrevistas: this.enviarEntrevistaPendiente,
+              countEntrevistasPendientes: rows.length
+            });
+          }
+        );
+      },
+      null,
+      this.update
+    );
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { 
-        this.setState({isConnected}); 
-        if (isConnected) {
-          this.enviarEntrevistaPendiente();
-        }
+        this.setState({isConnected}, () => {
+          this.props.navigation.setParams({isConnected: isConnected});
+        });
       }
     );
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
@@ -56,7 +88,7 @@ export default class BuscarImputado extends React.Component {
       ToastAndroid.show('Cerró la aplicación.', ToastAndroid.SHORT);
       BackHandler.exitApp();
       numBack = 0;
-    }else{
+    }else {
       ToastAndroid.show('Presione otra vez para salir.', ToastAndroid.SHORT);
     }
     return true;
@@ -64,9 +96,7 @@ export default class BuscarImputado extends React.Component {
 
   _handleConnectivityChange = (isConnected) => {
     this.setState({isConnected}, () => {
-      if (this.state.isConnected && !this.state.entrevistaPendienteGuardada) {
-        this.enviarEntrevistaPendiente();
-      }
+      this.props.navigation.setParams({isConnected: isConnected});
     });
   };
 
@@ -120,51 +150,75 @@ export default class BuscarImputado extends React.Component {
   }
 
   enviarEntrevistaPendiente = () => {
-    if (!this.state.entrevistaPendienteGuardada) {
-      this.setState({entrevistaPendienteGuardada: true});
-      storage.load({
-        key: 'entrevistaPendiente',
-      }).then((responseStorage) => {
-        let imputadoEntrevistaPendiente = responseStorage.imputado.nombre + " "+ responseStorage.imputado.primerApellido + " " + responseStorage.imputado.segundoApellido;
-        ToastAndroid.show('Enviando entrevista pendiente para: ' + imputadoEntrevistaPendiente,  ToastAndroid.LONG);
-        this.setState({jsonEntrevistaPendiente: responseStorage}, () => {
-          this._reqGuardarEntrevista(imputadoEntrevistaPendiente);
+    console.log("Enviando entrevista...")
+    db.transaction(
+      tx => {
+        tx.executeSql('select * from entrevistasOffline', [], (_, { rows: { _array } }) => {
+          _array.map((entrevista, i) => {
+            entrevista.data = JSON.parse(entrevista.data);
+            let imputadoEntrevistaPendiente = entrevista.data.imputado.nombre + " "+ entrevista.data.imputado.primerApellido + " " + entrevista.data.imputado.segundoApellido;
+            console.log("Nombre imptado: ", imputadoEntrevistaPendiente);
+            ToastAndroid.show('Enviando entrevista pendiente para: ' + imputadoEntrevistaPendiente,  ToastAndroid.LONG);
+            if (entrevista.tipo_captura == 'ONLINE') {
+              this._saveEntrevistaOnlinePendiente(imputadoEntrevistaPendiente, entrevista);
+            }else{
+              console.log("Entrevista offline pendiente: ",entrevista.id)
+            }
+          })
         });
-      }).catch(err => {
-        this.setState({jsonEntrevistaPendiente: null});
-        //console.log("ENTREVISTA PENDIENTE: "+err.message);
-      })
-    }
+      },
+      (err) => { console.log("Select Failed Message", err) },
+      this.update
+    );
   }
-
-  _reqGuardarEntrevista = (paramImputado) => {
-    console.log("Entrevista pendiente to save: " + JSON.stringify(this.state.jsonEntrevistaPendiente));
+  
+  _saveEntrevistaOnlinePendiente = (paramImputado, entrevistaOnlinePendiente) => {
+    this.setState({isLoading: true});
+    //console.log("Entrevista pendiente to save: " + JSON.stringify(entrevistaOnlinePendiente));
     instanceAxios({
       method: 'POST',
       url: '/evaluacion/update',
-      data: this.state.jsonEntrevistaPendiente,
+      data: entrevistaOnlinePendiente.data,
+      onUploadProgress: (progressEvent) => {
+        let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+        console.log("percentCompleted: ", percentCompleted);
+      }
     })
     .then((res) => {
       console.log("Res request to save pendding... " + JSON.stringify(res.data));
       if(res.data.status == "ok"){
-        Alert.alert('Guardado', res.data.message + " Imputado: " + paramImputado,  [{text: 'OK'}], { cancelable: false });
-        storage.remove({
-          key: 'entrevistaPendiente'
-        });
-        this.setState({jsonEntrevistaPendiente: null});
+        ToastAndroid.showWithGravity(res.data.message + " Imputado: " + paramImputado, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+        //Alert.alert('Guardado', res.data.message + " Imputado: " + paramImputado,  [{text: 'OK'}], { cancelable: true });
+        this.deleteEntrevistasPendientesEnviadas(entrevistaOnlinePendiente.id);
       }
+      this.setState({isLoading: false});
     })
     .catch(async (error) => {
       this.setState({isLoading: false});
-      //console.warn(JSON.stringify(error))
-      Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
+      console.log("Error:: ",JSON.stringify(error))
+      Alert.alert('Conexión', 'OK Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
     });
+  }
+
+  deleteEntrevistasPendientesEnviadas = (idEntrevistaSQLite) => {
+    db.transaction(
+      tx => {
+        tx.executeSql('delete from entrevistasOffline where id = ?;',  [idEntrevistaSQLite]),
+        tx.executeSql('select * from entrevistasOffline', [], (_, { rows }) => {
+          console.log("SQLite SIZE ON DELETE: "+rows.length)
+          this.setState({countEntrevistasPendientes: rows.length})
+          this.props.navigation.setParams({countEntrevistasPendientes: rows.length});
+        });
+      },
+      (err) => { console.log("Delete Failed Message", err) },
+      this.update
+    );
   }
 
   onSelectImputado(value) {
     this.setState({ selectedImputado: value })
   }
-
+  
   aplicarEntrevistaImputado = () => {
     const {navigate} = this.props.navigation;
     navigate('EntrevistaScreen',
@@ -198,15 +252,15 @@ export default class BuscarImputado extends React.Component {
     return (
       <KeyboardAvoidingView behavior="position">
         <ScrollView keyboardShouldPersistTaps="always">
-          <Grid>
+          <Grid style={{ paddingHorizontal:15 }}>
+
             <Row style={{marginTop: 20}}>
-              <Col style={{ paddingHorizontal:15 }}>
+              <Col>
 
                 {/*<View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Image source={require('../assets/img/medidasCautelares.png')} resizeMode="contain"
                   style={{width:250, marginTop:-25}}></Image>
                   </View>*/}
-
                 <Display enable={this.state.evaluador != null}
                   enterDuration={500}
                   enter="fadeInDown">

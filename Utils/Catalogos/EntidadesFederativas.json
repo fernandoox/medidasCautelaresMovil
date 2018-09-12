@@ -1,7 +1,135 @@
 [
-    {
-      "id": 9,
-      "nombre": "Ciudad de México"
-    }
+  {
+    "id": 1,
+    "nombre": "AGUASCALIENTES"
+  },
+  {
+    "id": 2,
+    "nombre": "BAJA CALIFORNIA"
+  },
+  {
+    "id": 3,
+    "nombre": "BAJA CALIFORNIA SUR"
+  },
+  {
+    "id": 4,
+    "nombre": "CAMPECHE"
+  },
+  {
+    "id": 5,
+    "nombre": "COAHUILA"
+  },
+  {
+    "id": 6,
+    "nombre": "COLIMA"
+  },
+  {
+    "id": 7,
+    "nombre": "CHIAPAS"
+  },
+  {
+    "id": 8,
+    "nombre": "CHIHUAHUA"
+  },
+  {
+    "id": 9,
+    "nombre": "CIUDAD DE MEXICO"
+  },
+  {
+    "id": 10,
+    "nombre": "DURANGO"
+  },
+  {
+    "id": 11,
+    "nombre": "GUANAJUATO"
+  },
+  {
+    "id": 12,
+    "nombre": "GUERRERO"
+  },
+  {
+    "id": 13,
+    "nombre": "HIDALGO"
+  },
+  {
+    "id": 14,
+    "nombre": "JALISCO"
+  },
+  {
+    "id": 15,
+    "nombre": "ESTADO DE MEXICO"
+  },
+  {
+    "id": 16,
+    "nombre": "MICHOACAN"
+  },
+  {
+    "id": 17,
+    "nombre": "MORELOS"
+  },
+  {
+    "id": 18,
+    "nombre": "NAYARIT"
+  },
+  {
+    "id": 19,
+    "nombre": "NUEVO LEON"
+  },
+  {
+    "id": 20,
+    "nombre": "OAXACA"
+  },
+  {
+    "id": 21,
+    "nombre": "PUEBLA"
+  },
+  {
+    "id": 22,
+    "nombre": "QUERETARO"
+  },
+  {
+    "id": 23,
+    "nombre": "QUINTANA ROO"
+  },
+  {
+    "id": 24,
+    "nombre": "SAN LUIS POTOSI"
+  },
+  {
+    "id": 25,
+    "nombre": "SINALOA"
+  },
+  {
+    "id": 26,
+    "nombre": "SONORA"
+  },
+  {
+    "id": 27,
+    "nombre": "TABASCO"
+  },
+  {
+    "id": 28,
+    "nombre": "TAMAULIPAS"
+  },
+  {
+    "id": 29,
+    "nombre": "TLAXCALA"
+  },
+  {
+    "id": 30,
+    "nombre": "VERACRUZ"
+  },
+  {
+    "id": 31,
+    "nombre": "YUCATAN"
+  },
+  {
+    "id": 32,
+    "nombre": "ZACATECAS"
+  },
+  {
+    "id": 33,
+    "nombre": "OTRO"
+  }
   ]
   

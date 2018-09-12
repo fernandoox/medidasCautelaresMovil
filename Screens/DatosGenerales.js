@@ -13,7 +13,6 @@ import CatNacionalidadesData from '../Utils/Catalogos/Nacionalidades.json';
 import CatLugaresEntrevistaData from '../Utils/Catalogos/LugaresEntrevista.json';
 import CatEstadosCivilesData from '../Utils/Catalogos/EstadosCiviles.json';
 import CatTiposDocMigratorioData from '../Utils/Catalogos/TiposDocMigratorio.json';
-import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 
 const screenWidth = Dimensions.get('window').width - 30;
@@ -44,7 +43,6 @@ export default class DatosGenerales extends React.Component {
       LugaresEntrevistaCat: CatLugaresEntrevistaData,
       EstadosCivilesCat: CatEstadosCivilesData,
       TiposDocMigratorioCat: CatTiposDocMigratorioData,
-      DelegacionesCat: CatDelegacionesData,
       EntidadesFederativasCat: CatEntidadesFederativasData,
       loadedResponsesBD: false
     };
@@ -70,19 +68,27 @@ export default class DatosGenerales extends React.Component {
   }
 
   setValueAnswerFromBD = () => {
+    // Limpiar respuestas de cada pregunta
+    this.state.preguntas.map((pregLocal, i) => {
+        pregLocal.valueBD = null;
+    })
     if(!this.state.loadedResponsesBD && this.props.generalesDB != null){
+      /*
+      * Del screen de entrevista recibe generalesDB que es la petición a bd 
+      * de la información de imputado, para hacer el set de las respuestas 
+      * de bd a los componentes del form se ocupa el nodeDB (foreach)
+      */
       let objGeneralesDB = this.props.generalesDB;
-      for (let nodeDB in objGeneralesDB) {
-        if (objGeneralesDB.hasOwnProperty(nodeDB)) {
-          jsonRespDatosGenerales[nodeDB] = objGeneralesDB[nodeDB];
+      for (let nodeGeneralesDB in objGeneralesDB) {
+        if (objGeneralesDB.hasOwnProperty(nodeGeneralesDB)) {
+          jsonRespDatosGenerales[nodeGeneralesDB] = objGeneralesDB[nodeGeneralesDB];
           this.state.preguntas.map((pregLocal, i) => {
-            if (pregLocal.node == nodeDB) {
-              pregLocal.valueBD = objGeneralesDB[nodeDB];
+            if (pregLocal.node == nodeGeneralesDB) {
+              pregLocal.valueBD = objGeneralesDB[nodeGeneralesDB];
             }
           })
         }
       }
-
       this.setState({loadedResponsesBD: true});
       this.saveJsonLocalGenerales(jsonRespDatosGenerales);
     }
@@ -142,9 +148,6 @@ export default class DatosGenerales extends React.Component {
         break;
       case "indSituacionCalle":
         this.setState({indSituacionCalle:itemSelected})
-        break;
-      case "municipioLn":
-        this.setState({municipioLn:itemSelected})
         break;
       case "tipoDocMigratorio":
         this.setState({tipoDocMigratorio:itemSelected})

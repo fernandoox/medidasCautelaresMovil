@@ -7,7 +7,8 @@
     "babel-preset-stage-2": "^6.24.1",
     "jest-expo": "26.0.0",
     "react-native-scripts": "1.13.1",
-    "react-test-renderer": "16.3.0-alpha.1"
+    "react-test-renderer": "16.3.0-alpha.1",
+    "reactotron-react-native": "^2.1.0"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -39,6 +40,7 @@
     "react-native-ignore-warnings": "^0.1.1",
     "react-native-looped-carousel": "^0.1.10",
     "react-native-modal": "^6.0.0",
+    "react-native-progress-indicator": "^1.0.2",
     "react-native-step-indicator": "0.0.8",
     "react-native-storage": "^0.2.2",
     "react-navigation": "^1.5.11"

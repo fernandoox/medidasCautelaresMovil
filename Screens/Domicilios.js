@@ -10,7 +10,7 @@ import CONSTANTS from '../Utils/ConstantsNG';
 import Modal from "react-native-modal";
 import Display from 'react-native-display';
 import AgregarDomicilio from './AgregarDomicilio'
-import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
+import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
 
 const { width, height } = Dimensions.get('window');
@@ -24,7 +24,7 @@ export default class Domicilios extends React.Component {
       domicilios: [],
       numeroDomicilios: 0,
       snRazonMultiplesDomicilios: null,
-      DelegacionesCat: CatDelegacionesData,
+      EntidadesFederativasCat: CatEntidadesFederativasData,
       TiposDomicilioCat: CatTiposDomicilioData,
       loadedResponsesBD: false,
     };
@@ -97,16 +97,17 @@ export default class Domicilios extends React.Component {
     let numExt = (domicilio.snNumExterior != null) ? domicilio.snNumExterior : "";
     let colonia = (domicilio.snColonia != null) ? domicilio.snColonia : "";
     let cPostal = (domicilio.snCodigoPostal != null) ? domicilio.snCodigoPostal : "";
-    let municipio = (domicilio.municipio != null) ? this.getDelegacionById(domicilio.municipio) : "";
-    let domicilioStr =  calle + " " + numExt + ", " + colonia + ", C.P. " + cPostal + ", " + municipio + ", Ciudad de México";
+    let municipio = (domicilio.snMunicipio != null) ? domicilio.snMunicipio : "";
+    let entidad = (domicilio.idNuEntidadFederativa != null) ? this.getEntidadFederativaById(domicilio.idNuEntidadFederativa) : "";
+    let domicilioStr =  calle + " " + numExt + ", " + colonia + ", C.P. " + cPostal + ", " + municipio + ", " + entidad;
     return domicilioStr;
   }
 
-  getDelegacionById = (idParam) => {
-    function delegacion(delegacion) { 
-      return delegacion.id === idParam;
+  getEntidadFederativaById = (idParam) => {
+    function entidad(entidad) { 
+      return entidad.id === idParam;
     }
-    return this.state.DelegacionesCat.find(delegacion).nombre;
+    return this.state.EntidadesFederativasCat.find(entidad).nombre;
   }
 
   getTipoDomicilioById = (idParam) => {

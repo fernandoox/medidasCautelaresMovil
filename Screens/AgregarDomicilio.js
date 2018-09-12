@@ -6,7 +6,6 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import GLOBALS from '../Utils/Globals';
 import preguntasAgregarMunicipio from '../Utils/Preguntas/AgregarDomicilio.json';
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
-import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
 import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
 import CatTiposViviendaData from '../Utils/Catalogos/TiposVivienda.json';
 
@@ -17,7 +16,6 @@ export default class AgregarDomicilio extends React.Component {
     this.state = {
       preguntas: preguntasAgregarMunicipio,
       EntidadesFederativasCat: CatEntidadesFederativasData,
-      DelegacionesCat: CatDelegacionesData,
       TiposDomicilioCat: CatTiposDomicilioData,
       TiposViviendaCat: CatTiposViviendaData,
       idNuEntidadFederativa: null,
@@ -48,9 +46,6 @@ export default class AgregarDomicilio extends React.Component {
       case "idNuEntidadFederativa":
         this.setState({idNuEntidadFederativa:itemSelected})
         break;
-      case "municipio":
-        this.setState({municipio:itemSelected})
-        break;
       case "tipoDomicilio":
         this.setState({tipoDomicilio:itemSelected})
         break;
@@ -65,6 +60,7 @@ export default class AgregarDomicilio extends React.Component {
 
   agregarDomicilio = () => {
     if(this.validateForm()){
+      console.log("Domicilio add: " + JSON.stringify(jsonRespDomicilio));
       this.props.agregarDomicilioChild(jsonRespDomicilio);
     }
   }

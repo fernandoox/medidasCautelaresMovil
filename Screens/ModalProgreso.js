@@ -1,5 +1,5 @@
 import React from 'react';
-import { Font } from 'expo';
+import { SQLite, Font } from 'expo';
 import { View, ActivityIndicator, Alert, NetInfo, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -9,7 +9,7 @@ import Display from 'react-native-display';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
 import Storage from 'react-native-storage';
-
+const db = SQLite.openDatabase('db.db');
 export default class ModalProgreso extends React.Component {
 
   constructor(props){
@@ -43,8 +43,9 @@ export default class ModalProgreso extends React.Component {
     }).then((response) => {
       this.setState({evaluador: response})
     }).catch(async (err) => {
-      console.error("ERROR EVALUADOR: "+err.message);
+      console.warn("ERROR EVALUADOR: "+err.message);
     })
+
 
     // Load JSON Base
     storage.load({
@@ -52,7 +53,7 @@ export default class ModalProgreso extends React.Component {
     }).then((response) => {
       jsonBaseEntrevistaLocal = response;
     }).catch(err => {
-      console.error("ERROR ASYNC: "+err.message);
+      console.warn("ERROR ASYNC: "+err.message);
     })
 
     // Load JSON Generales
@@ -63,7 +64,7 @@ export default class ModalProgreso extends React.Component {
       this.setState({jsonGeneralesCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
-      console.error("ERROR ASYNC GENERALES: "+err.message);
+      console.warn("ERROR ASYNC GENERALES: "+err.message);
     })
     
     // Load JSON Domicilios
@@ -85,7 +86,7 @@ export default class ModalProgreso extends React.Component {
       this.setState({jsonRedFamiliarCompleto: response.completo});
       this.setState({jsonBase: jsonBaseEntrevistaLocal});
     }).catch(err => {
-      console.error("ERROR ASYNC RED FAMILIAR: "+err.message);
+      console.warn("ERROR ASYNC RED FAMILIAR: "+err.message);
     })
 
     // Load JSON Estudios
@@ -120,6 +121,17 @@ export default class ModalProgreso extends React.Component {
     }).catch(err => {
       console.warn("ERROR ASYNC SUSTANCIAS: "+err.message);
     })
+
+    // Load evaluador logueado
+    storage.load({
+      key: 'evaluadorLogueado',
+    }).then((response) => {
+      console.log("Evaluador Storage: " + JSON.stringify(response));
+      jsonBaseEntrevistaLocal.evaluador = response;
+      this.setState({jsonBase: jsonBaseEntrevistaLocal});
+    }).catch(async (err) => {
+      console.warn("ERROR ASYNC EVALUADOR LOGUEADO: "+err.message);
+    })
   }
 
   componentWillUnmount() {
@@ -128,23 +140,22 @@ export default class ModalProgreso extends React.Component {
 
   _handleConnectivityChange = (isConnected) => {
     this.setState({isConnected});
-    
   };
 
   changeStep = (numberStep) => {
-    console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
+    console.log("JSON Step Base: " + JSON.stringify(this.state.jsonBase))
     this.props.changeStepChild(numberStep);
   }
 
   saveInfoTotal = () => {
-    console.log("JSON Base: " + JSON.stringify(this.state.jsonBase))
     if (this.state.isConnected && this.state.jsonBase.tipoCaptura == "ONLINE") {
+      console.log("JSON BASE ONLINE: " + JSON.stringify(this.state.jsonBase))
       this.setState({isLoading:true});
       instanceAxios({
         method: 'POST',
         url: '/evaluacion/update',
         data: this.state.jsonBase,
-        timeout: 2500
+        timeout: 2500,
       })
       .then((res) => {
         console.log("Res request to save: " + JSON.stringify(res.data));
@@ -162,38 +173,34 @@ export default class ModalProgreso extends React.Component {
         Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
       });
     }else if(!this.state.isConnected && this.state.jsonBase.tipoCaptura == "ONLINE"){
-      Alert.alert('Problemas de red', "No hay conexión a internet, se enviará cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
-      /**
-      * Guardar en dispositivo el json aux que se enviará.
-      * Podrá continuar realizando mas entrevistas.
-      */
-      storage.save({
-        key: 'entrevistaPendiente',
-        data: this.state.jsonBase,
-      });
-      this.props.cerrarModalProgrsoChild();
-      this.props.nav.navigate('BuscarImputadoScreen', 
-        {
-          carpetaJudicialParam: this.props.carpetaJudicial,
-          evaluador: this.state.evaluador
-        }
-      );
+      Alert.alert('Red', "No hay conexión a internet, se podrá enviar cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
+      // Guardar en SQLite el json aux que se enviará. Podrá continuar realizando mas entrevistas.
+      this.saveSQLiteEntrevistaPendiente();
     }else{
-      /**
-       * Cuando se envia una entrevista de tipo captura OFFLINE
-       * Solo se hace la nevgacion, no se guarda en storage ni se hace peticion
-       * (Pendiente)
-       */
       Alert.alert('Carga offline', "Pendiente...", [{text: 'OK'}], { cancelable: false });
-      this.props.cerrarModalProgrsoChild();
-      this.props.nav.navigate('BuscarImputadoScreen', 
-        {
-          carpetaJudicialParam: this.props.carpetaJudicial,
-          evaluador: this.state.evaluador
-        }
-      );
+      this.saveSQLiteEntrevistaPendiente();
     }
     
+  }
+  
+  saveSQLiteEntrevistaPendiente = () => {
+    // Transactions to SQLite!
+    db.transaction(
+      tx => {
+        tx.executeSql('insert into entrevistasOffline (tipo_captura, carpeta, data) values (?, ?, ?)', 
+          [this.state.jsonBase.tipoCaptura, this.state.jsonBase.carpetaJudicial, JSON.stringify(this.state.jsonBase)]);
+      },
+      null,
+      this.update
+    );
+    //console.log("JSON BASE: " + JSON.stringify(this.state.jsonBase))
+    this.props.cerrarModalProgrsoChild();
+    this.props.nav.navigate('BuscarImputadoScreen', 
+      {
+        carpetaJudicialParam: this.props.carpetaJudicial,
+        evaluador: this.state.evaluador
+      }
+    );
   }
 
   render() {

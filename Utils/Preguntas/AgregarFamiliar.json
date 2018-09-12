@@ -75,10 +75,10 @@
         "maxLongitud": 10
     },
     {
-        "node": "municipio",
+        "node": "snMunicipio",
         "pregunta": "Municipio",
-        "tipoEntrada": "catalogo",
-        "catalogo": "DelegacionesCat"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snColonia",
@@ -87,7 +87,7 @@
         "maxLongitud": 50
     },
     {
-        "node": "idNuEnitidadFederativa",
+        "node": "idNuEntidadFederativa",
         "pregunta": "Entidad federativa",
         "tipoEntrada": "catalogo",
         "catalogo": "EntidadesFederativasCat"

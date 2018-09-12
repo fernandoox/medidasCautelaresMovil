@@ -126,16 +126,16 @@ export default class Login extends React.Component {
 
                 <Button full danger
                   disabled={!this.state.isConnected}
-                  style={{marginVertical: 10, borderRadius:20, marginTop: 20}}
+                  style={{marginVertical: 10, borderRadius:20, marginTop: 40}}
                   onPress={this.loginEvaluador}>
                     <Text>Iniciar sesión</Text>
                 </Button>
 
-                <Button full danger bordered
+                {/*<Button full danger bordered
                   style={{marginVertical: 10, borderRadius:20}}
                   onPress={this.omitirSesion} disabled={this.state.isConnected}>
                     <Text>Omitir</Text>
-                </Button>
+                </Button>*/}
 
               </Col>
             </Row>

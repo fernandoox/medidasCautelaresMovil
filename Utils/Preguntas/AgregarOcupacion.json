@@ -18,9 +18,10 @@
         "maxLongitud": 15
     },
     {
-        "node": "dtmFechaInicio",
+        "node": "snFechaInicio",
         "pregunta": "Fecha inicio",
-        "tipoEntrada": "date"
+        "tipoEntrada": "default",
+        "maxLongitud": 50
     },
     {
         "node": "snSalario",

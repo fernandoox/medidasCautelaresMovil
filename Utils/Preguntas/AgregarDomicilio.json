@@ -12,10 +12,10 @@
       "maxLongitud": 5
     },
     {
-      "node": "municipio",
+      "node": "snMunicipio",
       "pregunta": "Municipio",
-      "tipoEntrada": "catalogo",
-      "catalogo": "DelegacionesCat"
+      "tipoEntrada": "default",
+      "maxLongitud": 50
     },
     {
       "node": "snColonia",

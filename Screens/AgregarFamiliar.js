@@ -6,7 +6,6 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import GLOBALS from '../Utils/Globals';
 import preguntasAgregarFamiliar from '../Utils/Preguntas/AgregarFamiliar.json';
 import CatParentescosData from '../Utils/Catalogos/Parentescos.json';
-import CatDelegacionesData from '../Utils/Catalogos/Delegaciones.json';
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 
 export default class AgregarFamiliar extends React.Component { 
@@ -16,14 +15,13 @@ export default class AgregarFamiliar extends React.Component {
     this.state = {
       preguntas: preguntasAgregarFamiliar,
       ParentescosCat: CatParentescosData,
-      DelegacionesCat: CatDelegacionesData,
       EntidadesFederativasCat: CatEntidadesFederativasData,
       parentesco: null,
       indApoyoEconomico:null,
       indDependienteEconomico: null,
       indMismaVivienda: null,
       municipio: null,
-      idNuEnitidadFederativa: null,
+      idNuEntidadFederativa: null,
     };
     jsonRespFamiliar = {}
   }
@@ -57,11 +55,8 @@ export default class AgregarFamiliar extends React.Component {
       case "indMismaVivienda":
         this.setState({indMismaVivienda:itemSelected})
         break;
-      case "municipio":
-        this.setState({municipio:itemSelected})
-        break;
-      case "idNuEnitidadFederativa":
-        this.setState({idNuEnitidadFederativa:itemSelected})
+      case "idNuEntidadFederativa":
+        this.setState({idNuEntidadFederativa:itemSelected})
         break;
       default:
         break;

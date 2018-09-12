@@ -5,8 +5,8 @@ import { AsyncStorage } from 'react-native';
 
 /*-------------------------------------------------------------------------------------*/
 // REST API with Axios config
-let urlDev = 'http://10.2.48.179:60523/SSCMC_WS/api/app';
-let urlProd = 'http://10.8.2.130:8080/SSCMC_WS/api/app';
+let urlDev  = 'http://172.19.40.61:8080/SSCMC_WS-dev/api/app';
+let urlProd = 'http://172.19.40.61:8080/SSCMC_WS/api/app';
 var initAxios = axios.create({
     baseURL: urlDev,
     timeout: 3000
