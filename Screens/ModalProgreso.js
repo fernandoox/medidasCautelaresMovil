@@ -122,16 +122,6 @@ export default class ModalProgreso extends React.Component {
       console.warn("ERROR ASYNC SUSTANCIAS: "+err.message);
     })
 
-    // Load evaluador logueado
-    storage.load({
-      key: 'evaluadorLogueado',
-    }).then((response) => {
-      console.log("Evaluador Storage: " + JSON.stringify(response));
-      jsonBaseEntrevistaLocal.evaluador = response;
-      this.setState({jsonBase: jsonBaseEntrevistaLocal});
-    }).catch(async (err) => {
-      console.warn("ERROR ASYNC EVALUADOR LOGUEADO: "+err.message);
-    })
   }
 
   componentWillUnmount() {

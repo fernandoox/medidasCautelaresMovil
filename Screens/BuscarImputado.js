@@ -10,7 +10,9 @@ import ProgressIndicator from 'react-native-progress-indicator';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
-import ImputadoTemporal from './ImputadoTemporal'
+import ImputadoTemporal from './ImputadoTemporal';
+//import ActualizarEntrevistasSQLite from '../Utils/ActualizarEntrevistasSQLite';
+
 const db = SQLite.openDatabase('db.db');
 export default class BuscarImputado extends React.Component {
 
@@ -21,7 +23,7 @@ export default class BuscarImputado extends React.Component {
         <Root>
           <Button style={{marginRight:10, paddingLeft:10}} light bordered iconLeft 
             onPress={params.enviarMultiplesEntrevistas} disabled={!params.isConnected || params.countEntrevistasPendientes == 0}>
-            <Icon active name="upload" style={{color: (params.isConnected && params.countEntrevistasPendientes > 0) ? 'white' : 'lightgrey', fontSize:20}}/>
+            <Icon active name="download" style={{color: (params.isConnected && params.countEntrevistasPendientes > 0) ? 'white' : 'lightgrey', fontSize:20}}/>
             <Text style={{fontSize:19}}>{params.countEntrevistasPendientes}</Text>
           </Button>
         </Root>
@@ -54,7 +56,7 @@ export default class BuscarImputado extends React.Component {
     db.transaction(
       tx => {
         tx.executeSql('select * from entrevistasOffline', [], (_, { rows }) => {
-            console.log("SQLite SIZE CDM: "+rows.length)
+            //console.log("SQLite SIZE CDM: "+JSON.stringify(rows))
             this.setState({countEntrevistasPendientes: rows.length})
             this.props.navigation.setParams({ 
               enviarMultiplesEntrevistas: this.enviarEntrevistaPendiente,
@@ -63,7 +65,7 @@ export default class BuscarImputado extends React.Component {
           }
         );
       },
-      null,
+      (err) => { console.log("Select Failed Message", err) },
       this.update
     );
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
@@ -266,10 +268,10 @@ export default class BuscarImputado extends React.Component {
                   enter="fadeInDown">
                   <Card>
                     <CardItem>
-                      <Body>
-                        <Row style={{marginTop: -20, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>             
+                      <Body style={{alignSelf: 'center'}}>
+                        <Row style={{marginTop: -20, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',alignSelf: 'center'}}>             
                           <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:25}}>
-                            EVALUADOR: {this.getNombreEvaluador()}
+                            {this.getNombreEvaluador()}
                           </Text>
                         </Row>
                         <Row style={{marginTop: -15, marginBottom:-20}}>

@@ -10,6 +10,7 @@ import Entrevista from './Screens/Entrevista';
 import GLOBALS from './Utils/Globals';
 import './Utils/ReactotronConfig'
 import ignoreWarnings from 'react-native-ignore-warnings';
+import ActualizarEntrevistasSQLite  from './Utils/Helpers';
 const db = SQLite.openDatabase('db.db');
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
@@ -60,7 +61,7 @@ export default class App extends React.Component {
    }
 
     componentDidMount(){
-
+      ActualizarEntrevistasSQLite();
       /*db.transaction(tx => {
         tx.executeSql(
           'DROP TABLE entrevistasOffline;'
@@ -69,7 +70,7 @@ export default class App extends React.Component {
 
       db.transaction(tx => {
         tx.executeSql(
-          'create table if not exists entrevistasOffline (id integer primary key not null, tipo_captura text, carpeta text, data text);'
+          'create table if not exists entrevistasOffline (id integer primary key not null, tipo_captura text, carpeta text, data text, id_imputado integer, fecha_asignacion varchar, lista_para_envio integer);'
         );
       });
       
