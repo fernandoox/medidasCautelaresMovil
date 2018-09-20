@@ -5,16 +5,14 @@ import { Root } from 'native-base';
 import { StackNavigator } from 'react-navigation';
 import Login from './Screens/Login';
 import BuscarImputado from './Screens/BuscarImputado';
-import ImputadoTemporal from './Screens/ImputadoTemporal';
 import Entrevista from './Screens/Entrevista';
 import GLOBALS from './Utils/Globals';
 import './Utils/ReactotronConfig'
 import ignoreWarnings from 'react-native-ignore-warnings';
-import ActualizarEntrevistasSQLite  from './Utils/Helpers';
 const db = SQLite.openDatabase('db.db');
+
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
-  
   LoginScreen: {
     screen: Login,
     navigationOptions: {
@@ -61,7 +59,6 @@ export default class App extends React.Component {
    }
 
     componentDidMount(){
-      ActualizarEntrevistasSQLite();
       /*db.transaction(tx => {
         tx.executeSql(
           'DROP TABLE entrevistasOffline;'
@@ -70,7 +67,7 @@ export default class App extends React.Component {
 
       db.transaction(tx => {
         tx.executeSql(
-          'create table if not exists entrevistasOffline (id integer primary key not null, tipo_captura text, carpeta text, data text, id_imputado integer, fecha_asignacion varchar, lista_para_envio integer);'
+          'create table if not exists entrevistasOffline (id integer primary key not null, tipo_captura text, carpeta_investigacion text, carpeta_judicial text, data text, id_imputado integer, fecha_asignacion varchar, lista_para_envio integer);'
         );
       });
       

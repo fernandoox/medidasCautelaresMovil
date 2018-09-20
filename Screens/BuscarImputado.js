@@ -10,8 +10,8 @@ import ProgressIndicator from 'react-native-progress-indicator';
 import Storage from 'react-native-storage';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
+import SQLiteHelpers  from '../Utils/SQLiteHelpers';
 import ImputadoTemporal from './ImputadoTemporal';
-//import ActualizarEntrevistasSQLite from '../Utils/ActualizarEntrevistasSQLite';
 
 const db = SQLite.openDatabase('db.db');
 export default class BuscarImputado extends React.Component {
@@ -22,8 +22,8 @@ export default class BuscarImputado extends React.Component {
       headerRight: (
         <Root>
           <Button style={{marginRight:10, paddingLeft:10}} light bordered iconLeft 
-            onPress={params.enviarMultiplesEntrevistas} disabled={!params.isConnected || params.countEntrevistasPendientes == 0}>
-            <Icon active name="download" style={{color: (params.isConnected && params.countEntrevistasPendientes > 0) ? 'white' : 'lightgrey', fontSize:20}}/>
+            onPress={params.hanldeActualizarEvaluacionesSQLite} disabled={!params.isConnected}>
+            <Icon active name="download" style={{color: (params.isConnected) ? 'white' : 'lightgrey', fontSize:20}}/>
             <Text style={{fontSize:19}}>{params.countEntrevistasPendientes}</Text>
           </Button>
         </Root>
@@ -34,6 +34,7 @@ export default class BuscarImputado extends React.Component {
   constructor(props){
     super(props)
     const { params } = this.props.navigation.state;
+    ObjHelperSQlite = new SQLiteHelpers();
     this.state = {
       isLoading: false,
       isConnected: null,
@@ -52,37 +53,53 @@ export default class BuscarImputado extends React.Component {
   }
   
   componentDidMount(){
-    // Transactions to SQLite!
-    db.transaction(
-      tx => {
-        tx.executeSql('select * from entrevistasOffline', [], (_, { rows }) => {
-            //console.log("SQLite SIZE CDM: "+JSON.stringify(rows))
-            this.setState({countEntrevistasPendientes: rows.length})
-            this.props.navigation.setParams({ 
-              enviarMultiplesEntrevistas: this.enviarEntrevistaPendiente,
-              countEntrevistasPendientes: rows.length
-            });
-          }
-        );
-      },
-      (err) => { console.log("Select Failed Message", err) },
-      this.update
-    );
+    ObjHelperSQlite.actualizarEntrevistasSQLiteBack();
+    this.countEvaluacionesSQLite();
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { 
         this.setState({isConnected}, () => {
-          this.props.navigation.setParams({isConnected: isConnected});
+          this.props.navigation.setParams({
+            isConnected: isConnected,
+            hanldeActualizarEvaluacionesSQLite: this.actualizarEvaluacionesSQLite
+          });
         });
       }
     );
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
 
+  componentWillReceiveProps(){
+    console.log("componentWillReceiveProps Buscar imputado!!!!!!!!");
+  }
+
+  actualizarEvaluacionesSQLite = () => {
+    ObjHelperSQlite.actualizarEntrevistasSQLiteButton(); // FUNCION 1
+    setTimeout(() => {
+      this.countEvaluacionesSQLite(); // FUNCION 2
+    }, 800);
+  }
+
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
+  
+  countEvaluacionesSQLite = () => {
+    db.transaction(
+      tx => {
+        tx.executeSql('SELECT COUNT(*) AS c FROM entrevistasOffline', [], (tx, r) => {
+          console.log("* Rows count: "+r.rows.item(0).c);
+          this.setState({countEntrevistasPendientes: r.rows.item(0).c})
+          this.props.navigation.setParams({ 
+            countEntrevistasPendientes: r.rows.item(0).c
+          });
+        });
+      },
+      (err) => { console.log("Select Failed Message", err) },
+      this.update
+    );
+ }
 
   handleBackButton() {
     numBack++;
@@ -292,20 +309,21 @@ export default class BuscarImputado extends React.Component {
                   Buscar imputados por:
                 </Text>
 
-                <Item style={{marginVertical: 10}}>
-                  <Input
-                    defaultValue={this.state.carpetaJudicial}
-                    placeholder='Carpeta juidicial / investigación'
-                    placeholderTextColor='#2C4743'
-                    autoCapitalize='characters' autoCorrect={false}
-                    style={{color:'#2C4743', fontSize: 17}}
-                    onChangeText={(carpetaJudicial) => this.setState({carpetaJudicial}) }/>
-                </Item>
 
                 {/* Buscar imputados por carpeta solo cuando hay conexión a internet */}
                 <Display enable={this.state.isConnected}
                   enterDuration={500}
                   enter="fadeInDown">
+                  <Item style={{marginVertical: 10}}>
+                    <Input
+                      defaultValue={this.state.carpetaJudicial}
+                      placeholder='Carpeta juidicial / investigación'
+                      placeholderTextColor='#2C4743'
+                      autoCapitalize='characters' autoCorrect={false}
+                      style={{color:'#2C4743', fontSize: 17}}
+                      onChangeText={(carpetaJudicial) => this.setState({carpetaJudicial}) }/>
+                  </Item>
+
                   <ListItem>
                     <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarAsignados} 
                       onPress={this._selectCheckBoxSearchAsignados}/>

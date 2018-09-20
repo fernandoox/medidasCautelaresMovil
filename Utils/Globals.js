@@ -26,7 +26,7 @@ global.storage = new Storage({
 	storageBackend: AsyncStorage,
 	// expire time, default 1 day(1000 * 3600 * 24 milliseconds).
 	// can be null, which means never expire.
-	defaultExpires: 1000 * 3600 * 24,
+	defaultExpires: null,
 	// cache data in the memory. default is true.
 	enableCache: false,
 	// if data was not found in storage or expired,

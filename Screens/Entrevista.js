@@ -1,5 +1,5 @@
 import React from 'react';
-import { Font } from 'expo';
+import { Font, SQLite } from 'expo';
 import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions, StyleSheet } from 'react-native';
 import { Root, Button, Text, Item, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,6 +18,7 @@ import RedFamiliar from './RedFamiliar';
 import Estudios from './Estudios';
 import Ocupacion from './Ocupacion';
 import Sustancias from './Sustancias';
+const db = SQLite.openDatabase('db.db');
 
 const { width, height } = Dimensions.get('window');
 
@@ -88,39 +89,71 @@ export default class Entrevista extends React.Component {
   };
 
   getDataImputado = async () => {
+    //Cambiar condiciones ************
     if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
-    console.log("Get data imputado!!");
-    this.setState({isLoading: true});
-    instanceAxios.get('/evaluacion/get', {
-      params: {
-        idImputado: this.state.imputado.id,
-      }
-    })
-    .then(async (res) => {
-      if (res.data.status == "ok") {
-        //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion));
-        this.setState({
-          dataGeneralesDB: res.data.evaluacion.datosGenerales,
-          dataDomicilioDB: res.data.evaluacion.domicilios,
-          dataFamiliaDB: res.data.evaluacion.redFamiliar,
-          dataEstudiosBD: res.data.evaluacion.estudios,
-          dataOcupacionesDB: res.data.evaluacion.ocupaciones,
-          dataSustanciasDB: res.data.evaluacion.sustancias,
-          isLoading: false,
-          loadedResponsesBD: true,
-        });
-      }
-      if (res.data.status == "error") {
-        Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
-        this.setState({isLoading: false, loadedResponsesBD: true,});
-      }
-    })
-    .catch(async (error) => {
-      this.setState({isLoading: false});
-      //console.warn(JSON.stringify(error))
-      Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
-    });
+    if (this.state.isConnected) {
+      console.log("Get data imputado!!");
+      this.setState({isLoading: true});
+      instanceAxios.get('/evaluacion/get', {
+        params: {
+          idImputado: this.state.imputado.id,
+        }
+      })
+      .then(async (res) => {
+        if (res.data.status == "ok") {
+          //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion));
+          this.setState({
+            dataGeneralesDB: res.data.evaluacion.datosGenerales,
+            dataDomicilioDB: res.data.evaluacion.domicilios,
+            dataFamiliaDB: res.data.evaluacion.redFamiliar,
+            dataEstudiosBD: res.data.evaluacion.estudios,
+            dataOcupacionesDB: res.data.evaluacion.ocupaciones,
+            dataSustanciasDB: res.data.evaluacion.sustancias,
+            isLoading: false,
+            loadedResponsesBD: true,
+          });
+        }
+        if (res.data.status == "error") {
+          Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
+          this.setState({isLoading: false, loadedResponsesBD: true,});
+        }
+      })
+      .catch(async (error) => {
+        this.setState({isLoading: false});
+        //console.warn(JSON.stringify(error))
+        Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
+      });
+    } else {
+      this.getImputadoSQLiteById();
     }
+    }
+  }
+
+  getImputadoSQLiteById = () => {
+    this.setState({isLoading: true});
+    console.log("Buscando imputado SQLite:", this.state.imputado.id);
+    db.transaction(
+      tx => {
+         tx.executeSql('select * from entrevistasOffline where id_imputado = ?', 
+          [this.state.imputado.id], (_, { rows: { _array }}) => {
+            let infoEvaluacion = JSON.parse(_array[0].data);    
+              console.log("Evaluacion imputado:", JSON.stringify(infoEvaluacion.evaluacion))
+              this.setState({
+                dataGeneralesDB: infoEvaluacion.evaluacion.datosGenerales,
+                dataDomicilioDB: infoEvaluacion.evaluacion.domicilios,
+                dataFamiliaDB: infoEvaluacion.evaluacion.redFamiliar,
+                dataEstudiosBD: infoEvaluacion.evaluacion.estudios,
+                dataOcupacionesDB: infoEvaluacion.evaluacion.ocupaciones,
+                dataSustanciasDB: infoEvaluacion.evaluacion.sustancias,
+                isLoading: false,
+                loadedResponsesBD: true,
+              });
+            
+         });
+      },
+      (err) => { console.log("Select Failed Message", err) },
+      this.update
+   );
   }
 
   _toggleModalProgress = () => {
