@@ -2,6 +2,7 @@ import React from 'react';
 import { Font, SQLite } from 'expo';
 import { View, Alert, Keyboard } from 'react-native';
 import { Button, Text, Item, Picker, Input, H3 } from 'native-base';
+import Display from 'react-native-display';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { NavigationActions } from 'react-navigation';
 import GLOBALS from '../Utils/Globals';
@@ -14,7 +15,7 @@ export default class ImputadoTemporal extends React.Component {
     const { params } = this.props.nav.state;
     this.state = {
       //Variables
-      carpetaJudicial:null,
+      carpetaJudicial: null,
       imputados: [],
       numImputados: 0,
       selectedImputado: null,
@@ -28,22 +29,25 @@ export default class ImputadoTemporal extends React.Component {
     db.transaction(
       tx => {
          tx.executeSql('select * from entrevistasOffline where carpeta_investigacion = ? or carpeta_judicial = ?', 
-          [this.state.carpetaJudicial], (_, { rows: { _array }}) => {
+          [this.state.carpetaJudicial, this.state.carpetaJudicial], (_, { rows: { _array }}) => {
             let arrayImputados = _array.map((evaluacion) => {
               evaluacion.data = JSON.parse(evaluacion.data);
-              //console.log("Evaluaciones SQLite:", JSON.stringify(evaluacion.data))
+              console.log("Data Evaluaciones SQLite:" + JSON.stringify(evaluacion));
               return {
-                id: evaluacion.data.idImputado,
-                nombre: evaluacion.data.nombre,
-                primerApellido: evaluacion.data.primerApellido,
-                segundoApellido: evaluacion.data.segundoApellido,
+                id: evaluacion.data.imputado.id,
+                nombre: evaluacion.data.imputado.nombre,
+                primerApellido: evaluacion.data.imputado.primerApellido,
+                segundoApellido: evaluacion.data.imputado.segundoApellido,
                 idEstatus: 4,
-                evaluacionMensual: evaluacion.data.evaluacionMensual,
+                evaluacionMensual: evaluacion.data.imputado.evaluacionMensual,
               };
             })
             console.log("Array imputados size SQLite", arrayImputados.length)
             this.setState({imputados:arrayImputados, numImputados:arrayImputados.length});
             Keyboard.dismiss();
+            if (arrayImputados.length == 0) {
+              Alert.alert('Sin resultados', 'No se han encontrado resultados.', [{text: 'OK'}], { cancelable: false });
+            }
          });
       },
       (err) => { console.log("Select Failed Message", err) },
@@ -87,38 +91,42 @@ export default class ImputadoTemporal extends React.Component {
               <Text>Buscar por Carpeta</Text>
             </Button>
 
-            <Text>Imputados:</Text>
-            <Picker
-              enabled={this.state.numImputados > 0}             
-              iosHeader="Seleccionar un imputado"
-              placeholder="Seleccionar un imputado"
-              itemTextStyle={{ fontSize: 17}}
-              supportedOrientations={['portrait','landscape']}
-              selectedValue={this.state.selectedImputado}
-              onValueChange={this.onSelectImputado.bind(this)}
-              mode="dropdown">
-              <Item label="Seleccionar un imputado" value={null} />
-              {
-                this.state.imputados.map((imputado) => {
-                  return (
-                    <Item
-                      value={imputado} key={imputado.id}
-                      label={( (imputado.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? "✔️ (A) - " : "🚫 (C) - ") + 
-                            imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido +
-                            ((imputado.evaluacionMensual) ? " 📅" : "")}/>
-                  );
-                })
-              }
-            </Picker>
+            <Display enable={this.state.numImputados > 0}
+              enterDuration={500}
+              enter="fadeInDown">
+              <Text>Imputados:</Text>
+              <Picker
+                enabled={this.state.numImputados > 0}             
+                iosHeader="Seleccionar un imputado"
+                placeholder="Seleccionar un imputado"
+                itemTextStyle={{ fontSize: 17}}
+                supportedOrientations={['portrait','landscape']}
+                selectedValue={this.state.selectedImputado}
+                onValueChange={this.onSelectImputado.bind(this)}
+                mode="dropdown">
+                <Item label="Seleccionar un imputado" value={null} />
+                {
+                  this.state.imputados.map((imputado) => {
+                    return (
+                      <Item
+                        value={imputado} key={imputado.id}
+                        label={( (imputado.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? "✔️ (A) - " : "🚫 (C) - ") + 
+                              imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido +
+                              ((imputado.evaluacionMensual) ? " 📅" : "")}/>
+                    );
+                  })
+                }
+              </Picker>
+              {/*<Text>{this.state.numImputados} - {JSON.stringify(this.state.selectedImputado)}</Text>*/}
 
-            <Text>{this.state.numImputados} - {JSON.stringify(this.state.selectedImputado)}</Text>
+              <Button full danger
+                style={{marginVertical: 10, borderRadius:20}}
+                disabled={this.state.selectedImputado == null}
+                onPress={this.aplicarEntrevistaImputadoTemporal}>
+                  <Text>Aplicar entrevista temporal</Text>
+              </Button>
+            </Display>
 
-            <Button full danger
-              style={{marginVertical: 10, borderRadius:20}}
-              disabled={this.state.selectedImputado == null}
-              onPress={this.aplicarEntrevistaImputadoTemporal}>
-                <Text>Aplicar entrevista temporal</Text>
-            </Button>
 
             <Text style={{marginVertical:10, textAlign:'center', color:'#c93242', fontWeight:'bold'}}>
               Sin conexión!

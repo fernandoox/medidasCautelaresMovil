@@ -1,7 +1,7 @@
 import React from 'react';
 import { SQLite, Font } from 'expo';
 import { View, ActivityIndicator, Alert, NetInfo, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge, Spinner } from 'native-base';
+import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge, Spinner, CheckBox, ListItem } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
@@ -10,10 +10,13 @@ import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
 import Storage from 'react-native-storage';
 const db = SQLite.openDatabase('db.db');
+import SQLiteHelpers  from '../Utils/SQLiteHelpers';
+
 export default class ModalProgreso extends React.Component {
 
   constructor(props){
     super(props)
+    ObjHelperSQlite = new SQLiteHelpers();
     this.state = {
       isLoading: false,
       isConnected: null,
@@ -24,7 +27,8 @@ export default class ModalProgreso extends React.Component {
       jsonEstudiosCompleto: null,
       jsonOcupacionesCompleto: null,
       jsonSustanciasCompleto: null,
-      evaluador: null
+      evaluador: null,
+      evaluacionListaParaEnvio: false
     };
     jsonBaseEntrevistaLocal = {}
     const nav = this.props.nav;
@@ -45,7 +49,6 @@ export default class ModalProgreso extends React.Component {
     }).catch(async (err) => {
       console.warn("ERROR EVALUADOR: "+err.message);
     })
-
 
     // Load JSON Base
     storage.load({
@@ -137,6 +140,10 @@ export default class ModalProgreso extends React.Component {
     this.props.changeStepChild(numberStep);
   }
 
+  _selectCheckBoxEvaluacionParaEnvio = () => {
+    this.setState({ evaluacionListaParaEnvio: !this.state.evaluacionListaParaEnvio });
+  }
+
   saveInfoTotal = () => {
     if (this.state.isConnected && this.state.jsonBase.tipoCaptura == "ONLINE") {
       console.log("JSON BASE ONLINE: " + JSON.stringify(this.state.jsonBase))
@@ -151,7 +158,8 @@ export default class ModalProgreso extends React.Component {
         console.log("Res request to save: " + JSON.stringify(res.data));
         if(res.data.status == "ok"){
           Alert.alert('Guardado', res.data.message, [{text: 'OK'}], { cancelable: false });
-          // Pendiente: Limpiar storage
+          //ELIMINAR LA RECIEN ENVIADA SI EXISTE EN SQLITE EN BASE AL ID IMPUTADO
+          ObjHelperSQlite.deleteEntrevistaByIdImputado(this.state.jsonBase.imputado.id);
           this.props.cerrarModalProgrsoChild();
           this.props.nav.navigate('BuscarImputadoScreen', {carpetaJudicialParam: this.props.carpetaJudicial, evaluador:this.props.evaluador});
         }
@@ -163,25 +171,62 @@ export default class ModalProgreso extends React.Component {
         Alert.alert('Error', error, [{text: 'OK'}], { cancelable: false });
       });
     }else if(!this.state.isConnected && this.state.jsonBase.tipoCaptura == "ONLINE"){
+      /**
+      * Cuando se empieza con internet pero durante la entrevista se pierde 
+      * (se interactua con información del web service)
+      */
       Alert.alert('Red', "No hay conexión a internet, se podrá enviar cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
-      // Guardar en SQLite el json aux que se enviará. Podrá continuar realizando mas entrevistas.
       this.saveSQLiteEntrevistaPendiente();
     }else{
-      Alert.alert('Carga offline', "Pendiente...", [{text: 'OK'}], { cancelable: false });
-      this.saveSQLiteEntrevistaPendiente();
+      /**
+       * Cuando se empieza sin internet y se interactua con SQLite
+       */
+      Alert.alert('Red 2', "No hay conexión a internet, se podrá enviar cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
+      this.updateEvaluacionSQLite();
     }
     
   }
   
+  updateEvaluacionSQLite = () => {
+    console.log("Actualizando a SQLite imputado:", this.state.jsonBase.imputado.id);
+    db.transaction(
+       tx => {
+          tx.executeSql('UPDATE entrevistasOffline SET data = ?, lista_para_envio = ? WHERE id_imputado = ?',
+             [
+                JSON.stringify(this.state.jsonBase),
+                (this.state.evaluacionListaParaEnvio) ? 1 : 0,
+                this.state.jsonBase.imputado.id
+             ]);
+       },
+       (err) => { console.log("Update Failed Message", err) },
+       this.update
+    );
+    this.props.cerrarModalProgrsoChild();
+    this.props.nav.navigate('BuscarImputadoScreen', 
+      {
+        carpetaJudicialParam: this.props.carpetaJudicial,
+        evaluador: this.state.evaluador
+      }
+    );
+ }
+
   saveSQLiteEntrevistaPendiente = () => {
     // Transactions to SQLite!
     db.transaction(
-      tx => {
-        tx.executeSql('insert into entrevistasOffline (tipo_captura, carpeta, data) values (?, ?, ?)', 
-          [this.state.jsonBase.tipoCaptura, this.state.jsonBase.carpetaJudicial, JSON.stringify(this.state.jsonBase)]);
-      },
-      null,
-      this.update
+       tx => {
+          tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
+             [
+                this.state.tipoCaptura,
+                this.state.jsonBase.carpetaJudicial,
+                this.state.jsonBase.carpetaJudicial,
+                JSON.stringify(this.state.jsonBase),
+                this.state.jsonBase.imputado.id,
+                null,
+                1
+             ]);
+       },
+       (err) => { console.log("Insert Failed Message", err) },
+       this.update
     );
     //console.log("JSON BASE: " + JSON.stringify(this.state.jsonBase))
     this.props.cerrarModalProgrsoChild();
@@ -193,6 +238,29 @@ export default class ModalProgreso extends React.Component {
     );
   }
 
+  saveEvaluacionSQLite = (objNuevaEvaluacion) => {
+    let evaluacionAux = objNuevaEvaluacion.evaluacion;
+    delete objNuevaEvaluacion.evaluacion;
+    var objEvaluacionToSaveSQLite = Object.assign(objNuevaEvaluacion, evaluacionAux);
+    console.log("Object to save:", JSON.stringify(objEvaluacionToSaveSQLite));
+    db.transaction(
+       tx => {
+          tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
+             [
+                'OFFLINE',
+                objNuevaEvaluacion.carpetaInvestigacion,
+                objNuevaEvaluacion.carpetaJudicial,
+                JSON.stringify(objEvaluacionToSaveSQLite),
+                objNuevaEvaluacion.imputado.id,
+                objNuevaEvaluacion.fechaAsignacion,
+                0
+             ]);
+       },
+       (err) => { console.log("Insert Failed Message", err) },
+       this.update
+    );
+ }
+
   render() {
     return (
     <Grid style={{backgroundColor:'white'}}>
@@ -203,7 +271,7 @@ export default class ModalProgreso extends React.Component {
             <CardItem>
               <Body>
                 <Text style={[styles.labelInfo]}>
-                  CARPETA JUDICIAL: {this.props.carpetaJudicial}
+                  CARPETA: {this.props.carpetaJudicial}
                 </Text>
               </Body>
             </CardItem>
@@ -314,7 +382,6 @@ export default class ModalProgreso extends React.Component {
 
       <Row>
         <Col style={{ padding:15, justifyContent:'center' }}>
-          
           <Display enable={this.state.isLoading}
             enterDuration={300}
             exitDuration={300}
@@ -322,6 +389,23 @@ export default class ModalProgreso extends React.Component {
             exit="fadeOut">
             <Spinner color='red' style={{ marginTop:-20, marginBottom:-20}}/>
           </Display>
+          
+          <Display enable={this.state.jsonBase.tipoCaptura == 'OFFLINE'}
+            enterDuration={30}
+            exitDuration={30}
+            enter="fadeIn"
+            exit="fadeOut">
+            <ListItem style={{marginLeft:0}}>
+              <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.evaluacionListaParaEnvio} 
+                onPress={this._selectCheckBoxEvaluacionParaEnvio}/>
+              <TouchableOpacity onPress={this._selectCheckBoxEvaluacionParaEnvio}>
+                <Body>
+                  <Text>Evaluación lista para envío</Text>
+                </Body>
+              </TouchableOpacity>
+            </ListItem>
+          </Display>
+          
 
           <Button danger full onPress={this.saveInfoTotal} 
             disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
@@ -349,7 +433,7 @@ const styles = StyleSheet.create({
     margin:5,
     borderRadius:5,
     borderColor: COLORS.BACKGROUND_PRIMARY,
-    borderWidth: 2
+    borderWidth: 1
   },
   titleStep: {
     color: COLORS.TEXT_SECONDARY, 

@@ -89,7 +89,6 @@ export default class Entrevista extends React.Component {
   };
 
   getDataImputado = async () => {
-    //Cambiar condiciones ************
     if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
     if (this.state.isConnected) {
       console.log("Get data imputado!!");
@@ -134,17 +133,17 @@ export default class Entrevista extends React.Component {
     console.log("Buscando imputado SQLite:", this.state.imputado.id);
     db.transaction(
       tx => {
-         tx.executeSql('select * from entrevistasOffline where id_imputado = ?', 
+         tx.executeSql('SELECT * FROM entrevistasOffline WHERE id_imputado = ?', 
           [this.state.imputado.id], (_, { rows: { _array }}) => {
             let infoEvaluacion = JSON.parse(_array[0].data);    
-              console.log("Evaluacion imputado:", JSON.stringify(infoEvaluacion.evaluacion))
+              console.log("Evaluacion imputado:", JSON.stringify(infoEvaluacion))
               this.setState({
-                dataGeneralesDB: infoEvaluacion.evaluacion.datosGenerales,
-                dataDomicilioDB: infoEvaluacion.evaluacion.domicilios,
-                dataFamiliaDB: infoEvaluacion.evaluacion.redFamiliar,
-                dataEstudiosBD: infoEvaluacion.evaluacion.estudios,
-                dataOcupacionesDB: infoEvaluacion.evaluacion.ocupaciones,
-                dataSustanciasDB: infoEvaluacion.evaluacion.sustancias,
+                dataGeneralesDB: infoEvaluacion.datosGenerales,
+                dataDomicilioDB: infoEvaluacion.domicilios,
+                dataFamiliaDB: infoEvaluacion.redFamiliar,
+                dataEstudiosBD: infoEvaluacion.estudios,
+                dataOcupacionesDB: infoEvaluacion.ocupaciones,
+                dataSustanciasDB: infoEvaluacion.sustancias,
                 isLoading: false,
                 loadedResponsesBD: true,
               });
@@ -196,7 +195,7 @@ export default class Entrevista extends React.Component {
                     <Icon active name="bell" style={{marginRight:5, fontSize: 20, color: "#3c85ea"}}/>
                   }
                   <Text style={{ fontSize:14, fontWeight:'bold' }}>
-                    CARPETA JUDICIAL: {this.state.carpetaJudicial}
+                    CARPETA: {this.state.carpetaJudicial}
                   </Text>
                 </Body>
               </CardItem>

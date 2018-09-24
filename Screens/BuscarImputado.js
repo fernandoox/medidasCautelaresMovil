@@ -73,23 +73,23 @@ export default class BuscarImputado extends React.Component {
     console.log("componentWillReceiveProps Buscar imputado!!!!!!!!");
   }
 
-  actualizarEvaluacionesSQLite = () => {
-    ObjHelperSQlite.actualizarEntrevistasSQLiteButton(); // FUNCION 1
-    setTimeout(() => {
-      this.countEvaluacionesSQLite(); // FUNCION 2
-    }, 800);
-  }
-
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
   
+  actualizarEvaluacionesSQLite = () => {
+    ObjHelperSQlite.actualizarEntrevistasSQLiteButton();
+    setTimeout(() => {
+      this.countEvaluacionesSQLite();
+    }, 800);
+  }
+
   countEvaluacionesSQLite = () => {
     db.transaction(
       tx => {
         tx.executeSql('SELECT COUNT(*) AS c FROM entrevistasOffline', [], (tx, r) => {
-          console.log("* Rows count: "+r.rows.item(0).c);
+          console.log("* Rows count real: " + r.rows.item(0).c);
           this.setState({countEntrevistasPendientes: r.rows.item(0).c})
           this.props.navigation.setParams({ 
             countEntrevistasPendientes: r.rows.item(0).c
@@ -172,7 +172,7 @@ export default class BuscarImputado extends React.Component {
     console.log("Enviando entrevista...")
     db.transaction(
       tx => {
-        tx.executeSql('select * from entrevistasOffline', [], (_, { rows: { _array } }) => {
+        tx.executeSql('SELECT * FROM entrevistasOffline', [], (_, { rows: { _array } }) => {
           _array.map((entrevista, i) => {
             entrevista.data = JSON.parse(entrevista.data);
             let imputadoEntrevistaPendiente = entrevista.data.imputado.nombre + " "+ entrevista.data.imputado.primerApellido + " " + entrevista.data.imputado.segundoApellido;
@@ -222,8 +222,8 @@ export default class BuscarImputado extends React.Component {
   deleteEntrevistasPendientesEnviadas = (idEntrevistaSQLite) => {
     db.transaction(
       tx => {
-        tx.executeSql('delete from entrevistasOffline where id = ?;',  [idEntrevistaSQLite]),
-        tx.executeSql('select * from entrevistasOffline', [], (_, { rows }) => {
+        tx.executeSql('DELETE FROM entrevistasOffline WHERE id = ?;',  [idEntrevistaSQLite]),
+        tx.executeSql('SELECT * FROM entrevistasOffline', [], (_, { rows }) => {
           console.log("SQLite SIZE ON DELETE: "+rows.length)
           this.setState({countEntrevistasPendientes: rows.length})
           this.props.navigation.setParams({countEntrevistasPendientes: rows.length});
