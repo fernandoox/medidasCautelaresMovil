@@ -2,9 +2,9 @@
    "expo": {
     "name": "GM Cautelares",
     "icon": "./assets/img/iconAppRojo.png",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "slug": "entrevistaMedidas",
-    "sdkVersion": "26.0.0",
+    "sdkVersion": "29.0.0",
     "primaryColor": "#d9534f",
     "assetBundlePatterns": [
       "Utils/*",
@@ -13,13 +13,10 @@
       "node_modules/native-base/Fonts/*"
     ],
     "ios": {
-      "bundleIdentifier": "gob.tsjcdmx.appEntrevistaMedidias"
+      "bundleIdentifier": "gob.tsjcdmx.appEvalMedidias"
     },
     "android": {
-      "package": "gob.tsjcdmx.appEntrevistaMedidias"
-    },
-    "packagerOpts": {
-      "nonPersistent": "--nonPersistent"
+      "package": "gob.tsjcdmx.appEvalMedidias"
     }
    }
  }

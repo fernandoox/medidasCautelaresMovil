@@ -8,8 +8,9 @@ import BuscarImputado from './Screens/BuscarImputado';
 import Entrevista from './Screens/Entrevista';
 import GLOBALS from './Utils/Globals';
 import './Utils/ReactotronConfig'
-import ignoreWarnings from 'react-native-ignore-warnings';
-const db = SQLite.openDatabase('db.db');
+import ignoreWarnings from 'react-native-ignore-warnings'; 
+import Database from './Utils/Database';
+
 
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
@@ -59,13 +60,13 @@ export default class App extends React.Component {
    }
 
     componentDidMount(){
-      /*db.transaction(tx => {
+      /*Database.transaction(tx => {
         tx.executeSql(
           'DROP TABLE entrevistasOffline;'
         );
       });*/
 
-      db.transaction(tx => {
+      Database.transaction(tx => {
         tx.executeSql(
           'create table if not exists entrevistasOffline (id integer primary key not null, tipo_captura text, carpeta_investigacion text, carpeta_judicial text, data text, id_imputado integer, fecha_asignacion varchar, lista_para_envio integer);'
         );
@@ -74,7 +75,8 @@ export default class App extends React.Component {
       ignoreWarnings([
          'Warning: componentWillMount is deprecated',
          'Warning: componentWillReceiveProps is deprecated',
-         'Warning: componentWillUpdate is deprecated'
+         'Warning: componentWillUpdate is deprecated',
+         'Setting a timer'
       ]);
     }
    

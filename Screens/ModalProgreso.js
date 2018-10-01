@@ -9,7 +9,7 @@ import Display from 'react-native-display';
 import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
 import Storage from 'react-native-storage';
-const db = SQLite.openDatabase('db.db');
+import Database from '../Utils/Database';
 import SQLiteHelpers  from '../Utils/SQLiteHelpers';
 
 export default class ModalProgreso extends React.Component {
@@ -189,7 +189,7 @@ export default class ModalProgreso extends React.Component {
   
   updateEvaluacionSQLite = () => {
     console.log("Actualizando a SQLite imputado:", this.state.jsonBase.imputado.id);
-    db.transaction(
+    Database.transaction(
        tx => {
           tx.executeSql('UPDATE entrevistasOffline SET data = ?, lista_para_envio = ? WHERE id_imputado = ?',
              [
@@ -212,18 +212,18 @@ export default class ModalProgreso extends React.Component {
 
   saveSQLiteEntrevistaPendiente = () => {
     // Transactions to SQLite!
-    db.transaction(
+    Database.transaction(
        tx => {
           tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
-             [
-                this.state.tipoCaptura,
-                this.state.jsonBase.carpetaJudicial,
-                this.state.jsonBase.carpetaJudicial,
-                JSON.stringify(this.state.jsonBase),
-                this.state.jsonBase.imputado.id,
-                null,
-                1
-             ]);
+            [
+              this.state.tipoCaptura,
+              this.state.jsonBase.carpetaJudicial,
+              this.state.jsonBase.carpetaJudicial,
+              JSON.stringify(this.state.jsonBase),
+              this.state.jsonBase.imputado.id,
+              null,
+              1
+            ]);
        },
        (err) => { console.log("Insert Failed Message", err) },
        this.update
@@ -243,18 +243,18 @@ export default class ModalProgreso extends React.Component {
     delete objNuevaEvaluacion.evaluacion;
     var objEvaluacionToSaveSQLite = Object.assign(objNuevaEvaluacion, evaluacionAux);
     console.log("Object to save:", JSON.stringify(objEvaluacionToSaveSQLite));
-    db.transaction(
+    Database.transaction(
        tx => {
           tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
-             [
-                'OFFLINE',
-                objNuevaEvaluacion.carpetaInvestigacion,
-                objNuevaEvaluacion.carpetaJudicial,
-                JSON.stringify(objEvaluacionToSaveSQLite),
-                objNuevaEvaluacion.imputado.id,
-                objNuevaEvaluacion.fechaAsignacion,
-                0
-             ]);
+            [
+              'OFFLINE',
+              objNuevaEvaluacion.carpetaInvestigacion,
+              objNuevaEvaluacion.carpetaJudicial,
+              JSON.stringify(objEvaluacionToSaveSQLite),
+              objNuevaEvaluacion.imputado.id,
+              objNuevaEvaluacion.fechaAsignacion,
+              0
+            ]);
        },
        (err) => { console.log("Insert Failed Message", err) },
        this.update

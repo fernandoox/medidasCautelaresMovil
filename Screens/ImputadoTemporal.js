@@ -6,7 +6,7 @@ import Display from 'react-native-display';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { NavigationActions } from 'react-navigation';
 import GLOBALS from '../Utils/Globals';
-const db = SQLite.openDatabase('db.db');
+import Database from '../Utils/Database';
 
 export default class ImputadoTemporal extends React.Component {
 
@@ -26,13 +26,12 @@ export default class ImputadoTemporal extends React.Component {
 
   buscarCarpetasEnSQLite = () => {
     console.log("Buscando carpeta SQLite:",this.state.carpetaJudicial);
-    db.transaction(
+    Database.transaction(
       tx => {
-         tx.executeSql('select * from entrevistasOffline where carpeta_investigacion = ? or carpeta_judicial = ?', 
+         tx.executeSql('SELECT * FROM entrevistasOffline WHERE carpeta_investigacion = ? OR carpeta_judicial = ?', 
           [this.state.carpetaJudicial, this.state.carpetaJudicial], (_, { rows: { _array }}) => {
             let arrayImputados = _array.map((evaluacion) => {
               evaluacion.data = JSON.parse(evaluacion.data);
-              console.log("Data Evaluaciones SQLite:" + JSON.stringify(evaluacion));
               return {
                 id: evaluacion.data.imputado.id,
                 nombre: evaluacion.data.imputado.nombre,
@@ -42,7 +41,6 @@ export default class ImputadoTemporal extends React.Component {
                 evaluacionMensual: evaluacion.data.imputado.evaluacionMensual,
               };
             })
-            console.log("Array imputados size SQLite", arrayImputados.length)
             this.setState({imputados:arrayImputados, numImputados:arrayImputados.length});
             Keyboard.dismiss();
             if (arrayImputados.length == 0) {

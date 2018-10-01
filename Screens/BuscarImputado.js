@@ -12,8 +12,8 @@ import GLOBALS from '../Utils/Globals';
 import CONSTANTS from '../Utils/ConstantsNG';
 import SQLiteHelpers  from '../Utils/SQLiteHelpers';
 import ImputadoTemporal from './ImputadoTemporal';
+import Database from '../Utils/Database';
 
-const db = SQLite.openDatabase('db.db');
 export default class BuscarImputado extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
@@ -22,8 +22,8 @@ export default class BuscarImputado extends React.Component {
       headerRight: (
         <Root>
           <Button style={{marginRight:10, paddingLeft:10}} light bordered iconLeft 
-            onPress={params.hanldeActualizarEvaluacionesSQLite} disabled={!params.isConnected}>
-            <Icon active name="download" style={{color: (params.isConnected) ? 'white' : 'lightgrey', fontSize:20}}/>
+            onPress={params.hanldeActualizarEvaluacionesSQLite}>
+            <Icon active name="download" style={{color:'white', fontSize:20}}/>
             <Text style={{fontSize:19}}>{params.countEntrevistasPendientes}</Text>
           </Button>
         </Root>
@@ -64,36 +64,37 @@ export default class BuscarImputado extends React.Component {
             hanldeActualizarEvaluacionesSQLite: this.actualizarEvaluacionesSQLite
           });
         });
+        if (isConnected) {
+          console.log("Primer estado");
+          this.enviarEntrevistaPendienteTest();
+        }
       }
     );
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
 
-  componentWillReceiveProps(){
+  /*componentWillReceiveProps(){
     console.log("componentWillReceiveProps Buscar imputado!!!!!!!!");
-  }
+  }*/
 
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
-  
+
   actualizarEvaluacionesSQLite = () => {
     ObjHelperSQlite.actualizarEntrevistasSQLiteButton();
     setTimeout(() => {
       this.countEvaluacionesSQLite();
-    }, 800);
+    }, 900);
   }
 
   countEvaluacionesSQLite = () => {
-    db.transaction(
+    Database.transaction(
       tx => {
         tx.executeSql('SELECT COUNT(*) AS c FROM entrevistasOffline', [], (tx, r) => {
-          console.log("* Rows count real: " + r.rows.item(0).c);
           this.setState({countEntrevistasPendientes: r.rows.item(0).c})
-          this.props.navigation.setParams({ 
-            countEntrevistasPendientes: r.rows.item(0).c
-          });
+          this.props.navigation.setParams({countEntrevistasPendientes: r.rows.item(0).c});
         });
       },
       (err) => { console.log("Select Failed Message", err) },
@@ -116,6 +117,10 @@ export default class BuscarImputado extends React.Component {
   _handleConnectivityChange = (isConnected) => {
     this.setState({isConnected}, () => {
       this.props.navigation.setParams({isConnected: isConnected});
+      if (this.state.isConnected && !this.state.entrevistaPendienteGuardada) {
+        console.log("_handleConnectivityChange estado");
+        this.enviarEntrevistaPendienteTest();
+      }
     });
   };
 
@@ -168,32 +173,37 @@ export default class BuscarImputado extends React.Component {
     }
   }
 
-  enviarEntrevistaPendiente = () => {
-    console.log("Enviando entrevista...")
-    db.transaction(
-      tx => {
-        tx.executeSql('SELECT * FROM entrevistasOffline', [], (_, { rows: { _array } }) => {
-          _array.map((entrevista, i) => {
-            entrevista.data = JSON.parse(entrevista.data);
-            let imputadoEntrevistaPendiente = entrevista.data.imputado.nombre + " "+ entrevista.data.imputado.primerApellido + " " + entrevista.data.imputado.segundoApellido;
-            console.log("Nombre imptado: ", imputadoEntrevistaPendiente);
-            ToastAndroid.show('Enviando entrevista pendiente para: ' + imputadoEntrevistaPendiente,  ToastAndroid.LONG);
-            if (entrevista.tipo_captura == 'ONLINE') {
-              this._saveEntrevistaOnlinePendiente(imputadoEntrevistaPendiente, entrevista);
-            }else{
-              console.log("Entrevista offline pendiente: ",entrevista.id)
-            }
-          })
-        });
-      },
-      (err) => { console.log("Select Failed Message", err) },
-      this.update
-    );
+  /**
+   * Recuperar código para enviar entrevistas automaticamente cuando detecte conexion 
+   * Ennviar solo una vez las entrevistas que esten en listas para envio 1
+   * Las offline 
+   */
+  enviarEntrevistaPendienteTest = () => {
+    if (!this.state.entrevistaPendienteGuardada) {
+      this.setState({entrevistaPendienteGuardada: true});
+      console.log("Enviando entrevista pendiente online...!")
+      Database.transaction(
+        tx => {
+           tx.executeSql('SELECT * FROM entrevistasOffline WHERE lista_para_envio = ?', [1], 
+            (_, { rows: { _array }}) => {
+              _array.map((evaluacion) => {
+                evaluacion.data = JSON.parse(evaluacion.data);
+                let imputadoEntrevistaPendiente = evaluacion.data.imputado.nombre + " "+ evaluacion.data.imputado.primerApellido + " " + evaluacion.data.imputado.segundoApellido;
+                console.log("Nombre imputado pendiente:", imputadoEntrevistaPendiente)
+                ToastAndroid.show('Enviando entrevista pendiente para: ' + imputadoEntrevistaPendiente,  ToastAndroid.LONG);
+                this._saveEntrevistaOnlinePendiente(imputadoEntrevistaPendiente, evaluacion);
+              })
+            });
+        },
+        (err) => { console.log("Select Failed Message", err) },
+        this.update
+     );
+    }
   }
-  
+
   _saveEntrevistaOnlinePendiente = (paramImputado, entrevistaOnlinePendiente) => {
     this.setState({isLoading: true});
-    //console.log("Entrevista pendiente to save: " + JSON.stringify(entrevistaOnlinePendiente));
+    console.log("Entrevista pendiente to save: " + JSON.stringify(entrevistaOnlinePendiente));
     instanceAxios({
       method: 'POST',
       url: '/evaluacion/update',
@@ -220,16 +230,12 @@ export default class BuscarImputado extends React.Component {
   }
 
   deleteEntrevistasPendientesEnviadas = (idEntrevistaSQLite) => {
-    db.transaction(
+    Database.transaction(
       tx => {
         tx.executeSql('DELETE FROM entrevistasOffline WHERE id = ?;',  [idEntrevistaSQLite]),
-        tx.executeSql('SELECT * FROM entrevistasOffline', [], (_, { rows }) => {
-          console.log("SQLite SIZE ON DELETE: "+rows.length)
-          this.setState({countEntrevistasPendientes: rows.length})
-          this.props.navigation.setParams({countEntrevistasPendientes: rows.length});
-        });
+        this.countEvaluacionesSQLite();
       },
-      (err) => { console.log("Delete Failed Message", err) },
+      (err) => { console.log("Delete & Count Failed Message", err) },
       this.update
     );
   }
@@ -265,9 +271,7 @@ export default class BuscarImputado extends React.Component {
     navigate('LoginScreen');
   }
   
-
   render() {
-
     return (
       <KeyboardAvoidingView behavior="position">
         <ScrollView keyboardShouldPersistTaps="always">

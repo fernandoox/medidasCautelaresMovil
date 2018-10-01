@@ -18,7 +18,7 @@ import RedFamiliar from './RedFamiliar';
 import Estudios from './Estudios';
 import Ocupacion from './Ocupacion';
 import Sustancias from './Sustancias';
-const db = SQLite.openDatabase('db.db');
+import Database from '../Utils/Database';
 
 const { width, height } = Dimensions.get('window');
 
@@ -131,12 +131,12 @@ export default class Entrevista extends React.Component {
   getImputadoSQLiteById = () => {
     this.setState({isLoading: true});
     console.log("Buscando imputado SQLite:", this.state.imputado.id);
-    db.transaction(
+    Database.transaction(
       tx => {
          tx.executeSql('SELECT * FROM entrevistasOffline WHERE id_imputado = ?', 
           [this.state.imputado.id], (_, { rows: { _array }}) => {
             let infoEvaluacion = JSON.parse(_array[0].data);    
-              console.log("Evaluacion imputado:", JSON.stringify(infoEvaluacion))
+              //console.log("Evaluacion imputado:", JSON.stringify(infoEvaluacion))
               this.setState({
                 dataGeneralesDB: infoEvaluacion.datosGenerales,
                 dataDomicilioDB: infoEvaluacion.domicilios,

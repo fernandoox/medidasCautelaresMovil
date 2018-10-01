@@ -1,14 +1,16 @@
 import React from 'react';
-import { NetInfo } from 'react-native';
+import { NetInfo, Alert } from 'react-native';
 import GLOBALS from './Globals';
 import CONSTANTS from './ConstantsNG';
 import Storage from 'react-native-storage';
 import { SQLite } from 'expo';
 import axios from 'axios';
-const db = SQLite.openDatabase('db.db');
+import Database from './Database';
+import moment from 'moment';
 
 export default class SQLiteHelpers extends React.Component {
-   constructor(props){
+   
+  constructor(props){
       super(props);
       this.state = {
       }
@@ -16,13 +18,13 @@ export default class SQLiteHelpers extends React.Component {
 
    actualizarEntrevistasSQLiteBack = async () => {
       let idEvaluador = await this.getEvaluadorLogueado();
-      let minInterval = 0.1;
+      let minInterval = 60; // minutos
       let minIntervalToMill = minInterval * 60 * 1000;
       setInterval(() => {
          console.log("------------------------------BACK-----------------------------------");
          console.log("Id: " + idEvaluador + " - Ejecutado a: " + new Date());
          this.getEvaluacionesSQLite(idEvaluador);
-      }, 60000);
+      }, minIntervalToMill);
    }
 
    actualizarEntrevistasSQLiteButton = async () => {
@@ -75,11 +77,10 @@ export default class SQLiteHelpers extends React.Component {
    } // End function
 
    getEvaluacionesSQLite = (idEvaluador) => {
-      db.transaction(
+      Database.transaction(
          tx => {
             //tx.executeSql('DELETE FROM entrevistasOffline'),
             tx.executeSql('SELECT * FROM entrevistasOffline', [], (_, { rows: { _array }}) => {
-               console.log("1 Number of rows: " + _array.length)
                arrayEvaluacionesSQLiteSelect = _array.map((entrevista) => {
                   return entrevista;
                })
@@ -87,33 +88,48 @@ export default class SQLiteHelpers extends React.Component {
                this.finishQuerySQLiteMovil(arrayEvaluacionesSQLiteSelect, idEvaluador)
             });
          },
-         (err) => { console.log("Select Failed Message", err) },
+         (err) => { console.log("Select Failed Message", err); },
          this.update
       );
    };
 
    finishQuerySQLiteMovil = (arrayEntrevistasEnMovil, idEvaluador) => {
-      //console.log("2 Acabo SQLite select: ", arrayEntrevistasEnMovil.length)
+      //console.log("2 Acabo SQLite select: ", arrayEntrevistasEnMovil.length);
+      arrayEntrevistasEnMovil.map((evaluacion) => {
+        let now = moment(new Date());
+        //let now = moment('31-12-2018', 'DD-MM-YYYY');
+        let dateAsignacion = moment(evaluacion.fecha_asignacion, 'DD-MM-YYYY');
+        let duration = now.diff(dateAsignacion, 'days')
+        /**
+         * Si la evaluacion en el dispositivo ya tiene mas de 20 días desde du fecha de asignacion
+         * se elimina del dispositivo
+         */
+        if (duration > 20) {
+          console.log("Eliminar entrevista!", evaluacion.id_imputado);
+          this.deleteEntrevistaByIdImputado(evaluacion.id_imputado);
+        }
+      })
       this.requestEvaluacionesEvaluadorPorDia(arrayEntrevistasEnMovil, idEvaluador);
    }
 
    saveEvaluacionSQLite = (objNuevaEvaluacion) => {
+     // Para dar formato al json
       let evaluacionAux = objNuevaEvaluacion.evaluacion;
       delete objNuevaEvaluacion.evaluacion;
       var objEvaluacionToSaveSQLite = Object.assign(objNuevaEvaluacion, evaluacionAux);
-      console.log("Object to save:", JSON.stringify(objEvaluacionToSaveSQLite));
-      db.transaction(
+      //console.log("Object to save id imputado:", JSON.stringify(objEvaluacionToSaveSQLite));
+      Database.transaction(
          tx => {
             tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
-               [
-                  'OFFLINE',
-                  objEvaluacionToSaveSQLite.carpetaInvestigacion,
-                  objEvaluacionToSaveSQLite.carpetaJudicial,
-                  JSON.stringify(objEvaluacionToSaveSQLite),
-                  objEvaluacionToSaveSQLite.imputado.id,
-                  objEvaluacionToSaveSQLite.fechaAsignacion,
-                  0
-               ]);
+              [
+                'OFFLINE',
+                objEvaluacionToSaveSQLite.carpetaInvestigacion,
+                objEvaluacionToSaveSQLite.carpetaJudicial,
+                JSON.stringify(objEvaluacionToSaveSQLite),
+                objEvaluacionToSaveSQLite.imputado.id,
+                objEvaluacionToSaveSQLite.fechaAsignacion,
+                0
+              ]);
          },
          (err) => { console.log("Insert Failed Message", err) },
          this.update
@@ -135,7 +151,7 @@ export default class SQLiteHelpers extends React.Component {
    }
 
   deleteEntrevistaByIdImputado = (idImputado) => {
-    db.transaction(
+    Database.transaction(
       tx => {
         tx.executeSql('DELETE FROM entrevistasOffline WHERE id_imputado = ?;',  [idImputado])
       },
