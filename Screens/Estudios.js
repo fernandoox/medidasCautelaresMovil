@@ -255,7 +255,8 @@ export default class Estudios extends React.Component {
     </ScrollView>
     
 
-    <Modal onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
+    <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })} 
+      onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
       isVisible={this.state.isModalVisible} avoidKeyboard={true}>
       <AgregarEstudio agregarEstudioChild={this.agregarEstudio} cerrarModal={this._toggleModal}/>
     </Modal>

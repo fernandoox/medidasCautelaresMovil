@@ -77,11 +77,9 @@ export default class RedFamiliar extends React.Component {
     });
   }
 
+  // Se mantiene logica por posible cambio a multiples campos (nombres, appat, apmat)
   nombreFamiliarToString = (familiar) => {
-    let nombre = (familiar.snNombre != null) ? familiar.snNombre : "";
-    let apellidoPaterno = (familiar.snApellidoPaterno != null) ? familiar.snApellidoPaterno : "";
-    let apllidoMaterno = (familiar.snApellidoMaterno != null) ? familiar.snApellidoMaterno : "";
-    let nombreFamiliarStr =  nombre + " " + apellidoPaterno + " " + apllidoMaterno;
+    let nombreFamiliarStr = (familiar.snNombreCompleto != null) ? familiar.snNombreCompleto : "";
     return nombreFamiliarStr;
   }
 
@@ -166,7 +164,8 @@ export default class RedFamiliar extends React.Component {
     </Grid>
     </ScrollView>
 
-    <Modal onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
+    <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })} 
+      onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
       isVisible={this.state.isModalVisible} avoidKeyboard={true}>
       <AgregarFamiliar agregarFamiliarChild={this.agregarFamiliar} cerrarModal={this._toggleModal}/>
     </Modal>

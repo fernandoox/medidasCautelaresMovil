@@ -176,7 +176,8 @@ export default class Ocupacion extends React.Component {
     </Grid>
     </ScrollView>
 
-    <Modal onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
+    <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })}
+      onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
       isVisible={this.state.isModalVisible} avoidKeyboard={true}>
       <AgregarOcupacion agregarOcupacionChild={this.agregarOcupacion} cerrarModal={this._toggleModal}/>
     </Modal>

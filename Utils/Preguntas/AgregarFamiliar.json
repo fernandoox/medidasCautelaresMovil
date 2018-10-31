@@ -1,21 +1,9 @@
 [
     {
-        "node": "snNombre",
-        "pregunta": "Nombre",
+        "node": "snNombreCompleto",
+        "pregunta": "Nombre completo",
         "tipoEntrada": "default",
-        "maxLongitud": 50
-    },
-    {
-        "node": "snApellidoPaterno",
-        "pregunta": "Apellido paterno",
-        "tipoEntrada": "default",
-        "maxLongitud": 50
-    },
-    {
-        "node": "snApellidoMaterno",
-        "pregunta": "Apellido materno",
-        "tipoEntrada": "default",
-        "maxLongitud": 50
+        "maxLongitud": 250
     },
     {
         "node": "parentesco",

@@ -253,7 +253,8 @@ export default class Entrevista extends React.Component {
           </Carousel>
         </View>
 
-        <Modal onSwipe={() => this.setState({ isModalVisible: false })}
+        <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })}
+          onSwipe={() => this.setState({ isModalVisible: false })}
           swipeDirection="right" isVisible={this.state.isModalVisible}>
           <ModalProgreso 
             changeStepChild={this.changeStepInProgress} 

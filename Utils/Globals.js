@@ -2,19 +2,18 @@ import axios from 'axios';
 import Storage from 'react-native-storage';
 import { AsyncStorage } from 'react-native';
 
-
 /*-------------------------------------------------------------------------------------*/
 // REST API with Axios config
-let urlDev  = 'http://172.19.40.61:8080/SSCMC_WS-dev/api/app';
-let urlProd = 'http://172.19.40.61:8080/SSCMC_WS/api/app';
+let urlLocal    = 'http://172.19.40.7:9973/SSCMC_WS/api/app';
+let urlDev      = 'http://10.17.5.29:8080/:8080/SSCMC_WS-dev/api/app';
+let urlProd     = 'http://189.240.30.58:8080/SSCMC_WS/api/app';
 var initAxios = axios.create({
-    baseURL: urlDev,
+    baseURL: urlProd,
     timeout: 3000
 });
 initAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 global.instanceAxios = initAxios;
 /*-------------------------------------------------------------------------------------*/
-
 
 /*-------------------------------------------------------------------------------------*/
 // Local storage config
@@ -38,7 +37,6 @@ global.storage = new Storage({
 })
 /*-------------------------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------------------*/
 // Colores default
 global.COLORS = {
@@ -52,7 +50,6 @@ global.COLORS = {
 	LIGHT_ERROR: 			"#E56353"
 }
 /*-------------------------------------------------------------------------------------*/
-
 
 /*-------------------------------------------------------------------------------------*/
 // Steps config
@@ -81,7 +78,3 @@ global.customStylesSteps = {
       currentStepLabelColor: COLORS.BACKGROUND_PRIMARY
 }
 /*-------------------------------------------------------------------------------------*/
-
-
-
-

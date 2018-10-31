@@ -202,7 +202,8 @@ export default class Sustancias extends React.Component {
     </Grid>
     </ScrollView>
 
-    <Modal onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
+    <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })}
+      onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
       isVisible={this.state.isModalVisible} avoidKeyboard={true}>
       <AgregarSustancia agregarSustanciaChild={this.agregarSustancia} sustanciasChild={this.state.sustancias} cerrarModal={this._toggleModal}/>
     </Modal>
