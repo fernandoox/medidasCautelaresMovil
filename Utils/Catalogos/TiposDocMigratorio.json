@@ -1,10 +1,10 @@
 [
-    {
-      "id": 1,
-      "nombre": "Tarjeta de Residente Permanente"
-    },
-    {
-      "id": 2,
-      "nombre": "Permiso de Reingreso"
-    }
+  {
+    "id": 2,
+    "nombre": "Permiso de Reingreso"
+  },
+  {
+    "id": 1,
+    "nombre": "Tarjeta de Residente Permanente"
+  }
 ]

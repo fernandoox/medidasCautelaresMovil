@@ -1,9 +1,7 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
-import { Button, Text, Item, Input, Label, H3, Picker, Toast } from 'native-base';
+import { ScrollView, Alert } from 'react-native';
+import { Button, Text, Item, Input, Label, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import GLOBALS from '../Utils/Globals';
 import preguntasAgregarMunicipio from '../Utils/Preguntas/AgregarDomicilio.json';
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
@@ -60,7 +58,6 @@ export default class AgregarDomicilio extends React.Component {
 
   agregarDomicilio = () => {
     if(this.validateForm()){
-      console.log("Domicilio add: " + JSON.stringify(jsonRespDomicilio));
       this.props.agregarDomicilioChild(jsonRespDomicilio);
     }
   }

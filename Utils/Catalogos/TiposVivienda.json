@@ -1,22 +1,21 @@
-[
-    {
-      "id": 1,
-      "nombre": "HEREDADA"
-    },
-    {
-      "id": 2,
-      "nombre": "PROPIA"
-    },
-    {
-      "id": 3,
-      "nombre": "RENTADA"
-    },
-    {
-      "id": 4,
-      "nombre": "PRESTADA"
-    },
-    {
-      "id": 5,
-      "nombre": "OTRA"
-    }
+[{
+    "id": 1,
+    "nombre": "HEREDADA"
+  },
+  {
+    "id": 5,
+    "nombre": "OTRA"
+  },
+  {
+    "id": 4,
+    "nombre": "PRESTADA"
+  },
+  {
+    "id": 2,
+    "nombre": "PROPIA"
+  },
+  {
+    "id": 3,
+    "nombre": "RENTADA"
+  }
 ]

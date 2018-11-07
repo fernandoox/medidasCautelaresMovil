@@ -1,9 +1,7 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
-import { Button, Text, Item, Input, Label, H3, Picker, Toast } from 'native-base';
+import { ScrollView, Alert } from 'react-native';
+import { Button, Text, Item, Input, Label, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import GLOBALS from '../Utils/Globals';
 import preguntasAgregarFamiliar from '../Utils/Preguntas/AgregarFamiliar.json';
 import CatParentescosData from '../Utils/Catalogos/Parentescos.json';
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';

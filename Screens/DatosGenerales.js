@@ -1,12 +1,8 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView, AsyncStorage, Dimensions } from 'react-native';
-import { Button, Text, Item, Input, Label, H3, Separator, ListItem, Picker, Toast } from 'native-base';
+import { View, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { Text, Item, Input, Label, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker';
-import Storage from 'react-native-storage';
-import GLOBALS from '../Utils/Globals';
-import CONSTANTS from '../Utils/ConstantsNG';
 import preguntasDatosGeneralesData from '../Utils/Preguntas/DatosGenerales.json';
 import CatSexoData from '../Utils/Catalogos/Sexo.json';
 import CatNacionalidadesData from '../Utils/Catalogos/Nacionalidades.json';
@@ -213,6 +209,9 @@ export default class DatosGenerales extends React.Component {
                         style={{fontSize: 16}}
                         keyboardType={preg.tipoEntrada}
                         autoCapitalize="characters"
+                        ref={(input) => { preg.node = input; }}
+                        onSubmitEditing={() => { this.snCarpetaJudicial.focus(); }}
+                        blurOnSubmit={false}
                         onChangeText={(valueData) => {
                           this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
                         }}/>

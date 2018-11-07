@@ -1,14 +1,9 @@
 import React from 'react';
-import { SQLite, Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, StyleSheet, ScrollView, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Input, H3, Card, CardItem, Body, Badge, Spinner, CheckBox, ListItem } from 'native-base';
+import { Alert, NetInfo, StyleSheet, TouchableOpacity } from 'react-native';
+import { Button, Text, Card, CardItem, Body, Badge, Spinner, CheckBox, ListItem } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
 import Display from 'react-native-display';
-import GLOBALS from '../Utils/Globals';
-import CONSTANTS from '../Utils/ConstantsNG';
-import Storage from 'react-native-storage';
 import Database from '../Utils/Database';
 import SQLiteHelpers  from '../Utils/SQLiteHelpers';
 

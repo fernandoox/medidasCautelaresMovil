@@ -1,15 +1,9 @@
 import React from 'react';
-import { SQLite, Font } from 'expo';
-import { AsyncStorage, View, ActivityIndicator, TouchableOpacity, Alert, NetInfo, Image, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
-import { Root, Button, Text, Badge, H3, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker, Spinner } from 'native-base';
+import { AsyncStorage, TouchableOpacity, Alert, NetInfo, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
+import { Root, Button, Text, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import ProgressIndicator from 'react-native-progress-indicator';
-import Storage from 'react-native-storage';
-import GLOBALS from '../Utils/Globals';
-import CONSTANTS from '../Utils/ConstantsNG';
 import SQLiteHelpers  from '../Utils/SQLiteHelpers';
 import ImputadoTemporal from './ImputadoTemporal';
 import Database from '../Utils/Database';

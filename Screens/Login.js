@@ -1,13 +1,9 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, Alert, NetInfo, AsyncStorage, Image, ScrollView, KeyboardAvoidingView, Keyboard, ToastAndroid } from 'react-native';
-import { Button, Text, Item, Label, Input, Picker, Spinner } from 'native-base';
+import { View, Alert, NetInfo, AsyncStorage, Image, ScrollView, KeyboardAvoidingView, Keyboard, ToastAndroid } from 'react-native';
+import { Button, Text, Item, Input, Spinner } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
-import GLOBALS from '../Utils/Globals';
-import Storage from 'react-native-storage';
 
 export default class Login extends React.Component {
 

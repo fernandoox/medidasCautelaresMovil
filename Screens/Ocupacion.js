@@ -1,12 +1,8 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, Text, Item, Label, Input, Picker, H3, Content, List, ListItem, Body } from 'native-base';
+import { View, ScrollView } from 'react-native';
+import { Button, Text, Item, Label, Picker, Content, List, ListItem } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import Storage from 'react-native-storage';
-import GLOBALS from '../Utils/Globals';
-import CONSTANTS from '../Utils/ConstantsNG'
 import Modal from "react-native-modal";
 import AgregarOcupacion from './AgregarOcupacion';
 

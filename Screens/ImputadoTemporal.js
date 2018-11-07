@@ -1,11 +1,8 @@
 import React from 'react';
-import { Font, SQLite } from 'expo';
-import { View, Alert, Keyboard } from 'react-native';
+import { Alert, Keyboard } from 'react-native';
 import { Button, Text, Item, Picker, Input, H3 } from 'native-base';
 import Display from 'react-native-display';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { NavigationActions } from 'react-navigation';
-import GLOBALS from '../Utils/Globals';
 import Database from '../Utils/Database';
 
 export default class ImputadoTemporal extends React.Component {

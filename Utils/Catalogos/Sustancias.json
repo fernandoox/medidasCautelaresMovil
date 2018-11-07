@@ -1,11 +1,6 @@
-[
-    {
-        "id": 1,
-        "nombre": "MARIHUANA"
-    },
-    {
-        "id": 2,
-        "nombre": "HEROINA"
+[{
+        "id": 6,
+        "nombre": "ALCOHOL"
     },
     {
         "id": 3,
@@ -16,7 +11,23 @@
         "nombre": "CRISTAL"
     },
     {
+        "id": 2,
+        "nombre": "HEROINA"
+    },
+    {
         "id": 5,
         "nombre": "LSD"
+    },
+    {
+        "id": 1,
+        "nombre": "MARIHUANA"
+    },
+    {
+        "id": 100,
+        "nombre": "OTRO"
+    },
+    {
+        "id": 7,
+        "nombre": "SOLVENTES"
     }
 ]

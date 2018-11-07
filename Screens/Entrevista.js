@@ -1,13 +1,8 @@
 import React from 'react';
-import { Font, SQLite } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert, Dimensions, StyleSheet } from 'react-native';
-import { Root, Button, Text, Item, H3, Separator, ListItem, Card, CardItem, Body } from 'native-base';
+import { View, ActivityIndicator, NetInfo, Dimensions } from 'react-native';
+import { Root, Button, Text,  Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import axios from 'axios';
-import GLOBALS from '../Utils/Globals';
-import CONSTANTS from '../Utils/ConstantsNG';
-import Storage from 'react-native-storage';
 import StepIndicator from 'react-native-step-indicator';
 import Carousel from 'react-native-looped-carousel';
 import Modal from "react-native-modal";
@@ -195,7 +190,7 @@ export default class Entrevista extends React.Component {
                     <Icon active name="bell" style={{marginRight:5, fontSize: 20, color: "#3c85ea"}}/>
                   }
                   <Text style={{ fontSize:14, fontWeight:'bold' }}>
-                    CARPETA: {this.state.carpetaJudicial}
+                    ok CARPETA: {this.state.carpetaJudicial}
                   </Text>
                 </Body>
               </CardItem>

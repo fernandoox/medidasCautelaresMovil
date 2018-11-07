@@ -1,10 +1,8 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, NetInfo, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
-import { Button, Text, Item, Input, Label, H3, Picker, Toast } from 'native-base';
+import { ScrollView, Alert } from 'react-native';
+import { Button, Text, Item, Input, Label, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import DatePicker from 'react-native-datepicker';
-import GLOBALS from '../Utils/Globals';
 import preguntasAgregarOcupacion from '../Utils/Preguntas/AgregarOcupacion.json';
 
 export default class AgregarOcupacion extends React.Component { 

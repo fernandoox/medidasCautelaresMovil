@@ -1,5 +1,4 @@
-[
-  {
+[{
     "id": 1,
     "nombre": "AGUASCALIENTES"
   },
@@ -16,14 +15,6 @@
     "nombre": "CAMPECHE"
   },
   {
-    "id": 5,
-    "nombre": "COAHUILA"
-  },
-  {
-    "id": 6,
-    "nombre": "COLIMA"
-  },
-  {
     "id": 7,
     "nombre": "CHIAPAS"
   },
@@ -36,8 +27,20 @@
     "nombre": "CIUDAD DE MEXICO"
   },
   {
+    "id": 5,
+    "nombre": "COAHUILA"
+  },
+  {
+    "id": 6,
+    "nombre": "COLIMA"
+  },
+  {
     "id": 10,
     "nombre": "DURANGO"
+  },
+  {
+    "id": 15,
+    "nombre": "ESTADO DE MEXICO"
   },
   {
     "id": 11,
@@ -54,10 +57,6 @@
   {
     "id": 14,
     "nombre": "JALISCO"
-  },
-  {
-    "id": 15,
-    "nombre": "ESTADO DE MEXICO"
   },
   {
     "id": 16,
@@ -78,6 +77,10 @@
   {
     "id": 20,
     "nombre": "OAXACA"
+  },
+  {
+    "id": 33,
+    "nombre": "OTRO"
   },
   {
     "id": 21,
@@ -126,10 +129,5 @@
   {
     "id": 32,
     "nombre": "ZACATECAS"
-  },
-  {
-    "id": 33,
-    "nombre": "OTRO"
   }
-  ]
-  
+]

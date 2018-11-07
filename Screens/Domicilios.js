@@ -1,19 +1,13 @@
 import React from 'react';
-import { Font } from 'expo';
-import { View, ActivityIndicator, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
-import { Container, Content, Button, Text, Item, Input, Label, List, ListItem, Body } from 'native-base';
+import { View, ScrollView, Dimensions } from 'react-native';
+import { Content, Button, Text, Item, Input, Label, List, ListItem } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import Storage from 'react-native-storage';
-import GLOBALS from '../Utils/Globals';
-import CONSTANTS from '../Utils/ConstantsNG';
 import Modal from "react-native-modal";
 import Display from 'react-native-display';
 import AgregarDomicilio from './AgregarDomicilio'
 import CatEntidadesFederativasData from '../Utils/Catalogos/EntidadesFederativas.json';
 import CatTiposDomicilioData from '../Utils/Catalogos/TiposDomicilio.json';
-
-const { width, height } = Dimensions.get('window');
 
 export default class Domicilios extends React.Component {
 
