@@ -38,9 +38,9 @@ export default class RedFamiliar extends React.Component {
         loadedResponsesBD: true,
         familiares: this.props.familiaDB.jsonRedFamiliar,
         numeroFamiliares: Object.keys(this.props.familiaDB.jsonRedFamiliar).length,
+      }, () => {
+        this.saveJsonLocalFamiliares(this.props.familiaDB.jsonRedFamiliar);
       });
-
-      this.saveJsonLocalFamiliares(this.props.familiaDB.jsonRedFamiliar);
     }
   }
 
@@ -166,7 +166,7 @@ export default class RedFamiliar extends React.Component {
       <AgregarFamiliar agregarFamiliarChild={this.agregarFamiliar} cerrarModal={this._toggleModal}/>
     </Modal>
 
-    <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
+    <View style={{position:'absolute', bottom:0, right:15, height: 80, }}>
       <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}
         disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
         <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />

@@ -44,6 +44,7 @@ export default class BuscarImputado extends React.Component {
       countEntrevistasPendientes: 0
     };
     numBack = 0;
+    //console.log(varFake);
   }
   
   componentDidMount(){
@@ -168,14 +169,14 @@ export default class BuscarImputado extends React.Component {
   }
 
   /**
-   * Recuperar código para enviar entrevistas automaticamente cuando detecte conexion 
+   * Enviar entrevistas automaticamente cuando detecte conexion 
    * Ennviar solo una vez las entrevistas que esten en listas para envio 1
    * Las offline 
    */
   enviarEntrevistaPendienteTest = () => {
     if (!this.state.entrevistaPendienteGuardada) {
       this.setState({entrevistaPendienteGuardada: true});
-      console.log("Enviando entrevista pendiente online...!")
+      console.log("Verificando si hay entrevista pendiente para guardar...!")
       Database.transaction(
         tx => {
            tx.executeSql('SELECT * FROM entrevistasOffline WHERE lista_para_envio = ?', [1], 

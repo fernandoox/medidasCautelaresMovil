@@ -44,7 +44,7 @@ export default class DatosGenerales extends React.Component {
     };
     jsonRespDatosGenerales = {
       completo: false
-    }
+    } 
   }
 
   componentDidMount(){
@@ -69,24 +69,26 @@ export default class DatosGenerales extends React.Component {
         pregLocal.valueBD = null;
     })
     if(!this.state.loadedResponsesBD && this.props.generalesDB != null){
-      /*
-      * Del screen de entrevista recibe generalesDB que es la petición a bd 
-      * de la información de imputado, para hacer el set de las respuestas 
-      * de bd a los componentes del form se ocupa el nodeDB (foreach)
-      */
-      let objGeneralesDB = this.props.generalesDB;
-      for (let nodeGeneralesDB in objGeneralesDB) {
-        if (objGeneralesDB.hasOwnProperty(nodeGeneralesDB)) {
-          jsonRespDatosGenerales[nodeGeneralesDB] = objGeneralesDB[nodeGeneralesDB];
-          this.state.preguntas.map((pregLocal, i) => {
-            if (pregLocal.node == nodeGeneralesDB) {
-              pregLocal.valueBD = objGeneralesDB[nodeGeneralesDB];
-            }
-          })
+      
+      this.setState({loadedResponsesBD: true}, () => {
+        /*
+        * Del screen de entrevista recibe generalesDB que es la petición a bd 
+        * de la información de imputado, para hacer el set de las respuestas 
+        * de bd a los componentes del form se ocupa el nodeDB (foreach)
+        */
+        let objGeneralesDB = this.props.generalesDB;
+        for (let nodeGeneralesDB in objGeneralesDB) {
+          if (objGeneralesDB.hasOwnProperty(nodeGeneralesDB)) {
+            jsonRespDatosGenerales[nodeGeneralesDB] = objGeneralesDB[nodeGeneralesDB];
+            this.state.preguntas.map((pregLocal, i) => {
+              if (pregLocal.node == nodeGeneralesDB) {
+                pregLocal.valueBD = objGeneralesDB[nodeGeneralesDB];
+              }
+            })
+          }
         }
-      }
-      this.setState({loadedResponsesBD: true});
-      this.saveJsonLocalGenerales(jsonRespDatosGenerales);
+        this.saveJsonLocalGenerales(jsonRespDatosGenerales);
+      });
     }
   }
 
@@ -177,7 +179,26 @@ export default class DatosGenerales extends React.Component {
     return formCompleto;
   }
 
-  render() {
+  focusNextInput = (nodeToFocus) => {
+    console.log("Tipo de nodeFocus:",typeof nodeToFocus)
+    console.log("Focus:", nodeToFocus)
+    console.log("Size refs:", this.refs.length)
+    //this.refs['TextInput'].focus()
+    /*
+    function pregunta(pregunta) { 
+      return pregunta.node === nodeToFocus;
+    }  
+    this.state.preguntas.find(pregunta).focus = true;
+    this.setState({preguntas: this.state.preguntas});
+    console.log(JSON.stringify(this.state.preguntas.find(pregunta)));*/
+
+    /*returnKeyType = { "next" }
+    onSubmitEditing={() => {this.focusNextInput(this.state.preguntas[index+1].node)}}
+    ref={this.state.preguntas[index+1].node}
+    blurOnSubmit={false}*/
+  } 
+
+  render() { 
     return (
       <View>
       <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={230}>
@@ -200,18 +221,15 @@ export default class DatosGenerales extends React.Component {
               <Col>
                   {
                     (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
-                    <Item stackedLabel>
+                    <Item style={{marginVertical: 10}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Input
                         disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
                         maxLength={preg.maxLongitud}
                         defaultValue={preg.valueBD}
-                        style={{fontSize: 16}}
+                        style={{fontSize: 14}}
                         keyboardType={preg.tipoEntrada}
                         autoCapitalize="characters"
-                        ref={(input) => { preg.node = input; }}
-                        onSubmitEditing={() => { this.snCarpetaJudicial.focus(); }}
-                        blurOnSubmit={false}
                         onChangeText={(valueData) => {
                           this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
                         }}/>
@@ -220,7 +238,7 @@ export default class DatosGenerales extends React.Component {
 
                   {
                     (preg.tipoEntrada == "date" || preg.tipoEntrada == "time") ?
-                    <Item style={{marginVertical: 5}} stackedLabel>
+                    <Item style={{marginVertical: 10}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <DatePicker
                         disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
@@ -239,14 +257,14 @@ export default class DatosGenerales extends React.Component {
 
                   {
                     (preg.tipoEntrada == "catalogo") ?
-                    <Item style={{marginVertical: 5}} stackedLabel>
+                    <Item style={{marginVertical: 10}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Picker
                         enabled={(this.props.imputadoProp.idEstatus != ESTATUS_SOLICITUD.CONCLUIDO)}
                         style={{width: screenWidth}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
-                        itemTextStyle={{fontSize: 17}}
+                        itemTextStyle={{fontSize: 14}}
                         mode="dropdown"
                         supportedOrientations={['portrait','landscape']}
                         selectedValue={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}
@@ -269,14 +287,14 @@ export default class DatosGenerales extends React.Component {
 
                   {
                     (preg.tipoEntrada == "boolean") ?
-                    <Item style={{marginVertical: 5}} stackedLabel>
+                    <Item style={{marginVertical: 10}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <Picker
                         enabled={(this.props.imputadoProp.idEstatus != ESTATUS_SOLICITUD.CONCLUIDO)}
                         style={{width: screenWidth}}
                         iosHeader="Seleccionar una opción"
                         placeholder="Seleccionar una opción"
-                        itemTextStyle={{ fontSize: 17}}
+                        itemTextStyle={{ fontSize: 14}}
                         mode="dropdown"
                         supportedOrientations={['portrait','landscape']}
                         selectedValue={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}

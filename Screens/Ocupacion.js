@@ -178,7 +178,7 @@ export default class Ocupacion extends React.Component {
       <AgregarOcupacion agregarOcupacionChild={this.agregarOcupacion} cerrarModal={this._toggleModal}/>
     </Modal>
 
-    <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
+    <View style={{position:'absolute', bottom:0, right:15, height: 80, }}>
       <Button danger onPress={this._toggleModal} style={{width: 60, height: 60, borderRadius: 30, justifyContent: 'center'}}
         disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}>
         <Icon active name="plus" style={{fontSize: 22, color: 'white'}} />

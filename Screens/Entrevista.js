@@ -3,8 +3,6 @@ import { View, ActivityIndicator, NetInfo, Dimensions } from 'react-native';
 import { Root, Button, Text,  Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import StepIndicator from 'react-native-step-indicator';
-import Carousel from 'react-native-looped-carousel';
 import Modal from "react-native-modal";
 import ModalProgreso from './ModalProgreso';
 import DatosGenerales from './DatosGenerales';
@@ -14,6 +12,7 @@ import Estudios from './Estudios';
 import Ocupacion from './Ocupacion';
 import Sustancias from './Sustancias';
 import Database from '../Utils/Database';
+import {ScrollableTabView, ScrollableTabBar} from '@valdio/react-native-scrollable-tabview'
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,8 +49,6 @@ export default class Entrevista extends React.Component {
       carpetaJudicial: params.carpetaJudicialParam,
       evaluador: (params.evaluador != null) ? params.evaluador : null,
       tipoCaptura: params.tipoCapturaParam,
-      currentPosition: 0,
-      size: { width, height },
       loadedResponsesBD: false,
     };
     jsonBaseEntrevista = {
@@ -62,7 +59,7 @@ export default class Entrevista extends React.Component {
   }
 
   componentDidMount(){
-    
+    //Sentry.captureException(new Error('Oops!'))
     this.props.navigation.setParams({ handleToggleModalProgress: this._toggleModalProgress });
     NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
     NetInfo.isConnected.fetch().done(
@@ -87,7 +84,7 @@ export default class Entrevista extends React.Component {
     if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
     if (this.state.isConnected) {
       console.log("Get data imputado!!");
-      this.setState({isLoading: true});
+      this.setState({isLoading: true, loadedResponsesBD: true});
       instanceAxios.get('/evaluacion/get', {
         params: {
           idImputado: this.state.imputado.id,
@@ -103,8 +100,7 @@ export default class Entrevista extends React.Component {
             dataEstudiosBD: res.data.evaluacion.estudios,
             dataOcupacionesDB: res.data.evaluacion.ocupaciones,
             dataSustanciasDB: res.data.evaluacion.sustancias,
-            isLoading: false,
-            loadedResponsesBD: true,
+            isLoading: false
           });
         }
         if (res.data.status == "error") {
@@ -117,14 +113,15 @@ export default class Entrevista extends React.Component {
         //console.warn(JSON.stringify(error))
         Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
       });
-    } else {
+    } else { 
+      // Si no hay conexion busca en SQLite
       this.getImputadoSQLiteById();
     }
     }
   }
 
   getImputadoSQLiteById = () => {
-    this.setState({isLoading: true});
+    this.setState({isLoading: true, loadedResponsesBD: true});
     console.log("Buscando imputado SQLite:", this.state.imputado.id);
     Database.transaction(
       tx => {
@@ -140,9 +137,7 @@ export default class Entrevista extends React.Component {
                 dataOcupacionesDB: infoEvaluacion.ocupaciones,
                 dataSustanciasDB: infoEvaluacion.sustancias,
                 isLoading: false,
-                loadedResponsesBD: true,
               });
-            
          });
       },
       (err) => { console.log("Select Failed Message", err) },
@@ -154,18 +149,29 @@ export default class Entrevista extends React.Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
-  changeStep = (stepNumber) => {
-    this.setState({currentPosition: stepNumber});
-  }
 
   changeStepInProgress = (stepNumber) => {
-    this.setState({ isModalVisible: false, currentPosition: stepNumber })
-    this._carousel.animateToPage(stepNumber)
+    this.setState({ isModalVisible: false })
+    console.log("Tab:",stepNumber)
+    this.tabView.goToPage(stepNumber);
   }
-
-  _onLayoutDidChange = (e) => {
-    const layout = e.nativeEvent.layout;
-    this.setState({ size: { width: layout.width-12, height: layout.height } });
+  
+  showAllSections = () => {
+    console.log("Respuestas cargadas, mostrar secciones!")
+    return(
+      <ScrollableTabView  
+        ref={(tabView) => { this.tabView = tabView; }}
+        renderTabBar={() => <ScrollableTabBar/>} 
+        tabBarActiveTextColor={COLORS.BACKGROUND_PRIMARY}
+        tabBarUnderlineStyle={{backgroundColor: COLORS.BACKGROUND_PRIMARY}}>
+        <DatosGenerales tabLabel="Generales" generalesDB={this.state.dataGeneralesDB} imputadoProp={this.state.imputado}/>
+        <Domicilios tabLabel="Domicilios" domiciliosDB={this.state.dataDomicilioDB} imputadoProp={this.state.imputado}/>
+        <RedFamiliar tabLabel="Red Familiar" familiaDB={this.state.dataFamiliaDB} imputadoProp={this.state.imputado}/>
+        <Estudios tabLabel="Estudios" estudiosDB={this.state.dataEstudiosBD} imputadoProp={this.state.imputado}/>
+        <Ocupacion tabLabel="Ocupaciones" ocupacionesDB={this.state.dataOcupacionesDB} imputadoProp={this.state.imputado}/>
+        <Sustancias tabLabel="Sustancias" sustanciasDB={this.state.dataSustanciasDB} imputadoProp={this.state.imputado}/>
+      </ScrollableTabView> 
+    );
   }
 
   render() {
@@ -190,7 +196,7 @@ export default class Entrevista extends React.Component {
                     <Icon active name="bell" style={{marginRight:5, fontSize: 20, color: "#3c85ea"}}/>
                   }
                   <Text style={{ fontSize:14, fontWeight:'bold' }}>
-                    ok CARPETA: {this.state.carpetaJudicial}
+                    CARPETA: {this.state.carpetaJudicial}
                   </Text>
                 </Body>
               </CardItem>
@@ -208,45 +214,11 @@ export default class Entrevista extends React.Component {
           </Col>
         </Row>
 
-        <StepIndicator
-          style={{marginTop:10}}
-          stepCount={6}
-          customStyles={customStylesSteps}
-          labels={labelsSteps}
-          currentPosition={this.state.currentPosition}
-          onPress={(numberStep) => { this.changeStep(numberStep); this._carousel.animateToPage(numberStep)}}
-        />
-
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} onLayout={this._onLayoutDidChange}>
-          <Carousel
-            ref={ref => this._carousel = ref}
-            delay={100}
-            style={this.state.size}
-            pageInfo={false}
-            autoplay={false}
-            isLooped={true}
-            currentPage={0}
-            onAnimateNextPage={(numberPage) => {this.changeStep(numberPage)}}>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <DatosGenerales generalesDB={this.state.dataGeneralesDB} imputadoProp={this.state.imputado}/>
-            </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Domicilios domiciliosDB={this.state.dataDomicilioDB} imputadoProp={this.state.imputado}/>
-            </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <RedFamiliar familiaDB={this.state.dataFamiliaDB} imputadoProp={this.state.imputado}/>
-            </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Estudios estudiosDB={this.state.dataEstudiosBD} imputadoProp={this.state.imputado}/>
-            </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Ocupacion ocupacionesDB={this.state.dataOcupacionesDB} imputadoProp={this.state.imputado}/>
-            </View>
-            <View style={[{ borderWidth: 2, borderColor: COLORS.BACKGROUND_PRIMARY, borderRadius:5, paddingHorizontal: 15},this.state.size]}>
-              <Sustancias sustanciasDB={this.state.dataSustanciasDB} imputadoProp={this.state.imputado}/>
-            </View>
-          </Carousel>
-        </View>
+        {
+          this.state.loadedResponsesBD ? 
+          this.showAllSections()
+          : null
+        }
 
         <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })}
           onSwipe={() => this.setState({ isModalVisible: false })}

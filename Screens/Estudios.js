@@ -257,7 +257,7 @@ export default class Estudios extends React.Component {
       <AgregarEstudio agregarEstudioChild={this.agregarEstudio} cerrarModal={this._toggleModal}/>
     </Modal>
 
-    <View style={{position:'absolute', bottom:0, right:0, height: 80, }}>
+    <View style={{position:'absolute', bottom:0, right:15, height: 80, }}>
       <Display enable={this.state.ultimoGrado != 23}
         enterDuration={500}
         exitDuration={500}

@@ -114,11 +114,12 @@ export default class AgregarSustancia extends React.Component {
               <Col>
                 {
                   (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
-                  <Item stackedLabel>
+                  <Item style={{marginVertical: 10}} stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Input
                       autoCapitalize='characters'
                       maxLength={preg.maxLongitud}
+                      style={{fontSize: 14}}
                       keyboardType={preg.tipoEntrada}
                       autoCapitalize="characters"
                       onChangeText={(valueData) => {
@@ -129,13 +130,13 @@ export default class AgregarSustancia extends React.Component {
 
                 {
                   (preg.tipoEntrada == "catalogo") ?
-                  <Item style={{marginVertical: 5}} stackedLabel>
+                  <Item style={{marginVertical: 10}} stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Picker
                       style={{width: 310}}
                       iosHeader="Seleccionar una opción"
                       placeholder="Seleccionar una opción"
-                      itemTextStyle={{ fontSize: 17}}
+                      itemTextStyle={{ fontSize: 14}}
                       mode="dropdown"
                       supportedOrientations={['portrait','landscape']}
                       selectedValue={this.state[preg.node]}
@@ -158,7 +159,7 @@ export default class AgregarSustancia extends React.Component {
 
                 {
                     (preg.tipoEntrada == "date" || preg.tipoEntrada == "time") ?
-                    <Item style={{marginVertical: 5}} stackedLabel>
+                    <Item style={{marginVertical: 10}} stackedLabel>
                       <Label>{preg.pregunta}:</Label>
                       <DatePicker
                         style={{width: 310}}
@@ -176,13 +177,13 @@ export default class AgregarSustancia extends React.Component {
 
                 {
                   (preg.tipoEntrada == "boolean") ?
-                  <Item style={{marginVertical: 5}} stackedLabel>
+                  <Item style={{marginVertical: 10}} stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Picker
                       style={{width: 310}}
                       iosHeader="Seleccionar una opción"
                       placeholder="Seleccionar una opción"
-                      itemTextStyle={{ fontSize: 17}}
+                      itemTextStyle={{ fontSize: 14}}
                       mode="dropdown"
                       supportedOrientations={['portrait','landscape']}
                       selectedValue={this.state[preg.node]}

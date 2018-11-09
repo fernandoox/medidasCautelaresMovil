@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "@babel/preset-env": "^7.0.0-beta.51",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-stage-2": "^6.24.1",
     "jest-expo": "26.0.0",
     "react-native-scripts": "1.13.1",
@@ -27,6 +28,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^6.3.1",
+    "@valdio/react-native-scrollable-tabview": "^0.8.10",
     "babel-preset-env": "^1.7.0",
     "expo": "^29.0.0",
     "moment": "^2.22.2",
@@ -39,11 +41,9 @@
     "react-native-display": "^1.0.8",
     "react-native-easy-grid": "^0.1.17",
     "react-native-ignore-warnings": "^0.1.1",
-    "react-native-looped-carousel": "^0.1.10",
     "react-native-modal": "^6.0.0",
-    "react-native-progress-indicator": "^1.0.2",
-    "react-native-step-indicator": "0.0.8",
     "react-native-storage": "^0.2.2",
-    "react-navigation": "^1.5.11"
+    "react-navigation": "^1.5.11",
+    "sentry-expo": "^1.10.0"
   }
 }

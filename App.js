@@ -10,7 +10,10 @@ import GLOBALS from './Utils/Globals';
 import './Utils/ReactotronConfig'
 import ignoreWarnings from 'react-native-ignore-warnings'; 
 import Database from './Utils/Database';
-
+import Sentry from 'sentry-expo';
+// Remove this once Sentry is correctly setup.
+//Sentry.enableInExpoDevelopment = true;
+Sentry.config('https://11eec907408e4573a126c5485ed789b0@sentry.io/1319007').install();
 
 //Definicion de pantallas activas en la navegacion de la app
 const ScreensMedidasCautelares = StackNavigator({
@@ -60,6 +63,7 @@ export default class App extends React.Component {
    }
 
     componentDidMount(){
+      //Sentry.captureException(new Error('Error simulado para Sentry - Medidas App!'))
       /*Database.transaction(tx => {
         tx.executeSql(
           'DROP TABLE entrevistasOffline;'
