@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, NetInfo, Dimensions } from 'react-native';
+import { View, ActivityIndicator, NetInfo, Dimensions, Alert } from 'react-native';
 import { Root, Button, Text,  Card, CardItem, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -80,6 +80,22 @@ export default class Entrevista extends React.Component {
     this.setState({isConnected});
   };
 
+  guardarStorageFromBD = (jsonFromBD) => {
+    ObjDomicilios       = new Domicilios();
+    ObjRedFamiliar      = new RedFamiliar();
+    ObjEstudios         = new Estudios();
+    ObjOcupaciones      = new Ocupacion();
+    ObjSustancias       = new Sustancias();
+    // Guardado storage en entrevista
+    console.log("Guardado storage en entrevista");
+    ObjDomicilios.saveJsonLocalDomicilios(jsonFromBD.domicilios.datosDomicilios);
+    ObjRedFamiliar.saveJsonLocalFamiliares(jsonFromBD.redFamiliar.jsonRedFamiliar);
+    ObjEstudios.saveJsonLocalEstudios(jsonFromBD.estudios.jsonEstudios);
+    ObjOcupaciones.saveJsonLocalOcupaciones(jsonFromBD.ocupaciones.ocupaciones);
+    ObjSustancias.saveJsonLocalSustancia(jsonFromBD.sustancias.sustancias);
+    console.log("FIN - Guardado storage en entrevista");
+  }
+
   getDataImputado = async () => {
     if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
     if (this.state.isConnected) {
@@ -102,6 +118,7 @@ export default class Entrevista extends React.Component {
             dataSustanciasDB: res.data.evaluacion.sustancias,
             isLoading: false
           });
+          this.guardarStorageFromBD(res.data.evaluacion);
         }
         if (res.data.status == "error") {
           Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
@@ -138,6 +155,7 @@ export default class Entrevista extends React.Component {
                 dataSustanciasDB: infoEvaluacion.sustancias,
                 isLoading: false,
               });
+              this.guardarStorageFromBD(infoEvaluacion);
          });
       },
       (err) => { console.log("Select Failed Message", err) },
@@ -146,6 +164,7 @@ export default class Entrevista extends React.Component {
   }
 
   _toggleModalProgress = () => {
+    console.log("Cerrando modal")
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 

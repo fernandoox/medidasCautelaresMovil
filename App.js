@@ -1,6 +1,6 @@
 import React from 'react';
 import { SQLite, Font } from 'expo';
-import { View, ActivityIndicator, YellowBox } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { Root } from 'native-base';
 import { StackNavigator } from 'react-navigation';
 import Login from './Screens/Login';
@@ -12,7 +12,7 @@ import ignoreWarnings from 'react-native-ignore-warnings';
 import Database from './Utils/Database';
 import Sentry from 'sentry-expo';
 // Remove this once Sentry is correctly setup.
-//Sentry.enableInExpoDevelopment = true;
+Sentry.enableInExpoDevelopment = true;
 Sentry.config('https://11eec907408e4573a126c5485ed789b0@sentry.io/1319007').install();
 
 //Definicion de pantallas activas en la navegacion de la app
