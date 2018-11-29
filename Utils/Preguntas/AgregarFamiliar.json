@@ -28,11 +28,6 @@
         "tipoEntrada": "boolean"
     },
     {
-        "node": "indMismaVivienda",
-        "pregunta": "Vive en la misma vivienda",
-        "tipoEntrada": "boolean"
-    },
-    {
         "node": "snFrecuenciaVisita",
         "pregunta": "Frecuencia de visita",
         "tipoEntrada": "default",
@@ -43,6 +38,11 @@
         "pregunta": "Teléfono",
         "tipoEntrada": "numeric",
         "maxLongitud": 15
+    },
+    {
+        "node": "indMismaVivienda",
+        "pregunta": "Vive en la misma vivienda",
+        "tipoEntrada": "boolean"
     },
     {
         "node": "snCodigoPostal",
@@ -64,7 +64,7 @@
     },
     {
         "node": "snMunicipio",
-        "pregunta": "Municipio",
+        "pregunta": "Alcaldía o municipio",
         "tipoEntrada": "default",
         "maxLongitud": 50
     },

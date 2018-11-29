@@ -58,7 +58,24 @@ export default class AgregarDomicilio extends React.Component {
 
   agregarDomicilio = () => {
     if(this.validateForm()){
-      this.props.agregarDomicilioChild(jsonRespDomicilio);
+      let domicilioActualRepetido = false;
+      // Para la primera vez no existen sustancias repetidas
+      if (this.props.domiciliosChild.length == 0) {
+        this.props.agregarDomicilioChild(jsonRespDomicilio);
+      }else{
+        // Se iteran los domicilios y se compara con el domicilio que se agregará
+        this.props.domiciliosChild.map((domicilio, i) => {
+          if(domicilio.tipoDomicilio == 1 && jsonRespDomicilio.tipoDomicilio == 1){ // actual
+            domicilioActualRepetido = true;
+            Alert.alert('Datos duplicados', "Ya se ha dado de alta un domicilio 'Actual'.", [{text: 'OK'}], { cancelable: false });
+            return false; // Break
+          }
+        });
+        if (!domicilioActualRepetido) {
+          this.props.agregarDomicilioChild(jsonRespDomicilio);
+        }
+      }
+      
     }
   }
 

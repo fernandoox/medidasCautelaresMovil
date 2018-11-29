@@ -31,6 +31,14 @@ export default class AgregarFamiliar extends React.Component {
     })  
   }
 
+  componentWillMount(){
+    // Reset valores domicilio
+    this.state.preguntas.map((preg, i) => {
+      preg.valueBD = null;
+    })
+    this.setState({preguntas: this.state.preguntas});
+  }
+
   setValueAnswerText = (valueData, nodeQuestion, tipoEntrada) => {
     if(tipoEntrada == "default"){
       jsonRespFamiliar[nodeQuestion] = valueData.toUpperCase();
@@ -51,7 +59,25 @@ export default class AgregarFamiliar extends React.Component {
         this.setState({indDependienteEconomico:itemSelected})
         break;
       case "indMismaVivienda":
-        this.setState({indMismaVivienda:itemSelected})
+        this.setState({indMismaVivienda:itemSelected}, () => {
+          if (this.state.indMismaVivienda == 1) {
+            this.recuperarDomicilioActualImputado().then((domicilioActual) => {
+              this.setDomicilioActual(domicilioActual);
+            });
+          }else{
+            let fieldsDomicilioToReset = {
+              snCodigoPostal: null,
+              snCalle: null,
+              snNumExterior: null,
+              snMunicipio: null,
+              snColonia: null,
+              idNuEntidadFederativa: null
+            }; 
+            if (fieldsDomicilioToReset != null) {
+              this.resetDomicilioActual(fieldsDomicilioToReset);
+            }
+          }
+        })
         break;
       case "idNuEntidadFederativa":
         this.setState({idNuEntidadFederativa:itemSelected})
@@ -60,6 +86,51 @@ export default class AgregarFamiliar extends React.Component {
         break;
     }
     jsonRespFamiliar[nodeQuestion] = itemSelected;
+  }
+
+  recuperarDomicilioActualImputado = () => {
+    return new Promise( (resolve, reject) => {
+      storage.load({
+        key: 'datosDomiciliosStorage',
+      }).then((response) => {
+        response.datosDomicilios.map( (domicilio) => {
+          if (domicilio.tipoDomicilio == 1) {
+            resolve(domicilio); // domicilio actual
+          }
+        })
+      }).catch(err => {
+        console.log("Error async domicilios: "+err.message);
+        reject(null)
+      })
+    });
+  }
+
+  setDomicilioActual = (domicilioActual) => {
+    this.state.preguntas.map((pregLocal, i) => {
+      for (var propertyObjDomcilio in domicilioActual) {
+        jsonRespFamiliar[propertyObjDomcilio] = domicilioActual[propertyObjDomcilio];
+        if (domicilioActual.hasOwnProperty(propertyObjDomcilio)) {
+          if (pregLocal.node == propertyObjDomcilio) {
+            pregLocal.valueBD = domicilioActual[propertyObjDomcilio];
+          }
+        }
+      }
+    })
+    this.setState({preguntas: this.state.preguntas});
+  }
+
+  resetDomicilioActual = (domicilioActual) => {
+    this.state.preguntas.map((pregLocal, i) => {
+      for (var propertyObjDomcilio in domicilioActual) {
+        jsonRespFamiliar[propertyObjDomcilio] = domicilioActual[propertyObjDomcilio];
+        if (domicilioActual.hasOwnProperty(propertyObjDomcilio)) {
+          if (pregLocal.node == propertyObjDomcilio) {
+            pregLocal.valueBD = null;
+          }
+        }
+      }
+    })
+    this.setState({preguntas: this.state.preguntas});
   }
 
   agregarFamiliar = () => {
@@ -107,6 +178,7 @@ export default class AgregarFamiliar extends React.Component {
                   <Item style={{marginVertical: 10}} stackedLabel>
                     <Label>{preg.pregunta}:</Label>
                     <Input
+                      defaultValue={preg.valueBD}
                       maxLength={preg.maxLongitud}
                       style={{fontSize: 14}}
                       keyboardType={preg.tipoEntrada}
@@ -128,7 +200,7 @@ export default class AgregarFamiliar extends React.Component {
                       itemTextStyle={{ fontSize: 14}}
                       mode="dropdown"
                       supportedOrientations={['portrait','landscape']}
-                      selectedValue={this.state[preg.node]}
+                      selectedValue={(preg.valueBD != null && this.state[preg.node] == null) ? preg.valueBD : this.state[preg.node]}
                       onValueChange={(itemSelected) => {
                         this.setValueAnswerCatalogo(itemSelected, preg.node)
                       }}>
@@ -154,7 +226,7 @@ export default class AgregarFamiliar extends React.Component {
                       style={{width: 310}}
                       iosHeader="Seleccionar una opción"
                       placeholder="Seleccionar una opción"
-                      itemTextStyle={{ fontSize: 14}}
+                      itemTextStyle={{fontSize: 14}}
                       mode="dropdown"
                       supportedOrientations={['portrait','landscape']}
                       selectedValue={this.state[preg.node]}

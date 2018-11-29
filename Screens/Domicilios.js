@@ -188,7 +188,7 @@ export default class Domicilios extends React.Component {
         <Modal onBackButtonPress={() => this.setState({ isModalVisible: false })}
           onSwipe={() => this.setState({ isModalVisible: false })} swipeDirection="right" 
           isVisible={this.state.isModalVisible} avoidKeyboard={true}>
-          <AgregarDomicilio agregarDomicilioChild={this.agregarDomicilio} cerrarModal={this._toggleModal}/>
+          <AgregarDomicilio agregarDomicilioChild={this.agregarDomicilio} domiciliosChild={this.state.domicilios} cerrarModal={this._toggleModal}/>
         </Modal>
 
         <View style={{position:'absolute', bottom:0, right:15, height: 80, }}>

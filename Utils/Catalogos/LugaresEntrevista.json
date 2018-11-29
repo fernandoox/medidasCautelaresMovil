@@ -1,5 +1,4 @@
-[
-  {
+[{
     "id": 1,
     "nombre": "AGENCIA DEL MINISTERIO PÚBLICO ESPECIALIZADA EN NIÑAS, NIÑOS Y ADOLESCENTES NÚMERO 57."
   },
@@ -22,6 +21,10 @@
   {
     "id": 4,
     "nombre": "FISCALÍA CENTRAL DE INVESTIGACIÓN PARA EL DELITO DE NARCOMENUDEO"
+  },
+  {
+    "id": 10,
+    "nombre": "OTRO"
   },
   {
     "id": 7,

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { View, ScrollView, KeyboardAvoidingView, Dimensions, Alert } from 'react-native';
 import { Text, Item, Input, Label, Picker } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import Display from 'react-native-display';
 import DatePicker from 'react-native-datepicker';
 import preguntasDatosGeneralesData from '../Utils/Preguntas/DatosGenerales.json';
 import CatSexoData from '../Utils/Catalogos/Sexo.json';
@@ -29,7 +30,6 @@ export default class DatosGenerales extends React.Component {
       estadoCivil: null,
       indDocumentoMigratorio: null,
       tipoDocMigratorio: null,
-      indSabeLeerEscribir: null,
       indSituacionCalle: null,
       municipioLn: null,
       idNuEntidadFederativa: null,
@@ -72,7 +72,7 @@ export default class DatosGenerales extends React.Component {
       
       this.setState({loadedResponsesBD: true}, () => {
         /*
-        * Del screen de entrevista recibe generalesDB que es la petición a bd 
+        * Del screen de entrevista recibe props generalesDB que es la resp de petición a bd 
         * de la información de imputado, para hacer el set de las respuestas 
         * de bd a los componentes del form se ocupa el nodeDB (foreach)
         */
@@ -128,6 +128,10 @@ export default class DatosGenerales extends React.Component {
     switch (nodeQuestion) {
       case "lugarEntrevista":
         this.setState({lugarEntrevista:itemSelected})
+        // Diferente de otro
+        if (itemSelected != 10) {
+          jsonRespDatosGenerales.snLugarEntrevistaOtro = null;
+        }
         break;
       case "indSexo":
         this.setState({indSexo:itemSelected})
@@ -140,9 +144,6 @@ export default class DatosGenerales extends React.Component {
         break;
       case "indDocumentoMigratorio":
         this.setState({indDocumentoMigratorio:itemSelected})
-        break;
-      case "indSabeLeerEscribir":
-        this.setState({indSabeLeerEscribir:itemSelected})
         break;
       case "indSituacionCalle":
         this.setState({indSituacionCalle:itemSelected})
@@ -221,19 +222,23 @@ export default class DatosGenerales extends React.Component {
               <Col>
                   {
                     (preg.tipoEntrada == "default" || preg.tipoEntrada == "numeric") ?
-                    <Item style={{marginVertical: 10}} stackedLabel>
-                      <Label>{preg.pregunta}:</Label>
-                      <Input
-                        disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
-                        maxLength={preg.maxLongitud}
-                        defaultValue={preg.valueBD}
-                        style={{fontSize: 14}}
-                        keyboardType={preg.tipoEntrada}
-                        autoCapitalize="characters"
-                        onChangeText={(valueData) => {
-                          this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
-                        }}/>
-                    </Item> : null
+                    <Display enable={( (preg.node == 'snLugarEntrevistaOtro') ? false : true ) || this.state.lugarEntrevista == 10 || jsonRespDatosGenerales.lugarEntrevista == 10}
+                      enterDuration={300}
+                      enter="fadeInDown" exit="fadeOut">
+                      <Item style={{marginVertical: 10}} stackedLabel>
+                        <Label>{preg.pregunta}:</Label>
+                        <Input
+                          disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}
+                          maxLength={preg.maxLongitud}
+                          defaultValue={preg.valueBD}
+                          style={{fontSize: 14}}
+                          keyboardType={preg.tipoEntrada}
+                          autoCapitalize="characters"
+                          onChangeText={(valueData) => {
+                            this.setValueAnswerText(valueData, preg.node, preg.tipoEntrada);
+                          }}/>
+                      </Item>
+                    </Display> : null
                   }
 
                   {
@@ -306,6 +311,12 @@ export default class DatosGenerales extends React.Component {
                         <Item label="NO" value={0} />
                       </Picker>
                     </Item> : null
+                  }
+                  {
+                    (preg.tipoEntrada == "separador") ?
+                    <Text style={{marginVertical:5, textAlign:'center', color:'#c93242', fontWeight:'bold'}}>
+                      {preg.titulo}:
+                    </Text> : null
                   }
               </Col>
               </Row>

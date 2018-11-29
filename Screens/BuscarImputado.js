@@ -1,12 +1,14 @@
 import React from 'react';
-import { AsyncStorage, TouchableOpacity, Alert, NetInfo, ScrollView, KeyboardAvoidingView, Keyboard,  BackHandler, ToastAndroid } from 'react-native';
-import { Root, Button, Text, Card, CardItem, ListItem, CheckBox, Body, Item, Input, Picker, Spinner } from 'native-base';
+import { AsyncStorage, TouchableOpacity, Alert, NetInfo, Keyboard,  BackHandler, ToastAndroid, FlatList , ScrollView} from 'react-native';
+import { Root, Button, Text, Card, CardItem, CheckBox, Body, Item, Input, Picker, Spinner, ListItem, Right } from 'native-base';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Display from 'react-native-display';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SQLiteHelpers  from '../Utils/SQLiteHelpers';
 import ImputadoTemporal from './ImputadoTemporal';
 import Database from '../Utils/Database';
+import faker from 'faker';
+import moment from 'moment';
 
 export default class BuscarImputado extends React.Component {
 
@@ -15,11 +17,23 @@ export default class BuscarImputado extends React.Component {
     return{
       headerRight: (
         <Root>
-          <Button style={{marginRight:10, paddingLeft:10}} light bordered iconLeft 
-            onPress={params.hanldeActualizarEvaluacionesSQLite}>
-            <Icon active name="download" style={{color:'white', fontSize:20}}/>
-            <Text style={{fontSize:19}}>{params.countEntrevistasPendientes}</Text>
-          </Button>
+          <Grid >
+            <Row style={{marginTop: 5}}> 
+              <Col>
+                <Button light transparent style={{marginRight:10, paddingHorizontal: 10}} light bordered
+                  onPress={params.hanldeBorrarEvaluacionesSQLite}>
+                  <Icon active name="trash" style={{color:'white', fontSize:20}}/>
+                </Button> 
+              </Col> 
+              <Col>
+                <Button style={{marginRight:10, paddingLeft:10}} light bordered iconLeft 
+                  onPress={params.hanldeActualizarEvaluacionesSQLite}>
+                  <Icon active name="download" style={{color:'white', fontSize:20}}/>
+                  <Text style={{fontSize:19}}>{params.countEntrevistasPendientes}</Text>
+                </Button>
+              </Col>
+            </Row>
+          </Grid>
         </Root>
       )
     }
@@ -43,8 +57,24 @@ export default class BuscarImputado extends React.Component {
       isEntrevistaPendienteGuardada: false,
       countEntrevistasPendientes: 0
     };
+    
     numBack = 0;
-    //console.log(varFake);
+    arrFakeImputados = [];
+    faker.locale = "es_MX";
+    for (let index = 0; index < 20; index++) {
+      itemFake = {
+        "id": faker.random.number(),
+        "nombre": faker.name.findName().toUpperCase() ,
+        "primerApellido": faker.name.lastName().toUpperCase() ,
+        "segundoApellido": faker.name.lastName().toUpperCase() ,
+        "idEstatus": ( index%2 == 0 ) ? 4 : 7,
+        "evaluacionMensual": ( index%2 == 0 ) ? false : true,
+        "carpetaJudicial": ( index%2 == 0 ) ? faker.random.number() + "/" + faker.lorem.word().toUpperCase()  + "/" + faker.random.number()  : null,
+        "carpetaInvestigacion":  ( index%2 == 1 ) ? faker.random.number() + "/" + faker.lorem.word().toUpperCase()  + "/" + faker.random.number()  : null,
+        "fechaAsignacion": moment(faker.date.past()).format('DD-MM-YYYY')
+      }
+      arrFakeImputados.push(itemFake);
+    }
   }
   
   componentDidMount(){
@@ -56,7 +86,8 @@ export default class BuscarImputado extends React.Component {
         this.setState({isConnected}, () => {
           this.props.navigation.setParams({
             isConnected: isConnected,
-            hanldeActualizarEvaluacionesSQLite: this.actualizarEvaluacionesSQLite
+            hanldeActualizarEvaluacionesSQLite: this.actualizarEvaluacionesSQLite,
+            hanldeBorrarEvaluacionesSQLite: this.borrarTodasEntrevistasSQLite
           });
         });
         if (isConnected) {
@@ -84,6 +115,25 @@ export default class BuscarImputado extends React.Component {
     }, 900);
   }
 
+  borrarTodasEntrevistasSQLite = () => {
+    Alert.alert(
+      'Borrar evaluaciones locales',
+      '¿Está seguro de borrar todas las evaluaciones guardadas en su teléfono?',
+      [
+        {text: 'Cancelar', onPress: () => console.log('Cancel Pressed')},
+        {text: 'SI', onPress: () => this.borrarEntrevistasSQLite()}
+      ],
+      { cancelable: false }
+    )
+  }
+
+  borrarEntrevistasSQLite = () => {
+    ObjHelperSQlite.deleteAlllEvaluacionesSQLite();
+    setTimeout(() => {
+      this.countEvaluacionesSQLite();
+    }, 700);
+  }
+  
   countEvaluacionesSQLite = () => {
     Database.transaction(
       tx => {
@@ -144,7 +194,7 @@ export default class BuscarImputado extends React.Component {
           Keyboard.dismiss();
           this.setState({
             imputados: res.data.imputados,
-            numImputados: Object.keys(res.data.imputados).length,
+            numImputados: res.data.imputados.length,
             isLoading: false,
           })
         }
@@ -212,7 +262,6 @@ export default class BuscarImputado extends React.Component {
       console.log("Res request to save pendding... " + JSON.stringify(res.data));
       if(res.data.status == "ok"){
         ToastAndroid.showWithGravity(res.data.message + " Imputado: " + paramImputado, ToastAndroid.LONG, ToastAndroid.BOTTOM);
-        //Alert.alert('Guardado', res.data.message + " Imputado: " + paramImputado,  [{text: 'OK'}], { cancelable: true });
         this.deleteEntrevistasPendientesEnviadas(entrevistaOnlinePendiente.id);
       }
       this.setState({isLoading: false});
@@ -239,12 +288,12 @@ export default class BuscarImputado extends React.Component {
     this.setState({ selectedImputado: value })
   }
   
-  aplicarEntrevistaImputado = () => {
+  aplicarEntrevista = (imputadoSelected) => {
     const {navigate} = this.props.navigation;
     navigate('EntrevistaScreen',
       {
-        imputadoParam: this.state.selectedImputado,
-        carpetaJudicialParam: this.state.carpetaJudicial,
+        imputadoParam: imputadoSelected,
+        carpetaJudicialParam: (imputadoSelected.carpetaJudicial == null) ? imputadoSelected.carpetaInvestigacion : imputadoSelected.carpetaJudicial,
         tipoCapturaParam: "ONLINE",
         evaluador: this.state.evaluador
       }
@@ -268,144 +317,122 @@ export default class BuscarImputado extends React.Component {
   
   render() {
     return (
-      <KeyboardAvoidingView behavior="position">
-        <ScrollView keyboardShouldPersistTaps="always">
-          <Grid style={{ paddingHorizontal:15 }}>
+      <Grid style={{ paddingHorizontal:15 }} >
 
-            <Row style={{marginTop: 20}}>
-              <Col>
+        <Row size={0.6} >
+          <Col>
+            <Display enable={this.state.evaluador != null}
+              enterDuration={500}
+              enter="fadeInDown" style={{flex:1}}>
+              <Card>
+                <CardItem style={{paddingBottom:-20, paddingTop:-20}}>
+                  <Body style={{ alignItems: 'center' }}>
+                    <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:10}}>
+                      {this.getNombreEvaluador()}
+                    </Text>
+                    <Button transparent full danger
+                      onPress={this.cerrarSesion}>
+                      <Text style={{fontSize:16, textDecorationLine: "underline", textDecorationStyle: "solid",}}>Cerrar sesión</Text>
+                    </Button>
+                  </Body>
+                </CardItem> 
+              </Card>
+            </Display>
+          </Col>
+        </Row>
 
-                {/*<View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Image source={require('../assets/img/medidasCautelares.png')} resizeMode="contain"
-                  style={{width:250, marginTop:-25}}></Image>
-                  </View>*/}
-                <Display enable={this.state.evaluador != null}
-                  enterDuration={500}
-                  enter="fadeInDown">
-                  <Card>
-                    <CardItem>
-                      <Body style={{alignSelf: 'center'}}>
-                        <Row style={{marginTop: -20, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',alignSelf: 'center'}}>             
-                          <Text style={{color:COLORS.TEXT_PRIMARY, textAlign:'center', fontWeight:'bold', marginTop:25}}>
-                            {this.getNombreEvaluador()}
-                          </Text>
-                        </Row>
-                        <Row style={{marginTop: -15, marginBottom:-20}}>
-                          <Col>
-                            <Button transparent full danger
-                                style={{marginVertical: 10}}
-                                onPress={this.cerrarSesion}>
-                                <Text style={{fontSize:16, textDecorationLine: "underline", textDecorationStyle: "solid",}}>Cerrar sesión</Text>
-                              </Button>
-                          </Col>
-                        </Row>
-                      </Body>
-                    </CardItem>
-                  </Card>
-                </Display>
+        <Row size={3.4}>
+          <Col>
+            {/* Buscar imputados por carpeta solo cuando hay conexión a internet */}
+            <Display enable={this.state.isConnected}
+              enterDuration={500}
+              enter="fadeInDown" >
+              <Item style={{marginVertical: 10}} regular>
+                <Input
+                  defaultValue={this.state.carpetaJudicial}
+                  placeholder='Buscar por carpetas'
+                  placeholderTextColor='#2C4743'
+                  autoCapitalize='characters' autoCorrect={false}
+                  style={{color:'#2C4743', fontSize: 17, textAlign: 'center'}}
+                  onChangeText={(carpetaJudicial) => this.setState({carpetaJudicial}) }/>
+              </Item>
 
-                <Text style={{textAlign:'center', color:COLORS.TEXT_PRIMARY, fontWeight:'bold', marginTop:10, marginBottom:-10}}>
-                  Buscar imputados por:
-                </Text>
+              <Row style={{flex: 0, flexDirection: 'row'}}>
+                <Col style={{flexDirection: 'row', justifyContent:'space-evenly'}}>
+                  <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarAsignados} 
+                    onPress={this._selectCheckBoxSearchAsignados}/>
+                  <TouchableOpacity onPress={this._selectCheckBoxSearchAsignados}>
+                    <Text>Asignados</Text>
+                  </TouchableOpacity>
+                </Col>
+                <Col style={{flex:1, flexDirection: 'row', justifyContent:'space-evenly'}}>
+                  <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarConcluidos}
+                    onPress={this._selectCheckBoxSearchConcluidos}/>
+                  <TouchableOpacity onPress={this._selectCheckBoxSearchConcluidos}>
+                    <Text>Concluidos</Text>
+                  </TouchableOpacity>
+                </Col>
+              </Row> 
+              
+              <Display enable={this.state.isLoading}
+                enterDuration={300}
+                exitDuration={300}
+                enter="fadeIn"
+                exit="fadeOut">
+                <Spinner color='red' style={{ marginTop:-20, marginBottom:-20}}/>
+              </Display>
 
+              <Button full light
+                style={{marginTop:10}}
+                disabled={!this.state.isConnected || this.state.carpetaJudicial == null || this.state.carpetaJudicial == "" || 
+                  (!this.state.buscarAsignados && !this.state.buscarConcluidos)}
+                onPress={this.buscarImputadosByCarpeta}>
+                  <Text>Buscar por Carpeta</Text>
+              </Button>
+            </Display>
 
-                {/* Buscar imputados por carpeta solo cuando hay conexión a internet */}
-                <Display enable={this.state.isConnected}
-                  enterDuration={500}
-                  enter="fadeInDown">
-                  <Item style={{marginVertical: 10}}>
-                    <Input
-                      defaultValue={this.state.carpetaJudicial}
-                      placeholder='Carpeta juidicial / investigación'
-                      placeholderTextColor='#2C4743'
-                      autoCapitalize='characters' autoCorrect={false}
-                      style={{color:'#2C4743', fontSize: 17}}
-                      onChangeText={(carpetaJudicial) => this.setState({carpetaJudicial}) }/>
-                  </Item>
+            {/* Imputado en BD cuando hay imputados en la carpeta y hay conexión a internet */}
+            <Display enable={this.state.numImputados > 0 && this.state.isConnected}
+              enterDuration={500}
+              enter="fadeInDown" style={{flex:1}}>
 
-                  <ListItem>
-                    <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarAsignados} 
-                      onPress={this._selectCheckBoxSearchAsignados}/>
-                    <TouchableOpacity onPress={this._selectCheckBoxSearchAsignados}>
-                      <Body>
-                        <Text>Asignados</Text>
-                      </Body>
-                    </TouchableOpacity>
-                  </ListItem>
-                  <ListItem>
-                    <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.buscarConcluidos}
-                       onPress={this._selectCheckBoxSearchConcluidos}/>
-                     <TouchableOpacity onPress={this._selectCheckBoxSearchConcluidos}>
-                      <Body>
-                        <Text>Concluidos</Text>
-                      </Body>
-                    </TouchableOpacity>
-                  </ListItem>
+              <Text style={{marginVertical:5, textAlign:'center', color:'#c93242', fontWeight:'bold'}}>
+                Imputados:
+              </Text>
+            
+              <ScrollView> 
+                <FlatList
+                  data={this.state.imputados}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({item}) =>
+                  <ListItem button={true} onPress={() => this.aplicarEntrevista(item)} style={{marginLeft: -15, paddingLeft:10, paddingBottom:10, paddingTop:10}}>
+                    <Body>
+                      <Text style={{fontSize:15, fontWeight:'bold'}}>{item.nombre} {item.primerApellido} {item.segundoApellido}</Text>
+                      <Text style={{fontSize:13}}>{(item.carpetaJudicial != null) ? item.carpetaJudicial : item.carpetaInvestigacion}</Text>
+                    </Body> 
+                    <Right style={{alignSelf: 'flex-start'}}>
+                      <Text style={{fontSize:11}} note>{item.fechaAsignacion}</Text>
+                      <Text>{(item.evaluacionMensual) ? "📅" : ""}</Text>
+                      <Text>{(item.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? "✔️" : "🚫"}</Text>
+                    </Right>
+                  </ListItem> 
+                  }
+                  keyExtractor = { (item, index) => index.toString() }
+                />
+              </ScrollView>
+            </Display> 
+            
+            {/* Imputado temporal cuando no hay conexión a internet */}
+            <Display enable={!this.state.isConnected}
+              enterDuration={500}
+              enter="fadeInDown" style={{flex:1}}>
+              <ImputadoTemporal carpetaJudicial={this.state.carpetaJudicial} nav={this.props.navigation}/>
+            </Display>
 
-                  <Display enable={this.state.isLoading}
-                    enterDuration={300}
-                    exitDuration={300}
-                    enter="fadeIn"
-                    exit="fadeOut">
-                    <Spinner color='red' style={{ marginTop:-20, marginBottom:-20}}/>
-                  </Display>
-
-                  <Button full light
-                    style={{marginVertical: 10, borderRadius:20}}
-                    disabled={!this.state.isConnected || this.state.carpetaJudicial == null || this.state.carpetaJudicial == "" || 
-                      (!this.state.buscarAsignados && !this.state.buscarConcluidos)}
-                    onPress={this.buscarImputadosByCarpeta}>
-                     <Text>Buscar por Carpeta</Text>
-                  </Button>
-                </Display>
-
-                {/* Imputado en BD cuando hay imputados en la carpeta y hay conexión a internet */}
-                <Display enable={this.state.numImputados > 0 && this.state.isConnected}
-                  enterDuration={500}
-                  enter="fadeInDown">
-                  {/* Picker: Imputados */}
-                  <Text>Imputados:</Text>
-                  <Picker
-                    iosHeader="Seleccionar un imputado"
-                    placeholder="Seleccionar un imputado"
-                    itemTextStyle={{ fontSize: 17}}
-                    supportedOrientations={['portrait','landscape']}
-                    selectedValue={this.state.selectedImputado}
-                    onValueChange={this.onSelectImputado.bind(this)}
-                    mode="dropdown">
-                    <Item label="Seleccionar un imputado" value={null} />
-                    {
-                      this.state.imputados.map((imputado) => {
-                        return (
-                          <Item
-                            value={imputado} key={imputado.id}
-                            label={( (imputado.idEstatus == ESTATUS_SOLICITUD.ASIGNADO) ? "✔️ (A) - " : "🚫 (C) - ") + 
-                                  imputado.nombre + " " + imputado.primerApellido + " " + imputado.segundoApellido +
-                                  ((imputado.evaluacionMensual) ? " 📅" : "")}/>
-                        );
-                      })
-                    }
-                  </Picker>
-                  <Button full danger
-                    style={{marginVertical: 10, borderRadius:20}}
-                    disabled={this.state.selectedImputado == null}
-                    onPress={this.aplicarEntrevistaImputado}>
-                      <Text>Aplicar entrevista</Text>
-                  </Button>
-                </Display>
-
-                {/* Imputado temporal cuando no hay conexión a internet */}
-                <Display enable={!this.state.isConnected}
-                  enterDuration={500}
-                  enter="fadeInDown">
-                  <ImputadoTemporal carpetaJudicial={this.state.carpetaJudicial} nav={this.props.navigation}/>
-                </Display>
-
-              </Col>
-            </Row>
-          </Grid>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          </Col>
+        </Row>
+      
+      </Grid>
     );
   }
 }

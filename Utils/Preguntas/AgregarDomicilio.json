@@ -1,75 +1,74 @@
-[ 
-    {
-      "node": "idNuEntidadFederativa",
-      "pregunta": "Entidad federativa",
-      "tipoEntrada": "catalogo",
-      "catalogo": "EntidadesFederativasCat"
-    },
-    {
-      "node": "snCodigoPostal",
-      "pregunta": "Código postal",
-      "tipoEntrada": "numeric",
-      "maxLongitud": 5
-    },
-    {
-      "node": "snMunicipio",
-      "pregunta": "Municipio",
-      "tipoEntrada": "default",
-      "maxLongitud": 50
-    },
-    {
-      "node": "snColonia",
-      "pregunta": "Colonia",
-      "tipoEntrada": "default",
-      "maxLongitud": 50
-    },
-    {
-      "node": "snCalle",
-      "pregunta": "Calle",
-      "tipoEntrada": "default",
-      "maxLongitud": 300
-    },
-    {
-      "node": "snNumExterior",
-      "pregunta": "Número exterior",
-      "tipoEntrada": "default",
-      "maxLongitud": 10
-    },
-    {
-      "node": "snNumInterior",
-      "pregunta": "Número interior",
-      "tipoEntrada": "default",
-      "maxLongitud": 10
-    },
-    {
-      "node": "snReferenciasDomicilio",
-      "pregunta": "Referencias",
-      "tipoEntrada": "default",
-      "maxLongitud": 600
-    },
-    {
-      "node": "snTiempoVivir",
-      "pregunta": "Tiempo de vivir en el domicilio",
-      "tipoEntrada": "default",
-      "maxLongitud": 50
-    },
-    {
-      "node": "snTelefono",
-      "pregunta": "Teléfono",
-      "tipoEntrada": "numeric",
-      "maxLongitud": 15
-    },
-    {
-      "node": "tipoDomicilio",
-      "pregunta": "Tipo de domicilio",
-      "tipoEntrada": "catalogo",
-      "catalogo": "TiposDomicilioCat"
-    },
-    {
-      "node": "tipoVivienda",
-      "pregunta": "Tipo de vivienda",
-      "tipoEntrada": "catalogo",
-      "catalogo": "TiposViviendaCat"
-    }
-  ]
-  
+[
+  {
+    "node": "tipoDomicilio",
+    "pregunta": "Tipo de domicilio",
+    "tipoEntrada": "catalogo",
+    "catalogo": "TiposDomicilioCat"
+  },
+  {
+    "node": "idNuEntidadFederativa",
+    "pregunta": "Entidad federativa",
+    "tipoEntrada": "catalogo",
+    "catalogo": "EntidadesFederativasCat"
+  },
+  {
+    "node": "snCodigoPostal",
+    "pregunta": "Código postal",
+    "tipoEntrada": "numeric",
+    "maxLongitud": 5
+  },
+  {
+    "node": "snMunicipio",
+    "pregunta": "Alcaldía o municipio",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snColonia",
+    "pregunta": "Colonia",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snCalle",
+    "pregunta": "Calle",
+    "tipoEntrada": "default",
+    "maxLongitud": 300
+  },
+  {
+    "node": "snNumExterior",
+    "pregunta": "Número exterior",
+    "tipoEntrada": "default",
+    "maxLongitud": 10
+  },
+  {
+    "node": "snNumInterior",
+    "pregunta": "Número interior",
+    "tipoEntrada": "default",
+    "maxLongitud": 10
+  },
+  {
+    "node": "snReferenciasDomicilio",
+    "pregunta": "Referencias",
+    "tipoEntrada": "default",
+    "maxLongitud": 600
+  },
+  {
+    "node": "snTiempoVivir",
+    "pregunta": "Tiempo de vivir en el domicilio",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snTelefono",
+    "pregunta": "Teléfono",
+    "tipoEntrada": "numeric",
+    "maxLongitud": 15
+  },
+  {
+    "node": "tipoVivienda",
+    "pregunta": "Tipo de vivienda",
+    "tipoEntrada": "catalogo",
+    "catalogo": "TiposViviendaCat"
+  }
+]

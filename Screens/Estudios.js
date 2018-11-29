@@ -133,7 +133,6 @@ export default class Estudios extends React.Component {
     return (
     
     <View style={{flex:1}}>
-    <KeyboardAvoidingView behavior="position" enabled keyboardVerticalOffset={100}>
     <ScrollView keyboardShouldPersistTaps="always" keyboardDismissMode="interactive" overScrollMode="never">
       
     <Grid style={{flex:1}}>
@@ -150,6 +149,17 @@ export default class Estudios extends React.Component {
       <KeyboardAvoidingView behavior="position">
       <Row>
         <Col>
+          <Item style={{marginVertical: 10}} stackedLabel>
+            <Label>Razón para dejar de estudiar:</Label>
+            <Input style={{fontSize: 16}}
+              disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}  
+              autoCapitalize='characters'
+              defaultValue={this.state.snRazonDejarEstudiar}
+              onChangeText={(valueData) => {
+                this.setValueAnswerText(valueData, "snRazonDejarEstudiar");
+              }}
+            />
+          </Item>
 
           <Item style={{marginVertical: 5}} stackedLabel>
             <Label>Estudia actualmente:</Label>
@@ -196,18 +206,6 @@ export default class Estudios extends React.Component {
                 })
               }
             </Picker>
-          </Item>
-          
-          <Item style={{marginVertical: 10}} stackedLabel>
-            <Label>Razón para dejar de estudiar:</Label>
-            <Input style={{fontSize: 16}}
-              disabled={(this.props.imputadoProp.idEstatus == ESTATUS_SOLICITUD.CONCLUIDO)}  
-              autoCapitalize='characters'
-              defaultValue={this.state.snRazonDejarEstudiar}
-              onChangeText={(valueData) => {
-                this.setValueAnswerText(valueData, "snRazonDejarEstudiar");
-              }}
-            />
           </Item>
 
         </Col>
@@ -269,7 +267,6 @@ export default class Estudios extends React.Component {
         </Button>
       </Display>
     </View>
-    </KeyboardAvoidingView>
     </View>    
     );
   }

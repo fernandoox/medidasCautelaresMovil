@@ -59,11 +59,11 @@ export default class Entrevista extends React.Component {
   }
 
   componentDidMount(){
-    //Sentry.captureException(new Error('Oops!'))
     this.props.navigation.setParams({ handleToggleModalProgress: this._toggleModalProgress });
-    NetInfo.isConnected.addEventListener('connectionChange',this.verificarConexion);
+
+    NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
-      (isConnected) => { this.setState({isConnected}); }
+      (isConnected) => {  this.setState({isConnected}); }
     );
 
     storage.save({
@@ -73,90 +73,121 @@ export default class Entrevista extends React.Component {
   }
 
   componentWillUnmount() {
-    NetInfo.isConnected.removeEventListener('connectionChange',this.verificarConexion);
+    NetInfo.isConnected.removeEventListener('connectionChange',this._handleConnectivityChange);
   }
 
-  verificarConexion = (isConnected) => {
+  _handleConnectivityChange = (isConnected) => {
     this.setState({isConnected});
   };
 
   guardarStorageFromBD = (jsonFromBD) => {
-    ObjDomicilios       = new Domicilios();
-    ObjRedFamiliar      = new RedFamiliar();
-    ObjEstudios         = new Estudios();
-    ObjOcupaciones      = new Ocupacion();
-    ObjSustancias       = new Sustancias();
-    // Guardado storage en entrevista
-    console.log("Guardado storage en entrevista");
-    ObjDomicilios.saveJsonLocalDomicilios(jsonFromBD.domicilios.datosDomicilios);
-    ObjRedFamiliar.saveJsonLocalFamiliares(jsonFromBD.redFamiliar.jsonRedFamiliar);
-    ObjEstudios.saveJsonLocalEstudios(jsonFromBD.estudios.jsonEstudios);
-    ObjOcupaciones.saveJsonLocalOcupaciones(jsonFromBD.ocupaciones.ocupaciones);
-    ObjSustancias.saveJsonLocalSustancia(jsonFromBD.sustancias.sustancias);
-    console.log("FIN - Guardado storage en entrevista");
+    jsonFromBD.domicilios.completo = (jsonFromBD.domicilios.datosDomicilios.length > 0) ? true : false;
+    storage.save({ 
+      key: 'datosDomiciliosStorage',
+      data: jsonFromBD.domicilios,
+    });
+
+    jsonFromBD.redFamiliar.completo = (jsonFromBD.redFamiliar.jsonRedFamiliar.length > 0) ? true : false;
+    storage.save({
+      key: 'datosFamiliaresStorage',
+      data: jsonFromBD.redFamiliar,
+    });
+
+    // Estudios
+    if (jsonFromBD.estudios.jsonEstudios.length == 0 && jsonFromBD.estudios.ultimoGrado == 23) { // 23 (ninguna escolaridad) 
+      jsonFromBD.estudios.completo = true;
+    }else if(jsonFromBD.estudios.jsonEstudios.length > 0){
+      jsonFromBD.estudios.completo = true;
+    }
+    else{
+      jsonFromBD.estudios.completo = false;
+    }
+    storage.save({
+      key: 'datosEstudiosStorage',
+      data: jsonFromBD.estudios,
+    });
+
+    // Ocupaciones
+    jsonFromBD.ocupaciones.completo = (jsonFromBD.ocupaciones.ocupaciones.length > 0) ? true : false;
+    storage.save({
+      key: 'datosOcupacionesStorage',
+      data: jsonFromBD.ocupaciones,
+    });
+
+    // Sustancias
+    if (jsonFromBD.sustancias.sustancias.length == 0 && 
+      (!jsonFromBD.sustancias.indConsumeSustancias && jsonFromBD.sustancias.indConsumeSustancias != null)) {
+      jsonFromBD.sustancias.completo = true;
+    }else if(jsonFromBD.sustancias.sustancias.length > 0){
+      jsonFromBD.sustancias.completo = true;
+    }
+    else{
+      jsonFromBD.sustancias.completo = false;
+    }
+    storage.save({
+      key: 'datosSustanciasStorage',
+      data: jsonFromBD.sustancias,
+    });
   }
 
   getDataImputado = async () => {
     if (!this.state.loadedResponsesBD && this.state.imputado.id != null) {
-    if (this.state.isConnected) {
-      console.log("Get data imputado!!");
-      this.setState({isLoading: true, loadedResponsesBD: true});
-      instanceAxios.get('/evaluacion/get', {
-        params: {
-          idImputado: this.state.imputado.id,
-        }
-      })
-      .then(async (res) => {
-        if (res.data.status == "ok") {
-          //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion));
-          this.setState({
-            dataGeneralesDB: res.data.evaluacion.datosGenerales,
-            dataDomicilioDB: res.data.evaluacion.domicilios,
-            dataFamiliaDB: res.data.evaluacion.redFamiliar,
-            dataEstudiosBD: res.data.evaluacion.estudios,
-            dataOcupacionesDB: res.data.evaluacion.ocupaciones,
-            dataSustanciasDB: res.data.evaluacion.sustancias,
-            isLoading: false
-          });
-          this.guardarStorageFromBD(res.data.evaluacion);
-        }
-        if (res.data.status == "error") {
-          Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
-          this.setState({isLoading: false, loadedResponsesBD: true,});
-        }
-      })
-      .catch(async (error) => {
-        this.setState({isLoading: false});
-        //console.warn(JSON.stringify(error))
-        Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
-      });
-    } else { 
-      // Si no hay conexion busca en SQLite
-      this.getImputadoSQLiteById();
-    }
+      if (this.state.isConnected) {
+        console.log("Get data imputado!!");
+        this.setState({isLoading: true, loadedResponsesBD: true});
+        instanceAxios.get('/evaluacion/get', {
+          params: {
+            idImputado: this.state.imputado.id,
+          }
+        })
+        .then(async (res) => {
+          if (res.data.status == "ok") {
+            //console.log("Data imputado generales: " + JSON.stringify(res.data.evaluacion));
+            this.setState({
+              dataGeneralesDB: res.data.evaluacion.datosGenerales,
+              dataDomicilioDB: res.data.evaluacion.domicilios,
+              dataFamiliaDB: res.data.evaluacion.redFamiliar,
+              dataEstudiosBD: res.data.evaluacion.estudios,
+              dataOcupacionesDB: res.data.evaluacion.ocupaciones,
+              dataSustanciasDB: res.data.evaluacion.sustancias,
+              isLoading: false
+            });
+            this.guardarStorageFromBD(res.data.evaluacion);
+          }
+          if (res.data.status == "error") {
+            Alert.alert('Error', res.data.message, [{text: 'OK'}], { cancelable: false });
+            this.setState({isLoading: false, loadedResponsesBD: true,});
+          }
+        })
+        .catch(async (error) => {
+          this.setState({isLoading: false});
+          console.log(JSON.stringify(error))
+          Alert.alert('Conexión', 'Sin red celular o servidor no disponible.',[{text: 'OK'}],{ cancelable: false })
+        });
+      } else { 
+        // Si no hay conexion busca en SQLite
+        this.getImputadoSQLiteById();
+      }
     }
   }
 
   getImputadoSQLiteById = () => {
     this.setState({isLoading: true, loadedResponsesBD: true});
-    console.log("Buscando imputado SQLite:", this.state.imputado.id);
     Database.transaction(
-      tx => {
-         tx.executeSql('SELECT * FROM entrevistasOffline WHERE id_imputado = ?', 
-          [this.state.imputado.id], (_, { rows: { _array }}) => {
-            let infoEvaluacion = JSON.parse(_array[0].data);    
-              //console.log("Evaluacion imputado:", JSON.stringify(infoEvaluacion))
-              this.setState({
-                dataGeneralesDB: infoEvaluacion.datosGenerales,
-                dataDomicilioDB: infoEvaluacion.domicilios,
-                dataFamiliaDB: infoEvaluacion.redFamiliar,
-                dataEstudiosBD: infoEvaluacion.estudios,
-                dataOcupacionesDB: infoEvaluacion.ocupaciones,
-                dataSustanciasDB: infoEvaluacion.sustancias,
-                isLoading: false,
-              });
-              this.guardarStorageFromBD(infoEvaluacion);
-         });
+      tx => { 
+        tx.executeSql('SELECT * FROM entrevistasOffline WHERE id_imputado = ?', [this.state.imputado.id], (_, { rows: { _array }}) => {
+          infoEvaluacion = JSON.parse(_array[0].data);    
+          this.setState({
+            dataGeneralesDB: infoEvaluacion.datosGenerales,
+            dataDomicilioDB: infoEvaluacion.domicilios,
+            dataFamiliaDB: infoEvaluacion.redFamiliar,
+            dataEstudiosBD: infoEvaluacion.estudios,
+            dataOcupacionesDB: infoEvaluacion.ocupaciones,
+            dataSustanciasDB: infoEvaluacion.sustancias,
+            isLoading: false
+          });
+          this.guardarStorageFromBD(infoEvaluacion);
+        }); 
       },
       (err) => { console.log("Select Failed Message", err) },
       this.update
@@ -164,23 +195,25 @@ export default class Entrevista extends React.Component {
   }
 
   _toggleModalProgress = () => {
-    console.log("Cerrando modal")
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
 
   changeStepInProgress = (stepNumber) => {
     this.setState({ isModalVisible: false })
-    console.log("Tab:",stepNumber)
-    this.tabView.goToPage(stepNumber);
+    // https://github.com/ptomasroos/react-native-scrollable-tab-view/issues/818
+    if (this.tabView) {
+      setTimeout(() => {
+          this.tabView.goToPage(stepNumber);
+      }, 300);
+    }
   }
   
   showAllSections = () => {
-    console.log("Respuestas cargadas, mostrar secciones!")
     return(
       <ScrollableTabView  
-        ref={(tabView) => { this.tabView = tabView; }}
         renderTabBar={() => <ScrollableTabBar/>} 
+        ref={(tabView) => { this.tabView = tabView; }}
         tabBarActiveTextColor={COLORS.BACKGROUND_PRIMARY}
         tabBarUnderlineStyle={{backgroundColor: COLORS.BACKGROUND_PRIMARY}}>
         <DatosGenerales tabLabel="Generales" generalesDB={this.state.dataGeneralesDB} imputadoProp={this.state.imputado}/>

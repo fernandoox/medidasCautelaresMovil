@@ -13,6 +13,11 @@
       "native-base/Fonts/*",
       "node_modules/native-base/Fonts/*"
     ],
+    "splash": {
+      "image": "./assets/img/medidasCautelaresSplash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "bundleIdentifier": "gob.tsjcdmx.appEvalMedidias"
     },

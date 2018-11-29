@@ -160,4 +160,15 @@ export default class SQLiteHelpers extends React.Component {
     );
   }
 
+
+  deleteAlllEvaluacionesSQLite = () => {
+   Database.transaction(
+      tx => {
+         tx.executeSql('DELETE FROM entrevistasOffline');
+      },
+      (err) => { console.log("Delete Failed Message", err); },
+      this.update
+   );
+};
+
 }

@@ -11,7 +11,6 @@ export default class ModalProgreso extends React.Component {
 
   constructor(props){
     super(props)
-    ObjHelperSQlite = new SQLiteHelpers();
     this.state = {
       isLoading: false,
       isConnected: null,
@@ -31,6 +30,7 @@ export default class ModalProgreso extends React.Component {
 
   componentDidMount(){
     // Detectar conexion
+    ObjHelperSQlite = new SQLiteHelpers();
     NetInfo.isConnected.addEventListener('connectionChange',this._handleConnectivityChange);
     NetInfo.isConnected.fetch().done(
       (isConnected) => { this.setState({isConnected}); }
@@ -176,7 +176,11 @@ export default class ModalProgreso extends React.Component {
       /**
        * Cuando se empieza sin internet y se interactua con SQLite
        */
-      Alert.alert('Red 2', "No hay conexión a internet, se podrá enviar cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
+      if (this.state.evaluacionListaParaEnvio) {
+        Alert.alert('Red', "Se actualizaron los datos locales, se podrá enviar al servidor cuando se recupere la conexión.", [{text: 'OK'}], { cancelable: false });
+      }else{
+        Alert.alert('Red', "Se actualizaron los datos locales, puede seguir trabajando de manera local.", [{text: 'OK'}], { cancelable: false });
+      }
       this.updateEvaluacionSQLite();
     }
     
@@ -187,11 +191,11 @@ export default class ModalProgreso extends React.Component {
     Database.transaction(
        tx => {
           tx.executeSql('UPDATE entrevistasOffline SET data = ?, lista_para_envio = ? WHERE id_imputado = ?',
-             [
-                JSON.stringify(this.state.jsonBase),
-                (this.state.evaluacionListaParaEnvio) ? 1 : 0,
-                this.state.jsonBase.imputado.id
-             ]);
+            [
+              JSON.stringify(this.state.jsonBase),
+              (this.state.evaluacionListaParaEnvio) ? 1 : 0,
+              this.state.jsonBase.imputado.id
+            ]);
        },
        (err) => { console.log("Update Failed Message", err) },
        this.update
@@ -203,8 +207,9 @@ export default class ModalProgreso extends React.Component {
         evaluador: this.state.evaluador
       }
     );
- }
+  }
 
+  // Las entrevistas que comenzaron online pero al momento de guardar se pierde la red
   saveSQLiteEntrevistaPendiente = () => {
     // Transactions to SQLite!
     Database.transaction(
@@ -232,29 +237,6 @@ export default class ModalProgreso extends React.Component {
       }
     );
   }
-
-  saveEvaluacionSQLite = (objNuevaEvaluacion) => {
-    let evaluacionAux = objNuevaEvaluacion.evaluacion;
-    delete objNuevaEvaluacion.evaluacion;
-    var objEvaluacionToSaveSQLite = Object.assign(objNuevaEvaluacion, evaluacionAux);
-    console.log("Object to save:", JSON.stringify(objEvaluacionToSaveSQLite));
-    Database.transaction(
-       tx => {
-          tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
-            [
-              'OFFLINE',
-              objNuevaEvaluacion.carpetaInvestigacion,
-              objNuevaEvaluacion.carpetaJudicial,
-              JSON.stringify(objEvaluacionToSaveSQLite),
-              objNuevaEvaluacion.imputado.id,
-              objNuevaEvaluacion.fechaAsignacion,
-              0
-            ]);
-       },
-       (err) => { console.log("Insert Failed Message", err) },
-       this.update
-    );
- }
 
   render() {
     return (
@@ -390,7 +372,7 @@ export default class ModalProgreso extends React.Component {
             exitDuration={30}
             enter="fadeIn"
             exit="fadeOut">
-            <ListItem style={{marginLeft:0}}>
+            <ListItem style={{marginLeft:0, marginTop:-5, marginBottom:-5}}>
               <CheckBox color={COLORS.BACKGROUND_PRIMARY} checked={this.state.evaluacionListaParaEnvio} 
                 onPress={this._selectCheckBoxEvaluacionParaEnvio}/>
               <TouchableOpacity onPress={this._selectCheckBoxEvaluacionParaEnvio}>
@@ -427,7 +409,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin:5,
     borderRadius:5,
-    borderColor: COLORS.BACKGROUND_PRIMARY,
+    borderColor: '#607D8B',
     borderWidth: 1
   },
   titleStep: {

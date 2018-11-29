@@ -6,6 +6,12 @@
     "catalogo": "LugaresEntrevistaCat"
   },
   {
+    "node": "snLugarEntrevistaOtro",
+    "pregunta": "Otro lugar de entrevista",
+    "tipoEntrada": "default",
+    "maxLongitud": 80
+  },
+  {
     "node": "dtmFechaEntrevista",
     "pregunta": "Fecha de entrevista",
     "tipoEntrada": "date"
@@ -134,9 +140,10 @@
     "catalogo": "TiposDocMigratorioCat"
   },
   {
-    "node": "indSabeLeerEscribir",
+    "node": "snSabeLeerEscribir",
     "pregunta": "Sabe leer y escribir",
-    "tipoEntrada": "boolean"
+    "tipoEntrada": "default",
+    "maxLongitud": 80
   },
   {
     "node": "indSituacionCalle",
@@ -150,57 +157,25 @@
     "maxLongitud": 15
   },
   {
-    "node": "snCodigoPostal",
-    "pregunta": "Código postal",
-    "tipoEntrada": "numeric",
-    "maxLongitud": 5
+    "titulo": "Lugar de nacimiento",
+    "tipoEntrada": "separador"
   },
   {
     "node": "snMunicipio",
-    "pregunta": "Municipio",
+    "pregunta": "Alcaldía o municipio",
     "tipoEntrada": "default",
-    "maxLongitud": 50
-  },
-  {
-    "node": "snColonia",
-    "pregunta": "Colonia",
-    "tipoEntrada": "default",
-    "maxLongitud": 50
-  },
-  {
-    "node": "snCalle",
-    "pregunta": "Calle",
-    "tipoEntrada": "default",
-    "maxLongitud": 200
-  },
-  {
-    "node": "snNumExterior",
-    "pregunta": "Número exterior",
-    "tipoEntrada": "default",
-    "maxLongitud": 10
-  },
-  {
-    "node": "snNumInterior",
-    "pregunta": "Número interior",
-    "tipoEntrada": "default",
-    "maxLongitud": 10
-  },
-  {
-    "node": "snManzana",
-    "pregunta": "Manzana",
-    "tipoEntrada": "default",
-    "maxLongitud": 100
-  },
-  {
-    "node": "snLote",
-    "pregunta": "Lote",
-    "tipoEntrada": "default",
-    "maxLongitud": 100
+    "maxLongitud": 70
   },
   {
     "node": "idNuEntidadFederativa",
     "pregunta": "Entidad federativa",
     "tipoEntrada": "catalogo",
     "catalogo": "EntidadesFederativasCat"
+  },
+  {
+    "node": "snLugarNacimientoOtro",
+    "pregunta": "Otro (extranjero)",
+    "tipoEntrada": "default",
+    "maxLongitud": 90
   }
 ]
