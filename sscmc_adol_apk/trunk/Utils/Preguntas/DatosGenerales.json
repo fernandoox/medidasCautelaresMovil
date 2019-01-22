@@ -1,0 +1,206 @@
+[
+  {
+    "node": "lugarEntrevista",
+    "pregunta": "Lugar de entrevista",
+    "tipoEntrada": "catalogo",
+    "catalogo": "LugaresEntrevistaCat"
+  },
+  {
+    "node": "dtmFechaEntrevista",
+    "pregunta": "Fecha de entrevista",
+    "tipoEntrada": "date"
+  },
+  {
+    "node": "snHoraEntrevista",
+    "pregunta": "Hora de entrevista",
+    "tipoEntrada": "time"
+  },
+  {
+    "node": "snCarpetaInvestigacion",
+    "pregunta": "Carpeta de investigación",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snCarpetaJudicial",
+    "pregunta": "Carpeta judicial",
+    "tipoEntrada": "default",
+    "maxLongitud": 25
+  },
+  {
+    "node": "snNombre",
+    "pregunta": "Nombre del adolescente",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snApellidoPaterno",
+    "pregunta": "Apellido paterno",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snApellidoMaterno",
+    "pregunta": "Apellido materno",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snOtrosNombres",
+    "pregunta": "Otros nombres",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snApodos",
+    "pregunta": "Apodo (s)",
+    "tipoEntrada": "default",
+    "maxLongitud": 250
+  },
+  {
+    "node": "snGrupoEtnico",
+    "pregunta": "Grupo étnico o indigena",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snSituacionDiscapacidad",
+    "pregunta": "Situación de discapacidad",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snRfc",
+    "pregunta": "RFC",
+    "tipoEntrada": "default",
+    "maxLongitud": 13
+  },
+  {
+    "node": "snCurp",
+    "pregunta": "CURP",
+    "tipoEntrada": "default",
+    "maxLongitud": 18
+  },
+  {
+    "node": "indSexo",
+    "pregunta": "Sexo",
+    "tipoEntrada": "catalogo",
+    "catalogo": "SexoCat"
+  },
+  {
+    "node": "dtmFechaNacimiento",
+    "pregunta": "Fecha de nacimiento",
+    "tipoEntrada": "date"
+  },
+  {
+    "node": "nuEdad",
+    "pregunta": "Edad",
+    "tipoEntrada": "numeric",
+    "maxLongitud": 2
+  },
+  {
+    "node": "estadoCivil",
+    "pregunta": "Estado civil",
+    "tipoEntrada": "catalogo",
+    "catalogo": "EstadosCivilesCat"
+  },
+  {
+    "node": "snDuracion",
+    "pregunta": "Duración",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snPais",
+    "pregunta": "País",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snNacionalidad",
+    "pregunta": "Nacionalidad",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "indDocumentoMigratorio",
+    "pregunta": "Documento migratorio",
+    "tipoEntrada": "boolean"
+  },
+  {
+    "node": "tipoDocMigratorio",
+    "pregunta": "Tipo de documento migratorio",
+    "tipoEntrada": "catalogo",
+    "catalogo": "TiposDocMigratorioCat"
+  },
+  {
+    "node": "indSabeLeerEscribir",
+    "pregunta": "Sabe leer y escribir",
+    "tipoEntrada": "boolean"
+  },
+  {
+    "node": "indSituacionCalle",
+    "pregunta": "Situación de calle",
+    "tipoEntrada": "boolean"
+  },
+  {
+    "node": "snTelefono",
+    "pregunta": "Teléfono",
+    "tipoEntrada": "numeric",
+    "maxLongitud": 15
+  },
+  {
+    "node": "snCodigoPostal",
+    "pregunta": "Código postal",
+    "tipoEntrada": "numeric",
+    "maxLongitud": 5
+  },
+  {
+    "node": "snMunicipio",
+    "pregunta": "Municipio",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snColonia",
+    "pregunta": "Colonia",
+    "tipoEntrada": "default",
+    "maxLongitud": 50
+  },
+  {
+    "node": "snCalle",
+    "pregunta": "Calle",
+    "tipoEntrada": "default",
+    "maxLongitud": 200
+  },
+  {
+    "node": "snNumExterior",
+    "pregunta": "Número exterior",
+    "tipoEntrada": "default",
+    "maxLongitud": 10
+  },
+  {
+    "node": "snNumInterior",
+    "pregunta": "Número interior",
+    "tipoEntrada": "default",
+    "maxLongitud": 10
+  },
+  {
+    "node": "snManzana",
+    "pregunta": "Manzana",
+    "tipoEntrada": "default",
+    "maxLongitud": 100
+  },
+  {
+    "node": "snLote",
+    "pregunta": "Lote",
+    "tipoEntrada": "default",
+    "maxLongitud": 100
+  },
+  {
+    "node": "idNuEntidadFederativa",
+    "pregunta": "Entidad federativa",
+    "tipoEntrada": "catalogo",
+    "catalogo": "EntidadesFederativasCat"
+  }
+]

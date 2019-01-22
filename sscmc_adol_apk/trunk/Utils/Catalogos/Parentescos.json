@@ -1,0 +1,82 @@
+[
+  {
+    "id": 12,
+    "nombre": "ABUELO (A)"
+  },
+  {
+    "id": 4,
+    "nombre": "AMIGO (A)"
+  },
+  {
+    "id": 7,
+    "nombre": "CONCUBINO(A)"
+  },
+  {
+    "id": 3,
+    "nombre": "CONOCIDO (A)"
+  },
+  {
+    "id": 17,
+    "nombre": "CUÑADO (A)"
+  },
+  {
+    "id": 8,
+    "nombre": "ESPOSO(A)"
+  },
+  {
+    "id": 9,
+    "nombre": "HERMANO (A)"
+  },
+  {
+    "id": 2,
+    "nombre": "HIJO (A)"
+  },
+  {
+    "id": 20,
+    "nombre": "MADRASTRA"
+  },
+  {
+    "id": 6,
+    "nombre": "MADRE"
+  },
+  {
+    "id": 15,
+    "nombre": "MADRINA"
+  },
+  {
+    "id": 16,
+    "nombre": "NOVIO (A)"
+  },
+  {
+    "id": 5,
+    "nombre": "OTRO"
+  },
+  {
+    "id": 19,
+    "nombre": "PADRASTRO"
+  },
+  {
+    "id": 1,
+    "nombre": "PADRE"
+  },
+  {
+    "id": 14,
+    "nombre": "PADRINO"
+  },
+  {
+    "id": 18,
+    "nombre": "PAREJA"
+  },
+  {
+    "id": 10,
+    "nombre": "PRIMO (A)"
+  },
+  {
+    "id": 11,
+    "nombre": "SOBRINO (A)"
+  },
+  {
+    "id": 13,
+    "nombre": "TIO (A)"
+  }
+]

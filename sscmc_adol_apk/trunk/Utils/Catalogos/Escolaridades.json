@@ -1,0 +1,93 @@
+[{
+    "id": 22,
+    "nombre": "BACHILLERATO TER."
+  },
+  {
+    "id": 21,
+    "nombre": "BACHILLERATO TRUN."
+  },
+  {
+    "id": 11,
+    "nombre": "CARRERA COMER TER."
+  },
+  {
+    "id": 10,
+    "nombre": "CARRERA COMER TRUN."
+  },
+  {
+    "id": 13,
+    "nombre": "CARRERA TÚC. TER."
+  },
+  {
+    "id": 12,
+    "nombre": "CARRERA TÚC. TRUN."
+  },
+  {
+    "id": 17,
+    "nombre": "INGENIERIA TER."
+  },
+  {
+    "id": 16,
+    "nombre": "INGENIERIA TRUN."
+  },
+  {
+    "id": 15,
+    "nombre": "LICENCIATURA TER."
+  },
+  {
+    "id": 14,
+    "nombre": "LICENCIATURA TRUNCA"
+  },
+  {
+    "id": 23,
+    "nombre": "NINGUNA"
+  },
+  {
+    "id": 20,
+    "nombre": "OTRA"
+  },
+  {
+    "id": 19,
+    "nombre": "POST-GRADO TER."
+  },
+  {
+    "id": 18,
+    "nombre": "POST-GRADO TRUN."
+  },
+  {
+    "id": 9,
+    "nombre": "PREPA. TERMINADA"
+  },
+  {
+    "id": 8,
+    "nombre": "PREPA. TRUNCA"
+  },
+  {
+    "id": 1,
+    "nombre": "PRIMARIA"
+  },
+  {
+    "id": 3,
+    "nombre": "PRIMARIA TERMINADA"
+  },
+  {
+    "id": 2,
+    "nombre": "PRIMARIA TRUNCA"
+  },
+  {
+    "id": 5,
+    "nombre": "SECUNDARIA TERMINADA"
+  },
+  {
+    "id": 4,
+    "nombre": "SECUNDARIA TRUNCA"
+  },
+  {
+    "id": 7,
+    "nombre": "VOCACIONAL TERMINADA"
+  },
+  {
+    "id": 6,
+    "nombre": "VOCACIONAL TRUNCA"
+  }
+]

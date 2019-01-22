@@ -1,0 +1,40 @@
+{
+   "expo": {
+    "name": "GM Cautelares",
+    "icon": "./assets/img/iconAppRojo.png",
+    "version": "1.0.1",
+    "slug": "entrevistaMedidas",
+    "sdkVersion": "29.0.0",
+    "primaryColor": "#d9534f",
+    "orientation": "portrait",
+    "assetBundlePatterns": [
+      "Utils/*",
+      "assets/img/*",
+      "native-base/Fonts/*",
+      "node_modules/native-base/Fonts/*"
+    ],
+    "splash": {
+      "image": "./assets/img/medidasCautelaresSplash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "gob.tsjcdmx.appEvalMedidias"
+    },
+    "android": {
+      "package": "gob.tsjcdmx.appEvalMedidias"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "tsj-medidas",
+            "project": "react-medidas",
+            "authToken": "85e8719e56d143c180bb418268e5783be89c2c7f3f8840cdbb37a09700d0e9fa"
+          }
+        }
+      ]
+    }
+   }
+ }
