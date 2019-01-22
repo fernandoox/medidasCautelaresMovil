@@ -1,6 +1,6 @@
 import React from 'react';
 import { SQLite, Font } from 'expo';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Alert } from 'react-native';
 import { Root } from 'native-base';
 import { StackNavigator } from 'react-navigation';
 import Login from './Screens/Login';
@@ -75,6 +75,17 @@ export default class App extends React.Component {
           'create table if not exists entrevistasOffline (id integer primary key not null, tipo_captura text, carpeta_investigacion text, carpeta_judicial text, data text, id_imputado integer, fecha_asignacion varchar, lista_para_envio integer);'
         );
       });
+
+      Database.transaction(
+        tx => {
+           tx.executeSql('ALTER TABLE entrevistasOffline ADD nombre_imputado VARCHAR'); 
+           tx.executeSql('ALTER TABLE entrevistasOffline ADD ap_pat_imputado VARCHAR'); 
+           tx.executeSql('ALTER TABLE entrevistasOffline ADD ap_mat_imputado VARCHAR'); 
+        },
+        (err) => { console.log("Alter table error", err) },
+        this.update
+     );
+      
       
       ignoreWarnings([
          'Warning: componentWillMount is deprecated',

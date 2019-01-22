@@ -181,10 +181,10 @@ export default class BuscarImputado extends React.Component {
     const {navigate} = this.props.navigation;
     if(this.state.evaluador){
       this.setState({isLoading: true});
-      instanceAxios.get('/imputado/getByCarpetaJudicial', {
+      instanceAxios.get('/imputado/getByGeneralParam', {
         params: {
           idEvaluador: this.state.evaluador.id,
-          numeroCarpeta: this.state.carpetaJudicial,
+          data: this.state.carpetaJudicial,
           buscarAsignados: this.state.buscarAsignados,
           buscarConcluidos: this.state.buscarConcluidos
         }

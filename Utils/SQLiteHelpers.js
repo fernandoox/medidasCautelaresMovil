@@ -113,14 +113,15 @@ export default class SQLiteHelpers extends React.Component {
    }
 
    saveEvaluacionSQLite = (objNuevaEvaluacion) => {
-     // Para dar formato al json
+      // Para dar formato al json
       let evaluacionAux = objNuevaEvaluacion.evaluacion;
       delete objNuevaEvaluacion.evaluacion;
       var objEvaluacionToSaveSQLite = Object.assign(objNuevaEvaluacion, evaluacionAux);
       //console.log("Object to save id imputado:", JSON.stringify(objEvaluacionToSaveSQLite));
+      //return false;
       Database.transaction(
          tx => {
-            tx.executeSql('INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio) values (?, ?, ?, ?, ?, ?, ?)',
+            tx.executeSql("INSERT INTO entrevistasOffline (tipo_captura, carpeta_investigacion, carpeta_judicial, data, id_imputado, fecha_asignacion, lista_para_envio, nombre_imputado, ap_pat_imputado, ap_mat_imputado) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
               [
                 'OFFLINE',
                 objEvaluacionToSaveSQLite.carpetaInvestigacion,
@@ -128,7 +129,10 @@ export default class SQLiteHelpers extends React.Component {
                 JSON.stringify(objEvaluacionToSaveSQLite),
                 objEvaluacionToSaveSQLite.imputado.id,
                 objEvaluacionToSaveSQLite.fechaAsignacion,
-                0
+                0,
+                objEvaluacionToSaveSQLite.imputado.nombre,
+                objEvaluacionToSaveSQLite.imputado.primerApellido,
+                objEvaluacionToSaveSQLite.imputado.segundoApellido
               ]);
          },
          (err) => { console.log("Insert Failed Message", err) },

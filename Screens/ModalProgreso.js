@@ -188,16 +188,20 @@ export default class ModalProgreso extends React.Component {
   
   updateEvaluacionSQLite = () => {
     console.log("Actualizando a SQLite imputado:", this.state.jsonBase.imputado.id);
+    //Alert.alert("Actualizando apellido mat:", this.state.jsonBase.datosGenerales.snApellidoMaterno);
     Database.transaction(
        tx => {
-          tx.executeSql('UPDATE entrevistasOffline SET data = ?, lista_para_envio = ? WHERE id_imputado = ?',
+          tx.executeSql('UPDATE entrevistasOffline SET data = ?, lista_para_envio = ?, nombre_imputado = ?, ap_pat_imputado = ?, ap_mat_imputado = ? WHERE id_imputado = ?',
             [
               JSON.stringify(this.state.jsonBase),
               (this.state.evaluacionListaParaEnvio) ? 1 : 0,
-              this.state.jsonBase.imputado.id
-            ]);
+              this.state.jsonBase.datosGenerales.snNombre,
+              this.state.jsonBase.datosGenerales.snApellidoPaterno,
+              this.state.jsonBase.datosGenerales.snApellidoMaterno,
+              this.state.jsonBase.imputado.id,
+            ]); 
        },
-       (err) => { console.log("Update Failed Message", err) },
+       (err) => { Alert.alert("Update Failed Message", err) },
        this.update
     );
     this.props.cerrarModalProgrsoChild();

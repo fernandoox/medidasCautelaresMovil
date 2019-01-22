@@ -9,7 +9,7 @@ import moment from 'moment';
 
 export default class ImputadoTemporal extends React.Component {
 
-  constructor(props){
+  constructor(props){ 
     super(props)
     const { params } = this.props.nav.state;
     this.state = {
@@ -21,7 +21,8 @@ export default class ImputadoTemporal extends React.Component {
       evaluador: (params.evaluador !=  undefined || params.evaluador !=  null) ? params.evaluador : null,
     };
     const nav = this.props.nav;
-    arrFakeImputados = [];
+    // Para pruebas llenaba imputados con Faker
+    /*arrFakeImputados = [];
     faker.locale = "es_MX";
     for (let index = 0; index < 30; index++) {
       itemFake = {
@@ -36,21 +37,22 @@ export default class ImputadoTemporal extends React.Component {
         "fechaAsignacion": moment(faker.date.past()).format('DD-MM-YYYY')
       }
       arrFakeImputados.push(itemFake);
-    }
+    }*/
   }
 
   buscarCarpetasEnSQLite = () => {
     Database.transaction(
       tx => {
-        tx.executeSql('SELECT * FROM entrevistasOffline WHERE carpeta_investigacion LIKE ? OR carpeta_judicial LIKE ? ORDER BY fecha_asignacion DESC', ["%"+this.state.carpetaJudicial+"%", "%"+this.state.carpetaJudicial+"%"], (_, { rows: { _array }}) => {
+        tx.executeSql('SELECT * FROM entrevistasOffline WHERE carpeta_investigacion LIKE ? OR carpeta_judicial LIKE ? OR nombre_imputado LIKE ? OR ap_pat_imputado LIKE ? OR ap_mat_imputado LIKE ? ORDER BY fecha_asignacion DESC', 
+          ["%"+this.state.carpetaJudicial+"%", "%"+this.state.carpetaJudicial+"%", "%"+this.state.carpetaJudicial+"%", "%"+this.state.carpetaJudicial+"%", "%"+this.state.carpetaJudicial+"%"], (_, { rows: { _array }}) => {
           arrayImputados = _array.map((evaluacion) => {
             evaluacion.data = JSON.parse(evaluacion.data);
             return {
               idSQLite: evaluacion.id,
               id: evaluacion.data.imputado.id,
-              nombre: evaluacion.data.imputado.nombre,
-              primerApellido: evaluacion.data.imputado.primerApellido,
-              segundoApellido: evaluacion.data.imputado.segundoApellido,
+              nombre: evaluacion.nombre_imputado,
+              primerApellido: evaluacion.ap_pat_imputado,
+              segundoApellido: evaluacion.ap_mat_imputado,
               idEstatus: 4,
               evaluacionMensual: evaluacion.data.imputado.evaluacionMensual,
               carpetaJudicial: (evaluacion.carpeta_judicial != null || evaluacion.carpeta_judicial != '') ? evaluacion.carpeta_judicial : null,

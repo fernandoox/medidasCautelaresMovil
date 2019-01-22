@@ -4,7 +4,7 @@ import { AsyncStorage } from 'react-native';
 
 /*-------------------------------------------------------------------------------------*/
 // REST API with Axios config
-let urlLocal    = 'http://172.19.40.7:9973/SSCMC_WS/api/app';
+let urlLocal    = 'http://172.19.40.136:60523/SSCMC_WS/api/app';
 let urlDev      = 'http://10.17.5.29:8080/:8080/SSCMC_WS-dev/api/app';
 let urlProd     = 'http://189.240.30.58:8080/SSCMC_WS/api/app';
 var initAxios = axios.create({
