@@ -7,7 +7,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "faker": "^4.1.0",
     "jest-expo": "26.0.0",
-    "react-native-scripts": "1.13.1",
+    "react-native-scripts": "1.14.1",
     "react-test-renderer": "16.3.0-alpha.1",
     "reactotron-react-native": "^2.1.0"
   },
